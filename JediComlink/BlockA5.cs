@@ -19,7 +19,7 @@ namespace JediComlink
 
         #endregion
 
-        public BlockA5(Block parent, int vector) : base(parent, vector)
+        public BlockA5(Block parent, int vector, byte[] codeplugContents) : base(parent, vector, codeplugContents)
         {
             Id = 0xA5;
             Description = "Unknown";

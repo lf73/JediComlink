@@ -36,17 +36,17 @@ namespace JediComlink
 
         #endregion
 
-        public Block02(Block parent, int vector) : base(parent, vector)
+        public Block02(Block parent, int vector, byte[] codeplugContents) : base(parent, vector, codeplugContents)
         {
             Id = 0x02;
             Description = "HWConfig Radio";
 
-            // Block03 = new Block03(this, BLOCK_03_VECTOR);
-            // Block06 = new Block06(this, BLOCK_06_VECTOR);
-            // Block0A = new Block0A(this, BLOCK_0A_VECTOR);
-            // Block0C = new Block0C(this, BLOCK_0C_VECTOR);
-            // Block0F = new Block0F(this, BLOCK_0F_VECTOR);
-            // Block11 = new Block11(this, BLOCK_11_VECTOR);
+            // Block03 = new Block03(this, BLOCK_03_VECTOR, codeplugContents);
+            // Block06 = new Block06(this, BLOCK_06_VECTOR, codeplugContents);
+            // Block0A = new Block0A(this, BLOCK_0A_VECTOR, codeplugContents);
+            // Block0C = new Block0C(this, BLOCK_0C_VECTOR, codeplugContents);
+            // Block0F = new Block0F(this, BLOCK_0F_VECTOR, codeplugContents);
+            // Block11 = new Block11(this, BLOCK_11_VECTOR, codeplugContents);
         }
 
         public override string ToString()

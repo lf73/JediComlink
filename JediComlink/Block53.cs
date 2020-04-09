@@ -21,7 +21,7 @@ namespace JediComlink
 
         #endregion
 
-        public Block53(Block parent, int vector) : base(parent, vector)
+        public Block53(Block parent, int vector, byte[] codeplugContents) : base(parent, vector, codeplugContents)
         {
             Id = 0x53;
             Description = "Scan List";

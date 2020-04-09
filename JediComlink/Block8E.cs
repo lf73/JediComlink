@@ -21,12 +21,12 @@ namespace JediComlink
         private const int BLOCK_8F_VECTOR = 0x00;
         #endregion
 
-        public Block8E(Block parent, int vector) : base(parent, vector)
+        public Block8E(Block parent, int vector, byte[] codeplugContents) : base(parent, vector, codeplugContents)
         {
             Id = 0x8E;
             Description = "Status List Vector";
 
-            Block8F = new Block8F(this, BLOCK_8F_VECTOR);
+            Block8F = new Block8F(this, BLOCK_8F_VECTOR, codeplugContents);
         }
 
         public override string ToString()

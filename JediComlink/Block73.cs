@@ -19,7 +19,7 @@ namespace JediComlink
 
         #endregion
 
-        public Block73(Block parent, int vector) : base(parent, vector)
+        public Block73(Block parent, int vector, byte[] codeplugContents) : base(parent, vector, codeplugContents)
         {
             Id = 0x73;
             Description = "Trunk Status List/Zone Vector";

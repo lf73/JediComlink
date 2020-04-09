@@ -19,7 +19,7 @@ namespace JediComlink
 
         #endregion
 
-        public Block3B(Block parent, int vector) : base(parent, vector)
+        public Block3B(Block parent, int vector, byte[] codeplugContents) : base(parent, vector, codeplugContents)
         {
             Id = 0x3B;
             Description = "DTMF Codes List";

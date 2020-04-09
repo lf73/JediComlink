@@ -21,7 +21,7 @@ namespace JediComlink
         private const int XXXXX = 0x00;
         #endregion
 
-        public BlockXX(Block parent, int vector) : base(parent, vector)
+        public BlockXX(Block parent, int vector, byte[] codeplugContents) : base(parent, vector, codeplugContents)
         {
             Id = 0x99;
             Description = "XXXXX";

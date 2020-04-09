@@ -57,7 +57,7 @@ namespace JediComlink
         private const int BLOCK_73_VECTOR = 0x3E;
         #endregion
 
-        public Block30(Block parent, int vector) : base(parent, vector)
+        public Block30(Block parent, int vector, byte[] codeplugContents) : base(parent, vector, codeplugContents)
         {
             Id = 0x30;
             Description = "External Radio";
@@ -73,19 +73,19 @@ namespace JediComlink
                                     0);
             Unknown3 = Contents.Slice(0x21, 3).ToArray();
             CodeplugSize = Contents[0x24] * 0x100 + Contents[0x25];
-            Block31 = new Block31(this, BLOCK_31_VECTOR);
-            Block3D = new Block3D(this, BLOCK_3D_VECTOR);
-            Block36 = new Block36(this, BLOCK_36_VECTOR);
-            Block55 = new Block55(this, BLOCK_55_VECTOR);
-            Block54 = new Block54(this, BLOCK_54_VECTOR);
-            Block51 = new Block51(this, BLOCK_51_VECTOR);
+            Block31 = new Block31(this, BLOCK_31_VECTOR, codeplugContents);
+            Block3D = new Block3D(this, BLOCK_3D_VECTOR, codeplugContents);
+            Block36 = new Block36(this, BLOCK_36_VECTOR, codeplugContents);
+            Block55 = new Block55(this, BLOCK_55_VECTOR, codeplugContents);
+            Block54 = new Block54(this, BLOCK_54_VECTOR, codeplugContents);
+            Block51 = new Block51(this, BLOCK_51_VECTOR, codeplugContents);
             //Block33 = new Block33(this, 0x32);
-            Block39 = new Block39(this, BLOCK_39_VECTOR);
-            Block3B = new Block3B(this, BLOCK_3B_VECTOR);
-            Block34 = new Block34(this, BLOCK_34_VECTOR);
-            Block35 = new Block35(this, BLOCK_35_VECTOR);
-            Block3C = new Block3C(this, BLOCK_3C_VECTOR);
-            Block73 = new Block73(this, BLOCK_73_VECTOR);
+            Block39 = new Block39(this, BLOCK_39_VECTOR, codeplugContents);
+            Block3B = new Block3B(this, BLOCK_3B_VECTOR, codeplugContents);
+            Block34 = new Block34(this, BLOCK_34_VECTOR, codeplugContents);
+            Block35 = new Block35(this, BLOCK_35_VECTOR, codeplugContents);
+            Block3C = new Block3C(this, BLOCK_3C_VECTOR, codeplugContents);
+            Block73 = new Block73(this, BLOCK_73_VECTOR, codeplugContents);
             Unknown4 = Contents.Slice(0x40, 10).ToArray();
             //BlockB5 = new BlockB5(this, 0x4A);
             Unknown5 = Contents.Slice(0x4C, 2).ToArray();

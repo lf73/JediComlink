@@ -11,32 +11,22 @@ namespace JediComlink
 
         public string Description { get; protected set; }
 
-        public int Length { get; set; }
-
         public Block Parent { get; set; }
 
         public Codeplug Codeplug { get; set; }
 
-        /// <summary>
-        /// Returns actual length of contents, which is block length minus block type and checksum bytes
-        /// </summary>
-        public virtual int ContentsLength
+        private byte[] _contents;
+        public Span<Byte> Contents
         {
             get
             {
-                return Length - 1;
+                return _contents.AsSpan();
             }
-        }
-
-        public virtual Span<Byte> Contents
-        {
-            get
+            set
             {
-                return new Span<byte>(Codeplug.Contents, StartAddress + 2, ContentsLength);
+                _contents = value.ToArray();
             }
         }
-
-        public List<Block> Children { get; set; }
 
         public int Level { get; set; }
 
@@ -46,16 +36,17 @@ namespace JediComlink
 
         protected Block() { }
 
-        public Block(Block parent, int vector)
+        public Block(Block parent, int vector, byte[] codeplugContents)
         {
             Codeplug = parent.Codeplug;
             Parent = parent;
             Level = parent.Level + 1;
 
             StartAddress = parent.Contents[vector]  * 0x100 + parent.Contents[vector + 1];
-            Length = Codeplug.Contents[StartAddress];
-            EndAddress = StartAddress + Length;
-            Id = Codeplug.Contents[StartAddress + 1];
+            var length = codeplugContents[StartAddress];
+            Contents = codeplugContents.AsSpan().Slice(StartAddress + 2, length-1);
+
+            Codeplug.Children.Add(this);
         }
         
         public string GetStringContents(int offset, int length)
@@ -65,7 +56,6 @@ namespace JediComlink
             {
                 if (c == 0x00) break;
                 value += Convert.ToChar(c);
-
             }
             return value;
         }
@@ -73,7 +63,7 @@ namespace JediComlink
         public string GetTextHeader()
         {
             var s = new String(' ', (Parent?.Level).GetValueOrDefault() * 2);
-            return Environment.NewLine + s + $"Block {Id:X2} Length {Length} Starting At {StartAddress:X4}" + Environment.NewLine +
+            return Environment.NewLine + s + $"Block {Id:X2} Length {_contents.Length} Starting At {StartAddress:X4}" + Environment.NewLine +
                     s + "---------------------------";
         }
            

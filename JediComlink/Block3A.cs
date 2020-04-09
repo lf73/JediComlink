@@ -26,7 +26,7 @@ namespace JediComlink
 
         #endregion
 
-        public Block3A(Block parent, int vector) : base(parent, vector)
+        public Block3A(Block parent, int vector, byte[] codeplugContents) : base(parent, vector, codeplugContents)
         {
             Id = 0x3A;
             Description = "Phone List";

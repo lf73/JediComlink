@@ -19,7 +19,7 @@ namespace JediComlink
 
         #endregion
 
-        public Block67(Block parent, int vector) : base(parent, vector)
+        public Block67(Block parent, int vector, byte[] codeplugContents) : base(parent, vector, codeplugContents)
         {
             Id = 0x67;
             Description = "Trunk Pers Emergency";

@@ -31,12 +31,12 @@ namespace JediComlink
         //private const int BLOCK_09_VECTOR = 0x0B;
         #endregion
 
-        public Block08(Block parent, int vector) : base(parent, vector)
+        public Block08(Block parent, int vector, byte[] codeplugContents) : base(parent, vector, codeplugContents)
         {
             Id = 0x08;
             Description = "Softpot Interpol Vector";
 
-            Block09 = new Block09(this, BLOCK_09_VECTOR);
+            Block09 = new Block09(this, BLOCK_09_VECTOR, codeplugContents);
 
         }
 

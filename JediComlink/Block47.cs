@@ -21,12 +21,12 @@ namespace JediComlink
         private const int BLOCK_48_VECTOR = 0x01;
         #endregion
 
-        public Block47(Block parent, int vector) : base(parent, vector)
+        public Block47(Block parent, int vector, byte[] codeplugContents) : base(parent, vector, codeplugContents)
         {
             Id = 0x47;
             Description = "MDC System Vector";
 
-            Block48 = new Block48(this, BLOCK_48_VECTOR);
+            Block48 = new Block48(this, BLOCK_48_VECTOR, codeplugContents);
         }
 
         public override string ToString()

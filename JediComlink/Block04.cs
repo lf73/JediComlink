@@ -19,7 +19,7 @@ namespace JediComlink
 
         #endregion
 
-        public Block04(Block parent, int vector) : base(parent, vector)
+        public Block04(Block parent, int vector, byte[] codeplugContents) : base(parent, vector, codeplugContents)
         {
             Id = 0x04;
             Description = "HWConfig Conv";

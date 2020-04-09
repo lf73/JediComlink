@@ -19,18 +19,18 @@ namespace JediComlink
         public Block BlockA0 { get; set; }
         #endregion
 
-        public Block3D(Block parent, int vector) : base(parent, vector)
+        public Block3D(Block parent, int vector, byte[] codeplugContents) : base(parent, vector, codeplugContents)
         {
             Id = 0x3D;
             Description = "Signaling Vector";
 
-            Block3E = new Block3E(this, 0x00);
+            Block3E = new Block3E(this, 0x00, codeplugContents);
             UnknownPointer1 = Contents.Slice(0x02, 2).ToArray();
-            Block4A = new Block4A(this, 0x04);
+            Block4A = new Block4A(this, 0x04, codeplugContents);
             UnknownPointer2 = Contents.Slice(0x06, 2).ToArray();
             UnknownPointer3 = Contents.Slice(0x08, 2).ToArray();
             UnknownPointer4 = Contents.Slice(0x0A, 2).ToArray();
-            BlockA0 = new BlockA0(this, 0x0C);
+            BlockA0 = new BlockA0(this, 0x0C, codeplugContents);
         }
 
         public override string ToString()

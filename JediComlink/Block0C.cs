@@ -22,12 +22,12 @@ namespace JediComlink
         private const int BLOCK_30_VECTOR = 0x05;
         #endregion
 
-        public Block0C(Block parent, int vector) : base(parent, vector)
+        public Block0C(Block parent, int vector, byte[] codeplugContents) : base(parent, vector, codeplugContents)
         {
             Id = 0x0C;
             Description = "Unknown";
 
-            Block30 = new Block30(this, BLOCK_30_VECTOR);
+            Block30 = new Block30(this, BLOCK_30_VECTOR, codeplugContents);
         }
 
         public override string ToString()

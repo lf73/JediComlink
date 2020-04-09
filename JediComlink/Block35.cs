@@ -34,7 +34,7 @@ namespace JediComlink
 
         #endregion
 
-        public Block35(Block parent, int vector) : base(parent, vector)
+        public Block35(Block parent, int vector, byte[] codeplugContents) : base(parent, vector, codeplugContents)
         {
             Id = 0x35;
             Description = "Unknown";

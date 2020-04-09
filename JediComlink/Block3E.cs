@@ -19,18 +19,18 @@ namespace JediComlink
         public Block Block90 { get; set; }
         #endregion
 
-        public Block3E(Block parent, int vector) : base(parent, vector)
+        public Block3E(Block parent, int vector, byte[] codeplugContents) : base(parent, vector, codeplugContents)
         {
             Id = 0x3E;
             Description = "Conv Configuration";
 
-            Block3F = new Block3F(this, 0x00);
-            Block41 = new Block41(this, 0x02);
+            Block3F = new Block3F(this, 0x00, codeplugContents);
+            Block41 = new Block41(this, 0x02, codeplugContents);
             UnknownBytes1 = Contents.Slice(0x04, 3).ToArray();
-            Block42 = new Block42(this, 0x07);
+            Block42 = new Block42(this, 0x07, codeplugContents);
             UnknownBytes2 = Contents.Slice(0x09, 3).ToArray();
-            Block8E = new Block8E(this, 0x0C);
-            Block90 = new Block90(this, 0x0E);
+            Block8E = new Block8E(this, 0x0C, codeplugContents);
+            Block90 = new Block90(this, 0x0E, codeplugContents);
         }
 
         public override string ToString()

@@ -19,7 +19,7 @@ namespace JediComlink
 
         #endregion
 
-        public BlockA2(Block parent, int vector) : base(parent, vector)
+        public BlockA2(Block parent, int vector, byte[] codeplugContents) : base(parent, vector, codeplugContents)
         {
             Id = 0xA2;
             Description = "Singletone System";

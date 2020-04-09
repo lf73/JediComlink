@@ -21,12 +21,12 @@ namespace JediComlink
         private const int BLOCK_59_VECTOR = 0x00;
         #endregion
 
-        public Block58(Block parent, int vector) : base(parent, vector)
+        public Block58(Block parent, int vector, byte[] codeplugContents) : base(parent, vector, codeplugContents)
         {
             Id = 0x58;
             Description = "Trunk Call List Vector or CD: ASTRO25 Trunk Call List Vector";
 
-            Block59 = new Block59(this, BLOCK_59_VECTOR);
+            Block59 = new Block59(this, BLOCK_59_VECTOR, codeplugContents);
         }
 
         public override string ToString()

@@ -25,7 +25,7 @@ namespace JediComlink
 
         #endregion
 
-        public Block38(Block parent, int vector) : base(parent, vector)
+        public Block38(Block parent, int vector, byte[] codeplugContents) : base(parent, vector, codeplugContents)
         {
             Id = 0x38;
             Description = "Zone Chan Text";

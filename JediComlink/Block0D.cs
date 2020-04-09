@@ -22,12 +22,12 @@ namespace JediComlink
         private const int BLOCK_4B_VECTOR = 0x07;
         #endregion
 
-        public Block0D(Block parent, int vector) : base(parent, vector)
+        public Block0D(Block parent, int vector, byte[] codeplugContents) : base(parent, vector, codeplugContents)
         {
             Id = 0x0D;
             Description = "HWConfig MDC";
 
-            Block4B = new Block4B(this, BLOCK_4B_VECTOR);
+            Block4B = new Block4B(this, BLOCK_4B_VECTOR, codeplugContents);
         }
 
         public override string ToString()

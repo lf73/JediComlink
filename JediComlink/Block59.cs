@@ -19,7 +19,7 @@ namespace JediComlink
 
         #endregion
 
-        public Block59(Block parent, int vector) : base(parent, vector)
+        public Block59(Block parent, int vector, byte[] codeplugContents) : base(parent, vector, codeplugContents)
         {
             Id = 0x59;
             Description = "Trunk Call List";

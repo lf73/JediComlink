@@ -19,7 +19,7 @@ namespace JediComlink
 
         #endregion
 
-        public Block0F(Block parent, int vector) : base(parent, vector)
+        public Block0F(Block parent, int vector, byte[] codeplugContents) : base(parent, vector, codeplugContents)
         {
             Id = 0x0F;
             Description = "AD Switch Level";

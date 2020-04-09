@@ -25,7 +25,7 @@ namespace JediComlink
 
         #endregion
 
-        public Block91(Block parent, int vector) : base(parent, vector)
+        public Block91(Block parent, int vector, byte[] codeplugContents) : base(parent, vector, codeplugContents)
         {
             Id = 0x91;
             Description = "Message List";

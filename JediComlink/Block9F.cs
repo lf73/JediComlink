@@ -19,7 +19,7 @@ namespace JediComlink
 
         #endregion
 
-        public Block9F(Block parent, int vector) : base(parent, vector)
+        public Block9F(Block parent, int vector, byte[] codeplugContents) : base(parent, vector, codeplugContents)
         {
             Id = 0x9F;
             Description = "MDC Repeater ID Table";

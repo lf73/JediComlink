@@ -22,7 +22,7 @@ namespace JediComlink
 
         #endregion
 
-        public Block57(Block parent, int vector) : base(parent, vector)
+        public Block57(Block parent, int vector, byte[] codeplugContents) : base(parent, vector, codeplugContents)
         {
             Id = 0x57;
             Description = "Zone Chan TG Table";

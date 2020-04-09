@@ -24,7 +24,7 @@ namespace JediComlink
         private const int FLASHCODE = 0x1B;
         #endregion
 
-        public Block10(Block parent, int vector) : base(parent, vector)
+        public Block10(Block parent, int vector, byte[] codeplugContents) : base(parent, vector, codeplugContents)
         {
             Id = 0x10;
             Description = "Feature Descriptor Block";

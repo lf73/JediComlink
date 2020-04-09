@@ -20,7 +20,7 @@ namespace JediComlink
 
         #endregion
 
-        public Block07(Block parent, int vector) : base(parent, vector)
+        public Block07(Block parent, int vector, byte[] codeplugContents) : base(parent, vector, codeplugContents)
         {
             Id = 0x07;
             Description = "Softpot Radio";

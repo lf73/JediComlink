@@ -27,15 +27,15 @@ namespace JediComlink
         //private const int BLOCK_0B_VECTOR = 0x06;
         #endregion
 
-        public Block0A(Block parent, int vector) : base(parent, vector)
+        public Block0A(Block parent, int vector, byte[] codeplugContents) : base(parent, vector, codeplugContents)
         {
             Id = 0x0A;
             Description = "Softpot B/W Vector";
 
-            Block0B = new Block0B(this, BLOCK_0B_VECTOR);
-            //Block0B = new Block0B(this, BLOCK_0B_VECTOR);
-            //Block0B = new Block0B(this, BLOCK_0B_VECTOR);
-            //Block0B = new Block0B(this, BLOCK_0B_VECTOR);
+            Block0B = new Block0B(this, BLOCK_0B_VECTOR, codeplugContents);
+            //Block0B = new Block0B(this, BLOCK_0B_VECTOR, codeplugContents);
+            //Block0B = new Block0B(this, BLOCK_0B_VECTOR, codeplugContents);
+            //Block0B = new Block0B(this, BLOCK_0B_VECTOR, codeplugContents);
         }
 
         public override string ToString()

@@ -42,14 +42,14 @@ namespace JediComlink
         private const int AUTH_CODE = 0x30;
         #endregion
 
-        public Block01(Codeplug codeplug)
+        public Block01(Codeplug codeplug, byte[] codeplugContents)
         {
             Codeplug = codeplug;
             Level = 1;
 
             StartAddress = 0x0000;
-            Length = codeplug.Contents[StartAddress];
-            EndAddress = StartAddress + Length;
+            var length = codeplugContents[StartAddress];
+            Contents = codeplugContents.AsSpan().Slice(StartAddress + 2, length - 1);
 
             Id = 0x01;
             Description = "Internal Radio";            
@@ -58,10 +58,10 @@ namespace JediComlink
             Model = GetStringContents(MODEL, MODEL_LEN);
             AuthCode = Contents.Slice(AUTH_CODE, 10).ToArray();
 
-            Block30 = new Block30(this, BLOCK_30_VECTOR);
-            Block02 = new Block02(this, BLOCK_02_VECTOR);
-            Block56 = new Block56(this, BLOCK_56_VECTOR);
-            Block10 = new Block10(this, BLOCK_10_VECTOR);
+            Block30 = new Block30(this, BLOCK_30_VECTOR, codeplugContents);
+            Block02 = new Block02(this, BLOCK_02_VECTOR, codeplugContents);
+            Block56 = new Block56(this, BLOCK_56_VECTOR, codeplugContents);
+            Block10 = new Block10(this, BLOCK_10_VECTOR, codeplugContents);
         }
 
         public override string ToString()

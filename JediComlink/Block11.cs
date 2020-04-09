@@ -19,7 +19,7 @@ namespace JediComlink
 
         #endregion
 
-        public Block11(Block parent, int vector) : base(parent, vector)
+        public Block11(Block parent, int vector, byte[] codeplugContents) : base(parent, vector, codeplugContents)
         {
             Id = 0x11;
             Description = "AD Button Level";

@@ -19,7 +19,7 @@ namespace JediComlink
 
         #endregion
 
-        public Block74(Block parent, int vector) : base(parent, vector)
+        public Block74(Block parent, int vector, byte[] codeplugContents) : base(parent, vector, codeplugContents)
         {
             Id = 0x74;
             Description = "Trunk Message List/Zone Chan TG Table Accel Vector";

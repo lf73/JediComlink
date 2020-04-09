@@ -20,7 +20,7 @@ namespace JediComlink
 
         #endregion
 
-        public Block3C(Block parent, int vector) : base(parent, vector)
+        public Block3C(Block parent, int vector, byte[] codeplugContents) : base(parent, vector, codeplugContents)
         {
             Id = 0x3C;
             Description = "Hardware Button Configuration";

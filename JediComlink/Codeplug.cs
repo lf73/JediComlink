@@ -9,13 +9,14 @@ namespace JediComlink
 {
     public class Codeplug
     {
-        public byte[] Contents { get; protected set; }
         public Block01 Root { get; protected set; }
 
+        public List<Block> Children { get; protected set; } = new List<Block>();
+
         public Codeplug(string path)
-        {
-            Contents = File.ReadAllBytes(path);
-            Root = new Block01(this);
+        {           
+            var contents = File.ReadAllBytes(path);
+            Root = new Block01(this, contents);
         }
 
         public string GetText()

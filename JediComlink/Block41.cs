@@ -19,7 +19,7 @@ namespace JediComlink
 
         #endregion
 
-        public Block41(Block parent, int vector) : base(parent, vector)
+        public Block41(Block parent, int vector, byte[] codeplugContents) : base(parent, vector, codeplugContents)
         {
             Id = 0x41;
             Description = "Menu Item";
