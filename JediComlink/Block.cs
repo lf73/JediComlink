@@ -44,8 +44,6 @@ namespace JediComlink
 
         public int EndAddress { get; set; }
 
-        public bool LongChecksum { get; set; }
-
         protected Block() { }
 
         public Block(Block parent, int vector)
@@ -98,5 +96,28 @@ namespace JediComlink
             return (nibbles >> 4) * 10 + (nibbles & 0x0f);
         }
     }
+
+    //ToDo  Add in Checksum
+      //if (LongChecksum)
+      //      {
+      //          int checksum = -0x5555;
+      //          foreach (var b in Contents)
+      //              checksum += b;
+      //          checksum -= Contents[Length + 2];
+      //          checksum -= Contents[Length + 3];
+      //          checksum &= 0xFFFF;
+      //          //sb.AppendLine(s + $"Checksum {checksum:X4}");
+      //      }
+      //      else
+      //      {
+      //          int checksum = -0x55;
+      //          foreach (var b in Contents)
+      //              checksum += b;
+      //          //checksum -= Contents[Length + 1];
+      //          checksum &= 0xFF;
+      //          //sb.AppendLine(s + $"Checksum {checksum:X2}");
+      //      }
+
+
 
 }

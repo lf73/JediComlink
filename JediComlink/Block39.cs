@@ -35,7 +35,6 @@ namespace JediComlink
         {
             Id = 0x39;
             Description = "Phone List Vector";
-            LongChecksum = false;
 
             Block3A = new Block3A(this, BLOCK_3A_VECTOR);
         }

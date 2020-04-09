@@ -26,7 +26,6 @@ namespace JediComlink
         {
             Id = 0x90;
             Description = "Message List Vector";
-            LongChecksum = false;
 
             Block91 = new Block91(this, BLOCK_91_VECTOR);
         }

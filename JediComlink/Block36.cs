@@ -29,7 +29,6 @@ namespace JediComlink
         {
             Id = 0x36;
             Description = "Display & Menu";
-            LongChecksum = false;
 
             Block37 = new Block37(this, BLOCK_37_VECTOR);
             Block90 = new Block90(this, BLOCK_90_VECTOR);

@@ -23,7 +23,6 @@ namespace JediComlink
         {
             Id = 0x09;
             Description = "Softpot Interpol";
-            LongChecksum = false;
 
         }
 

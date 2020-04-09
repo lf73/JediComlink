@@ -25,7 +25,6 @@ namespace JediComlink
         {
             Id = 0x05;
             Description = "HWConfig Secure";
-            LongChecksum = false;
 
             Block02 = new Block02(this, BLOCK_02_VECTOR);
         }

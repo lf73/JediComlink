@@ -23,7 +23,6 @@ namespace JediComlink
         {
             Id = 0x93;
             Description = "MDC Call List";
-            LongChecksum = true;
 
         }
 

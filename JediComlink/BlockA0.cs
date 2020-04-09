@@ -25,7 +25,6 @@ namespace JediComlink
         {
             Id = 0xA0;
             Description = "Aux Signalling";
-            LongChecksum = false;
 
             BlockA9 = new BlockA9(this, BLOCK_A9_VECTOR);
         }

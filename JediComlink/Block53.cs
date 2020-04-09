@@ -25,7 +25,6 @@ namespace JediComlink
         {
             Id = 0x53;
             Description = "Scan List";
-            LongChecksum = false;
 
         }
 

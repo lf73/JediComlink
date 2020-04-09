@@ -25,7 +25,6 @@ namespace JediComlink
         {
             Id = 0xA1;
             Description = "Singletone System Vector";
-            LongChecksum = false;
 
             BlockA2 = new BlockA2(this, BLOCK_A2_VECTOR);
         }

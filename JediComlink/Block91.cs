@@ -29,7 +29,6 @@ namespace JediComlink
         {
             Id = 0x91;
             Description = "Message List";
-            LongChecksum = true;
         }
 
         public override string ToString()

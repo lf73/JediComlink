@@ -23,7 +23,6 @@ namespace JediComlink
         {
             Id = 0x59;
             Description = "Trunk Call List";
-            LongChecksum = true;
 
         }
 

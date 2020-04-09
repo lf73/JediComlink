@@ -23,7 +23,6 @@ namespace JediComlink
         {
             Id = 0x43;
             Description = "Unknown";
-            LongChecksum = true;
 
         }
 

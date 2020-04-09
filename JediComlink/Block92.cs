@@ -27,7 +27,6 @@ namespace JediComlink
         {
             Id = 0x92;
             Description = "MDC Call List Vector";
-            LongChecksum = false;
 
             Block10 = new Block10(this, BLOCK_10_VECTOR);
             Block93 = new Block93(this, BLOCK_93_VECTOR);

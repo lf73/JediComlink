@@ -61,7 +61,6 @@ namespace JediComlink
         {
             Id = 0x30;
             Description = "External Radio";
-            LongChecksum = false;
 
             Unknown1 = Contents.Slice(0x00, 2).ToArray();
             Serial = GetStringContents(0x02, 10);

@@ -136,7 +136,6 @@
     <Compile Include="Block3E.cs" />
     <Compile Include="Block3D.cs" />
     <Compile Include="Codeplug.cs" />
-    <Compile Include="GenericBlock.cs" />
     <Compile Include="Block30.cs" />
     <Compile Include="Home.cs">
       <SubType>Form</SubType>

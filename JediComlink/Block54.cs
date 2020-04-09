@@ -26,7 +26,6 @@ namespace JediComlink
         {
             Id = 0x54;
             Description = "Zone Chan Assignment";
-            LongChecksum = true;
 
             Block56 = new Block56(this, BLOCK_56_VECTOR);
         }

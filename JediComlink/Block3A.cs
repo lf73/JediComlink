@@ -30,7 +30,6 @@ namespace JediComlink
         {
             Id = 0x3A;
             Description = "Phone List";
-            LongChecksum = true;
 
         }
 

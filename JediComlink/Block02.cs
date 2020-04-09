@@ -40,7 +40,6 @@ namespace JediComlink
         {
             Id = 0x02;
             Description = "HWConfig Radio";
-            LongChecksum = false;
 
             // Block03 = new Block03(this, BLOCK_03_VECTOR);
             // Block06 = new Block06(this, BLOCK_06_VECTOR);

@@ -24,7 +24,6 @@ namespace JediComlink
         {
             Id = 0x0E;
             Description = "Test Channel Table";
-            LongChecksum = false;
 
         }
 

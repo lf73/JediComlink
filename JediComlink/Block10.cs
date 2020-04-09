@@ -28,7 +28,6 @@ namespace JediComlink
         {
             Id = 0x10;
             Description = "Feature Descriptor Block";
-            LongChecksum = false;
 
             var flashCode = FormatHex(Contents.Slice(FLASHCODE, 6).ToArray()).Replace(" ", "");
             FlashCode = flashCode.Substring(0, 6) + '-' + flashCode.Substring(6);

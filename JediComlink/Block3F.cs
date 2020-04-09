@@ -24,7 +24,6 @@ namespace JediComlink
         {
             Id = 0x3F;
             Description = "Control Head";
-            LongChecksum = false;
 
         }
 

@@ -43,7 +43,6 @@ namespace JediComlink
         {
             Id = 0x55;
             Description = "Personality Vector";
-            LongChecksum = true;
 
             Block56 = new Block56(this, BLOCK_56_VECTOR);
         }

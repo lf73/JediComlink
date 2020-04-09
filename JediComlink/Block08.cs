@@ -35,7 +35,6 @@ namespace JediComlink
         {
             Id = 0x08;
             Description = "Softpot Interpol Vector";
-            LongChecksum = false;
 
             Block09 = new Block09(this, BLOCK_09_VECTOR);
 

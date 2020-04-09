@@ -23,7 +23,6 @@ namespace JediComlink
         {
             Id = 0x74;
             Description = "Trunk Message List/Zone Chan TG Table Accel Vector";
-            LongChecksum = true;
 
         }
 

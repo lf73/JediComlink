@@ -31,7 +31,6 @@ namespace JediComlink
         {
             Id = 0x0A;
             Description = "Softpot B/W Vector";
-            LongChecksum = false;
 
             Block0B = new Block0B(this, BLOCK_0B_VECTOR);
             //Block0B = new Block0B(this, BLOCK_0B_VECTOR);

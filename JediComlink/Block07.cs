@@ -24,7 +24,6 @@ namespace JediComlink
         {
             Id = 0x07;
             Description = "Softpot Radio";
-            LongChecksum = false;
 
         }
 

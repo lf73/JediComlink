@@ -23,7 +23,6 @@ namespace JediComlink
         {
             Id = 0x04;
             Description = "HWConfig Conv";
-            LongChecksum = false;
 
         }
 

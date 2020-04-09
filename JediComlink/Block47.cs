@@ -25,7 +25,6 @@ namespace JediComlink
         {
             Id = 0x47;
             Description = "MDC System Vector";
-            LongChecksum = false;
 
             Block48 = new Block48(this, BLOCK_48_VECTOR);
         }

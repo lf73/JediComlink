@@ -23,7 +23,6 @@ namespace JediComlink
         {
             Id = 0x3B;
             Description = "DTMF Codes List";
-            LongChecksum = false;
 
         }
 

@@ -23,7 +23,6 @@ namespace JediComlink
         {
             Id = 0x11;
             Description = "AD Button Level";
-            LongChecksum = false;
 
         }
 

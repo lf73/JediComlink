@@ -29,7 +29,6 @@ namespace JediComlink
         {
             Id = 0x44;
             Description = "MDC Configuration";
-            LongChecksum = false;
 
             Block47 = new Block47(this, BLOCK_47_VECTOR);
             Block92 = new Block92(this, BLOCK_92_VECTOR);

@@ -25,7 +25,6 @@ namespace JediComlink
         {
             Id = 0x56;
             Description = "Conv or 62: Trunk/Test Mode Personality";
-            LongChecksum = false;
 
         }
 

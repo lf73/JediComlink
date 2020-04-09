@@ -23,7 +23,6 @@ namespace JediComlink
         {
             Id = 0x67;
             Description = "Trunk Pers Emergency";
-            LongChecksum = false;
 
         }
 

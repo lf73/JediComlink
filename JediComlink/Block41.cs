@@ -23,7 +23,6 @@ namespace JediComlink
         {
             Id = 0x41;
             Description = "Menu Item";
-            LongChecksum = false;
 
         }
 

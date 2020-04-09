@@ -23,7 +23,6 @@ namespace JediComlink
         {
             Id = 0x0F;
             Description = "AD Switch Level";
-            LongChecksum = false;
 
         }
 

@@ -23,7 +23,6 @@ namespace JediComlink
         {
             Id = 0x0B;
             Description = "Softpot B/W";
-            LongChecksum = false;
 
         }
 

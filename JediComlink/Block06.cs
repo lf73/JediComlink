@@ -29,7 +29,6 @@ namespace JediComlink
         {
             Id = 0x06;
             Description = "Softpot Vector";
-            LongChecksum = false;
 
             Block07 = new Block07(this, BLOCK_07_VECTOR);
             Block08 = new Block08(this, BLOCK_08_VECTOR);

@@ -23,7 +23,6 @@ namespace JediComlink
         {
             Id = 0x3D;
             Description = "Signaling Vector";
-            LongChecksum = false;
 
             Block3E = new Block3E(this, 0x00);
             UnknownPointer1 = Contents.Slice(0x02, 2).ToArray();

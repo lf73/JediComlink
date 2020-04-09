@@ -53,7 +53,6 @@ namespace JediComlink
 
             Id = 0x01;
             Description = "Internal Radio";            
-            LongChecksum = false;
 
             Serial = GetStringContents(SERIAL, SERIAL_LEN);
             Model = GetStringContents(MODEL, MODEL_LEN);

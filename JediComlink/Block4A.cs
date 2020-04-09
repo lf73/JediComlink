@@ -35,7 +35,6 @@ namespace JediComlink
         {
             Id = 0x4A;
             Description = "Trunk Configuration";
-            LongChecksum = false;
 
             Block3F = new Block3F(this, BLOCK_3F_VECTOR);
             Block41 = new Block41(this, BLOCK_41_VECTOR);

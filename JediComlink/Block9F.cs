@@ -23,7 +23,6 @@ namespace JediComlink
         {
             Id = 0x9F;
             Description = "MDC Repeater ID Table";
-            LongChecksum = false;
 
         }
 

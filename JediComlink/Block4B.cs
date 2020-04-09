@@ -25,7 +25,6 @@ namespace JediComlink
         {
             Id = 0x4B;
             Description = "Trunk System Vector";
-            LongChecksum = false;
 
             Block5A = new Block5A(this, BLOCK_5A_VECTOR);
         }

@@ -25,7 +25,6 @@ namespace JediComlink
         {
             Id = 0x58;
             Description = "Trunk Call List Vector or CD: ASTRO25 Trunk Call List Vector";
-            LongChecksum = false;
 
             Block59 = new Block59(this, BLOCK_59_VECTOR);
         }

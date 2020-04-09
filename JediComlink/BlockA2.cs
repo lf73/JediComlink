@@ -23,7 +23,6 @@ namespace JediComlink
         {
             Id = 0xA2;
             Description = "Singletone System";
-            LongChecksum = false;
 
         }
 

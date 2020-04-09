@@ -25,7 +25,6 @@ namespace JediComlink
         {
             Id = 0x8E;
             Description = "Status List Vector";
-            LongChecksum = false;
 
             Block8F = new Block8F(this, BLOCK_8F_VECTOR);
         }

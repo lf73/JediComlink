@@ -23,7 +23,6 @@ namespace JediComlink
         {
             Id = 0x63;
             Description = "Trunk II TG";
-            LongChecksum = false;
 
         }
 

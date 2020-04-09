@@ -38,7 +38,6 @@ namespace JediComlink
         {
             Id = 0x35;
             Description = "Unknown";
-            LongChecksum = false;
 
         }
 

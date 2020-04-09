@@ -26,7 +26,6 @@ namespace JediComlink
         {
             Id = 0x57;
             Description = "Zone Chan TG Table";
-            LongChecksum = true;
 
 
         }

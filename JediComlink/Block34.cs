@@ -27,7 +27,6 @@ namespace JediComlink
         {
             Id = 0x34;
             Description = "Bus Option Vector";
-            LongChecksum = false;
 
         }
 

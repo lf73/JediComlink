@@ -23,7 +23,6 @@ namespace JediComlink
         {
             Id = 0x3E;
             Description = "Conv Configuration";
-            LongChecksum = false;
 
             Block3F = new Block3F(this, 0x00);
             Block41 = new Block41(this, 0x02);

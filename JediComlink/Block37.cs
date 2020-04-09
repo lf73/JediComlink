@@ -25,7 +25,6 @@ namespace JediComlink
         {
             Id = 0x37;
             Description = "Zone Chan Text Vector";
-            LongChecksum = true;
 
             Block38 = new Block38(this, BLOCK_38_VECTOR);
         }

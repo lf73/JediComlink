@@ -24,7 +24,6 @@ namespace JediComlink
         {
             Id = 0x3C;
             Description = "Hardware Button Configuration";
-            LongChecksum = false;
 
         }
 

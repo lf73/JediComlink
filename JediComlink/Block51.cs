@@ -26,7 +26,6 @@ namespace JediComlink
         {
             Id = 0x51;
             Description = "Scan Configuration";
-            LongChecksum = false;
 
             Block52 = new Block52(this, BLOCK_52_VECTOR);
         }

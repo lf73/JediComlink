@@ -26,7 +26,6 @@ namespace JediComlink
         {
             Id = 0x0D;
             Description = "HWConfig MDC";
-            LongChecksum = false;
 
             Block4B = new Block4B(this, BLOCK_4B_VECTOR);
         }

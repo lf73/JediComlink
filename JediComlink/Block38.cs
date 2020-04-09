@@ -29,7 +29,6 @@ namespace JediComlink
         {
             Id = 0x38;
             Description = "Zone Chan Text";
-            LongChecksum = true;
 
         }
 

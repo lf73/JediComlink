@@ -28,7 +28,6 @@ namespace JediComlink
         {
             Id = 0x31;
             Description = "Radio Wide";
-            LongChecksum = false;
 
             Block90 = new Block90(this, BLOCK_90_VECTOR);
         }

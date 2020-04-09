@@ -25,7 +25,6 @@ namespace JediComlink
         {
             Id = 0x99;
             Description = "XXXXX";
-            LongChecksum = false;
 
 
         }

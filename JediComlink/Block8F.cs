@@ -26,7 +26,6 @@ namespace JediComlink
         {
             Id = 0x8F;
             Description = "Status List";
-            LongChecksum = true;
 
         }
 

@@ -25,7 +25,6 @@ namespace JediComlink
         {
             Id = 0x42;
             Description = "Unknown";
-            LongChecksum = false;
 
             Block43 = new Block43(this, BLOCK_43_VECTOR);
         }
