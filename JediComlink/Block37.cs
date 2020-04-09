@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace JediComlink
 {
-    public class Block37 : Block
+    public class Block37 : BlockLong
     {
         #region Propeties
         public Block38 Block38 { get; set; }
@@ -18,7 +18,7 @@ namespace JediComlink
         0: 01 04 D6
         */
 
-        private const int BLOCK_38_VECTOR = 0x02;
+        private const int BLOCK_38_VECTOR = 0x01;
         #endregion
 
         public Block37(Block parent, int vector) : base(parent, vector)

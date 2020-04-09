@@ -109,7 +109,7 @@ namespace JediComlink
             sb.AppendLine(Block55.ToString());
             sb.AppendLine(Block54.ToString());
             sb.AppendLine(Block51.ToString());
-            sb.AppendLine(Block33.ToString());
+            sb.AppendLine(Block33?.ToString());
             sb.AppendLine(Block39.ToString());
             sb.AppendLine(Block3B.ToString());
             sb.AppendLine(Block34.ToString());

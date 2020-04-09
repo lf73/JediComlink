@@ -7,26 +7,11 @@ using System.Threading.Tasks;
 
 namespace JediComlink
 {
-    public class Block55 : Block
+    public class Block55 : BlockLong
     {
         #region Propeties
         public Block56 Block56 { get; set; }
-        //public Block56 Block56 { get; set; }
-        //public Block56 Block56 { get; set; }
-        //public Block56 Block56 { get; set; }
-        //public Block56 Block56 { get; set; }
-        //public Block56 Block56 { get; set; }
-        //public Block56 Block56 { get; set; }
-        //public Block56 Block56 { get; set; }
-        //public Block56 Block56 { get; set; }
-        //public Block56 Block56 { get; set; }
-        //public Block56 Block56 { get; set; }
-        //public Block56 Block56 { get; set; }
-        //public Block56 Block56 { get; set; }
-        //public Block56 Block56 { get; set; }
-        //public Block56 Block56 { get; set; }
-        //public Block56 Block56 { get; set; }
-        public Block62 Block62 { get; set; }
+
         #endregion
 
         #region Definition
@@ -52,7 +37,6 @@ namespace JediComlink
         //private const int BLOCK_56_VECTOR = 0x1C;
         //private const int BLOCK_56_VECTOR = 0x1E;
         //private const int BLOCK_56_VECTOR = 0x20;
-        private const int BLOCK_62_VECTOR = 0x22;
         #endregion
 
         public Block55(Block parent, int vector) : base(parent, vector)
@@ -62,22 +46,6 @@ namespace JediComlink
             LongChecksum = true;
 
             Block56 = new Block56(this, BLOCK_56_VECTOR);
-            //Block56 = new Block56(this, BLOCK_56_VECTOR);
-            //Block56 = new Block56(this, BLOCK_56_VECTOR);
-            //Block56 = new Block56(this, BLOCK_56_VECTOR);
-            //Block56 = new Block56(this, BLOCK_56_VECTOR);
-            //Block56 = new Block56(this, BLOCK_56_VECTOR);
-            //Block56 = new Block56(this, BLOCK_56_VECTOR);
-            //Block56 = new Block56(this, BLOCK_56_VECTOR);
-            //Block56 = new Block56(this, BLOCK_56_VECTOR);
-            //Block56 = new Block56(this, BLOCK_56_VECTOR);
-            //Block56 = new Block56(this, BLOCK_56_VECTOR);
-            //Block56 = new Block56(this, BLOCK_56_VECTOR);
-            //Block56 = new Block56(this, BLOCK_56_VECTOR);
-            //Block56 = new Block56(this, BLOCK_56_VECTOR);
-            //Block56 = new Block56(this, BLOCK_56_VECTOR);
-            //Block56 = new Block56(this, BLOCK_56_VECTOR);
-            Block62 = new Block62(this, BLOCK_62_VECTOR);
         }
 
         public override string ToString()
@@ -85,7 +53,6 @@ namespace JediComlink
             var sb = new StringBuilder();
             sb.AppendLine(GetTextHeader());
             sb.AppendLine(Block56.ToString());
-            sb.AppendLine(Block62.ToString());
 
             return sb.ToString();
         }

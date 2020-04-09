@@ -20,22 +20,18 @@ namespace JediComlink
         /// <summary>
         /// Returns actual length of contents, which is block length minus block type and checksum bytes
         /// </summary>
-        public int ContentsLength
-        {
-            get
-            {  //Todo  This Might be wrong
-                if (LongChecksum)
-                    return Length - 2;
-                else
-                    return Length - 1;
-            }
-        }
-
-        public Span<Byte> Contents
+        public virtual int ContentsLength
         {
             get
             {
-                //TO DO Adjust for Extended Check Sum
+                return Length - 1;
+            }
+        }
+
+        public virtual Span<Byte> Contents
+        {
+            get
+            {
                 return new Span<byte>(Codeplug.Contents, StartAddress + 2, ContentsLength);
             }
         }

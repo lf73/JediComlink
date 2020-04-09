@@ -7,10 +7,9 @@ using System.Threading.Tasks;
 
 namespace JediComlink
 {
-    public class Block91 : Block
+    public class Block91 : BlockLong
     {
         #region Propeties
-        public Block09 Block09 { get; set; }
         #endregion
 
         #region Definition
@@ -24,7 +23,6 @@ namespace JediComlink
         6: 31 36 00
         */
 
-        private const int BLOCK_09_VECTOR = 0x63;
         #endregion
 
         public Block91(Block parent, int vector) : base(parent, vector)
@@ -32,15 +30,12 @@ namespace JediComlink
             Id = 0x91;
             Description = "Message List";
             LongChecksum = true;
-
-            Block09 = new Block09(this, BLOCK_09_VECTOR);
         }
 
         public override string ToString()
         {
             var sb = new StringBuilder();
             sb.AppendLine(GetTextHeader());
-            sb.AppendLine(Block09.ToString());
 
             return sb.ToString();
         }

@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace JediComlink
 {
-    public class Block3A : Block
+    public class Block3A : BlockLong
     {
         #region Propeties
         #endregion

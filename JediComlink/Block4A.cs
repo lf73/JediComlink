@@ -10,7 +10,6 @@ namespace JediComlink
     public class Block4A : Block
     {
         #region Propeties
-        public Block09 Block09 { get; set; }
         public Block3F Block3F { get; set; }
         public Block41 Block41 { get; set; }
         public Block4B Block4B { get; set; }
@@ -25,7 +24,6 @@ namespace JediComlink
         2: 00 00 00 00
         */
 
-        private const int BLOCK_09_VECTOR = 0x23;
         private const int BLOCK_3F_VECTOR = 0x00;
         private const int BLOCK_41_VECTOR = 0x02;
         private const int BLOCK_4B_VECTOR = 0x0A;
@@ -39,7 +37,6 @@ namespace JediComlink
             Description = "Trunk Configuration";
             LongChecksum = false;
 
-            Block09 = new Block09(this, BLOCK_09_VECTOR);
             Block3F = new Block3F(this, BLOCK_3F_VECTOR);
             Block41 = new Block41(this, BLOCK_41_VECTOR);
             Block4B = new Block4B(this, BLOCK_4B_VECTOR);
@@ -51,7 +48,6 @@ namespace JediComlink
         {
             var sb = new StringBuilder();
             sb.AppendLine(GetTextHeader());
-            sb.AppendLine(Block09.ToString());
             sb.AppendLine(Block3F.ToString());
             sb.AppendLine(Block41.ToString());
             sb.AppendLine(Block4B.ToString());

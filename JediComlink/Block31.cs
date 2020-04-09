@@ -10,8 +10,6 @@ namespace JediComlink
     public class Block31 : Block
     {
         #region Propeties
-        public Block0A Block0A { get; set; }
-        //public Block0A Block0A { get; set; }
         public Block90 Block90 { get; set; }
         #endregion
 
@@ -23,8 +21,6 @@ namespace JediComlink
         3: 00 00 00 00  00 00
         */
 
-        private const int BLOCK_0A_VECTOR = 0x1F;
-        //private const int BLOCK_0A_VECTOR = 0x20;
         private const int BLOCK_90_VECTOR = 0x02;
         #endregion
 
@@ -34,8 +30,6 @@ namespace JediComlink
             Description = "Radio Wide";
             LongChecksum = false;
 
-            Block0A = new Block0A(this, BLOCK_0A_VECTOR);
-            //Block0A = new Block0A(this, BLOCK_0A_VECTOR);
             Block90 = new Block90(this, BLOCK_90_VECTOR);
         }
 
@@ -43,7 +37,6 @@ namespace JediComlink
         {
             var sb = new StringBuilder();
             sb.AppendLine(GetTextHeader());
-            sb.AppendLine(Block0A.ToString());
             sb.AppendLine(Block90.ToString());
 
             return sb.ToString();
