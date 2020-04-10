@@ -9,6 +9,9 @@ namespace JediComlink
 {
     public class Block54 : BlockLong
     {
+        public override int Id { get => 0x54; }
+        public override string Description { get => "Zone Chan Assignment"; }
+
         #region Propeties
         public Block56 Block56 { get; set; }
         #endregion
@@ -24,9 +27,6 @@ namespace JediComlink
 
         public Block54(Block parent, int vector, byte[] codeplugContents) : base(parent, vector, codeplugContents)
         {
-            Id = 0x54;
-            Description = "Zone Chan Assignment";
-
             Block56 = new Block56(this, BLOCK_56_VECTOR, codeplugContents);
         }
 

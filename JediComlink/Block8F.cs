@@ -9,6 +9,9 @@ namespace JediComlink
 {
     public class Block8F : BlockLong
     {
+        public override int Id { get => 0x8F; }
+        public override string Description { get => "Status List"; }
+
         #region Propeties
         #endregion
 
@@ -24,9 +27,7 @@ namespace JediComlink
 
         public Block8F(Block parent, int vector, byte[] codeplugContents) : base(parent, vector, codeplugContents)
         {
-            Id = 0x8F;
-            Description = "Status List";
-
+ 
         }
 
         public override string ToString()

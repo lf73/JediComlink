@@ -9,6 +9,9 @@ namespace JediComlink
 {
     public class Block10 : Block
     {
+        public override int Id { get => 0x10; }
+        public override string Description { get => "Feature Descriptor Block"; }
+
         #region Propeties
         public string FlashCode { get; set; }
 
@@ -26,9 +29,6 @@ namespace JediComlink
 
         public Block10(Block parent, int vector, byte[] codeplugContents) : base(parent, vector, codeplugContents)
         {
-            Id = 0x10;
-            Description = "Feature Descriptor Block";
-
             var flashCode = FormatHex(Contents.Slice(FLASHCODE, 6).ToArray()).Replace(" ", "");
             FlashCode = flashCode.Substring(0, 6) + '-' + flashCode.Substring(6);
         }

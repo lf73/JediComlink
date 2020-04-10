@@ -9,6 +9,9 @@ namespace JediComlink
 {
     public class Block35 : Block
     {
+        public override int Id { get => 0x35; }
+        public override string Description { get => "Unknown"; }
+
         #region Propeties
         #endregion
 
@@ -36,8 +39,6 @@ namespace JediComlink
 
         public Block35(Block parent, int vector, byte[] codeplugContents) : base(parent, vector, codeplugContents)
         {
-            Id = 0x35;
-            Description = "Unknown";
 
         }
 

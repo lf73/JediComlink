@@ -9,6 +9,9 @@ namespace JediComlink
 {
     public class Block9F : Block
     {
+        public override int Id { get => 0x9F; }
+        public override string Description { get => "MDC Repeater ID Table"; }
+
         #region Propeties
         #endregion
 
@@ -21,8 +24,6 @@ namespace JediComlink
 
         public Block9F(Block parent, int vector, byte[] codeplugContents) : base(parent, vector, codeplugContents)
         {
-            Id = 0x9F;
-            Description = "MDC Repeater ID Table";
 
         }
 

@@ -9,15 +9,33 @@ namespace JediComlink
 {
     public class Block01 : Block
     {
+        public override int Id { get => 0x01; }
+        public override string Description { get => "Internal Radio"; }
+
         #region Propeties
-        public string Serial { get; set; }
-        public string Model { get; set; }
+        public string Serial
+        {
+            get => GetStringContents(SERIAL, SERIAL_LEN);
+            //set => XYZ = value; //TODO
+        }
+
+        public string Model
+        {
+            get => GetStringContents(MODEL, MODEL_LEN);
+            //set => XYZ = value; //TODO
+        }
+
+        public byte[] AuthCode
+        {
+            get => Contents.Slice(AUTH_CODE, 10).ToArray();
+            //set => XYZ = value; //TODO
+        }
+
+
         public Block30 Block30 { get; set; }
         public Block02 Block02 { get; set; }
         public Block56 Block56 { get; set; }
         public Block10 Block10 { get; set; }
-        public byte[] AuthCode { get; private set; }
-
 
         #endregion
 
@@ -50,13 +68,6 @@ namespace JediComlink
             StartAddress = 0x0000;
             var length = codeplugContents[StartAddress];
             Contents = codeplugContents.AsSpan().Slice(StartAddress + 2, length - 1);
-
-            Id = 0x01;
-            Description = "Internal Radio";            
-
-            Serial = GetStringContents(SERIAL, SERIAL_LEN);
-            Model = GetStringContents(MODEL, MODEL_LEN);
-            AuthCode = Contents.Slice(AUTH_CODE, 10).ToArray();
 
             Block30 = new Block30(this, BLOCK_30_VECTOR, codeplugContents);
             Block02 = new Block02(this, BLOCK_02_VECTOR, codeplugContents);

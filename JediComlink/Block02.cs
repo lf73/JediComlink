@@ -9,6 +9,9 @@ namespace JediComlink
 {
     public class Block02 : Block
     {
+        public override int Id { get => 0x02; }
+        public override string Description { get => "HWConfig Radio"; }
+
         #region Propeties
         // public Block03 Block03 { get; set; }
         // public Block06 Block06 { get; set; }
@@ -38,9 +41,6 @@ namespace JediComlink
 
         public Block02(Block parent, int vector, byte[] codeplugContents) : base(parent, vector, codeplugContents)
         {
-            Id = 0x02;
-            Description = "HWConfig Radio";
-
             // Block03 = new Block03(this, BLOCK_03_VECTOR, codeplugContents);
             // Block06 = new Block06(this, BLOCK_06_VECTOR, codeplugContents);
             // Block0A = new Block0A(this, BLOCK_0A_VECTOR, codeplugContents);

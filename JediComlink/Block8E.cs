@@ -9,6 +9,9 @@ namespace JediComlink
 {
     public class Block8E : Block
     {
+        public override int Id { get => 0x8E; }
+        public override string Description { get => "Status List Vector"; }
+
         #region Propeties
         public Block8F Block8F { get; set; }
         #endregion
@@ -23,9 +26,6 @@ namespace JediComlink
 
         public Block8E(Block parent, int vector, byte[] codeplugContents) : base(parent, vector, codeplugContents)
         {
-            Id = 0x8E;
-            Description = "Status List Vector";
-
             Block8F = new Block8F(this, BLOCK_8F_VECTOR, codeplugContents);
         }
 

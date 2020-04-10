@@ -9,6 +9,9 @@ namespace JediComlink
 {
     public class BlockA2 : Block
     {
+        public override int Id { get => 0xA2; }
+        public override string Description { get => "Singletone System"; }
+
         #region Propeties
         #endregion
 
@@ -21,8 +24,6 @@ namespace JediComlink
 
         public BlockA2(Block parent, int vector, byte[] codeplugContents) : base(parent, vector, codeplugContents)
         {
-            Id = 0xA2;
-            Description = "Singletone System";
 
         }
 

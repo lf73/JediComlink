@@ -9,6 +9,9 @@ namespace JediComlink
 {
     public class Block0E : Block
     {
+        public override int Id { get => 0x0E; }
+        public override string Description { get => "Test Channel Table"; }
+
         #region Propeties
         #endregion
 
@@ -22,8 +25,6 @@ namespace JediComlink
 
         public Block0E(Block parent, int vector, byte[] codeplugContents) : base(parent, vector, codeplugContents)
         {
-            Id = 0x0E;
-            Description = "Test Channel Table";
 
         }
 

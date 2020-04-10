@@ -9,6 +9,9 @@ namespace JediComlink
 {
     public class Block30 : Block
     {
+        public override int Id { get => 0x30; }
+        public override string Description { get => "External Radio"; }
+
         #region Propeties
         public byte[] Unknown1 { get; set; }
         public string Serial { get; set; }
@@ -59,9 +62,6 @@ namespace JediComlink
 
         public Block30(Block parent, int vector, byte[] codeplugContents) : base(parent, vector, codeplugContents)
         {
-            Id = 0x30;
-            Description = "External Radio";
-
             Unknown1 = Contents.Slice(0x00, 2).ToArray();
             Serial = GetStringContents(0x02, 10);
             Model = GetStringContents(0x0C, 16);

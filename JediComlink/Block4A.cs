@@ -9,6 +9,9 @@ namespace JediComlink
 {
     public class Block4A : Block
     {
+        public override int Id { get => 0x4A; }
+        public override string Description { get => "Trunk Configuration"; }
+
         #region Propeties
         public Block3F Block3F { get; set; }
         public Block41 Block41 { get; set; }
@@ -33,9 +36,6 @@ namespace JediComlink
 
         public Block4A(Block parent, int vector, byte[] codeplugContents) : base(parent, vector, codeplugContents)
         {
-            Id = 0x4A;
-            Description = "Trunk Configuration";
-
             Block3F = new Block3F(this, BLOCK_3F_VECTOR, codeplugContents);
             Block41 = new Block41(this, BLOCK_41_VECTOR, codeplugContents);
             Block4B = new Block4B(this, BLOCK_4B_VECTOR, codeplugContents);

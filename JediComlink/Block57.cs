@@ -9,6 +9,9 @@ namespace JediComlink
 {
     public class Block57 : BlockLong
     {
+        public override int Id { get => 0x57; }
+        public override string Description { get => "Zone Chan TG Table"; }
+
         #region Propeties
 
         #endregion
@@ -24,9 +27,6 @@ namespace JediComlink
 
         public Block57(Block parent, int vector, byte[] codeplugContents) : base(parent, vector, codeplugContents)
         {
-            Id = 0x57;
-            Description = "Zone Chan TG Table";
-
 
         }
 

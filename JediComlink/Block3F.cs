@@ -9,6 +9,9 @@ namespace JediComlink
 {
     public class Block3F : Block
     {
+        public override int Id { get => 0x3F; }
+        public override string Description { get => "Control Head"; }
+
         #region Propeties
         #endregion
 
@@ -22,8 +25,6 @@ namespace JediComlink
 
         public Block3F(Block parent, int vector, byte[] codeplugContents) : base(parent, vector, codeplugContents)
         {
-            Id = 0x3F;
-            Description = "Control Head";
 
         }
 

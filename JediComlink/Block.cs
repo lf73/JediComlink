@@ -7,9 +7,9 @@ namespace JediComlink
 {
     public abstract class Block
     {
-        public int Id { get; protected set; }
-
-        public string Description { get; protected set; }
+        public abstract int Id { get; }
+        
+        public abstract string Description { get; }
 
         public Block Parent { get; set; }
 

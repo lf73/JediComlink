@@ -9,6 +9,9 @@ namespace JediComlink
 {
     public class Block0F : Block
     {
+        public override int Id { get => 0x0F; }
+        public override string Description { get => "AD Switch Level"; }
+
         #region Propeties
         #endregion
 
@@ -21,8 +24,6 @@ namespace JediComlink
 
         public Block0F(Block parent, int vector, byte[] codeplugContents) : base(parent, vector, codeplugContents)
         {
-            Id = 0x0F;
-            Description = "AD Switch Level";
 
         }
 

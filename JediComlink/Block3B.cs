@@ -9,6 +9,9 @@ namespace JediComlink
 {
     public class Block3B : Block
     {
+        public override int Id { get => 0x3B; }
+        public override string Description { get => "DTMF Codes List"; }
+
         #region Propeties
         #endregion
 
@@ -21,8 +24,6 @@ namespace JediComlink
 
         public Block3B(Block parent, int vector, byte[] codeplugContents) : base(parent, vector, codeplugContents)
         {
-            Id = 0x3B;
-            Description = "DTMF Codes List";
 
         }
 

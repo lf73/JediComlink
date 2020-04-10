@@ -9,6 +9,9 @@ namespace JediComlink
 {
     public class Block62 : Block
     {
+        public override int Id { get => 0x62; }
+        public override string Description { get => "Unknown"; }
+
         #region Propeties
         public Block58 Block58 { get; set; }
         public Block63 Block63 { get; set; }
@@ -28,9 +31,6 @@ namespace JediComlink
 
         public Block62(Block parent, int vector, byte[] codeplugContents) : base(parent, vector, codeplugContents)
         {
-            Id = 0x62;
-            Description = "Unknown";
-
             Block58 = new Block58(this, BLOCK_58_VECTOR, codeplugContents);
             Block63 = new Block63(this, BLOCK_63_VECTOR, codeplugContents);
             Block67 = new Block67(this, BLOCK_67_VECTOR, codeplugContents);

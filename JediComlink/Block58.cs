@@ -9,6 +9,9 @@ namespace JediComlink
 {
     public class Block58 : Block
     {
+        public override int Id { get => 0x58; }
+        public override string Description { get => "Trunk Call List Vector or CD: ASTRO25 Trunk Call List Vector"; }
+
         #region Propeties
         public Block59 Block59 { get; set; }
         #endregion
@@ -23,9 +26,6 @@ namespace JediComlink
 
         public Block58(Block parent, int vector, byte[] codeplugContents) : base(parent, vector, codeplugContents)
         {
-            Id = 0x58;
-            Description = "Trunk Call List Vector or CD: ASTRO25 Trunk Call List Vector";
-
             Block59 = new Block59(this, BLOCK_59_VECTOR, codeplugContents);
         }
 

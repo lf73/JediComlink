@@ -9,6 +9,9 @@ namespace JediComlink
 {
     public class Block3D : Block
     {
+        public override int Id { get => 0x3D; }
+        public override string Description { get => "Signaling Vector"; }
+
         #region Propeties
         public Block Block3E { get; set; }
         public byte[] UnknownPointer1 { get; set; }
@@ -21,9 +24,6 @@ namespace JediComlink
 
         public Block3D(Block parent, int vector, byte[] codeplugContents) : base(parent, vector, codeplugContents)
         {
-            Id = 0x3D;
-            Description = "Signaling Vector";
-
             Block3E = new Block3E(this, 0x00, codeplugContents);
             UnknownPointer1 = Contents.Slice(0x02, 2).ToArray();
             Block4A = new Block4A(this, 0x04, codeplugContents);

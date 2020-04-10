@@ -9,6 +9,9 @@ namespace JediComlink
 {
     public class Block0D : Block
     {
+        public override int Id { get => 0x0D; }
+        public override string Description { get => "HWConfig MDC"; }
+
         #region Propeties
         public Block4B Block4B { get; set; }
         #endregion
@@ -24,9 +27,6 @@ namespace JediComlink
 
         public Block0D(Block parent, int vector, byte[] codeplugContents) : base(parent, vector, codeplugContents)
         {
-            Id = 0x0D;
-            Description = "HWConfig MDC";
-
             Block4B = new Block4B(this, BLOCK_4B_VECTOR, codeplugContents);
         }
 

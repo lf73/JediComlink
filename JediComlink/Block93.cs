@@ -9,6 +9,9 @@ namespace JediComlink
 {
     public class Block93 : BlockLong
     {
+        public override int Id { get => 0x93; }
+        public override string Description { get => "MDC Call List"; }
+
         #region Propeties
         #endregion
 
@@ -21,8 +24,6 @@ namespace JediComlink
 
         public Block93(Block parent, int vector, byte[] codeplugContents) : base(parent, vector, codeplugContents)
         {
-            Id = 0x93;
-            Description = "MDC Call List";
 
         }
 

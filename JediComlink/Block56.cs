@@ -9,6 +9,9 @@ namespace JediComlink
 {
     public class Block56 : Block
     {
+        public override int Id { get => 0x56; }
+        public override string Description { get => "Conv or 62: Trunk/Test Mode Personality"; }
+
         #region Propeties
         #endregion
 
@@ -23,8 +26,6 @@ namespace JediComlink
 
         public Block56(Block parent, int vector, byte[] codeplugContents) : base(parent, vector, codeplugContents)
         {
-            Id = 0x56;
-            Description = "Conv or 62: Trunk/Test Mode Personality";
 
         }
 

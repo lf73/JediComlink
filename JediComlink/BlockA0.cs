@@ -9,6 +9,9 @@ namespace JediComlink
 {
     public class BlockA0 : Block
     {
+        public override int Id { get => 0xA0; }
+        public override string Description { get => "Aux Signalling"; }
+
         #region Propeties
         public BlockA9 BlockA9 { get; set; }
         #endregion
@@ -23,10 +26,7 @@ namespace JediComlink
 
         public BlockA0(Block parent, int vector, byte[] codeplugContents) : base(parent, vector, codeplugContents)
         {
-            Id = 0xA0;
-            Description = "Aux Signalling";
-
-            BlockA9 = new BlockA9(this, BLOCK_A9_VECTOR, codeplugContents);
+              BlockA9 = new BlockA9(this, BLOCK_A9_VECTOR, codeplugContents);
         }
 
         public override string ToString()

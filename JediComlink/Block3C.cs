@@ -9,6 +9,9 @@ namespace JediComlink
 {
     public class Block3C : Block
     {
+        public override int Id { get => 0x3C; }
+        public override string Description { get => "Hardware Button Configuration"; }
+
         #region Propeties
         #endregion
 
@@ -22,8 +25,6 @@ namespace JediComlink
 
         public Block3C(Block parent, int vector, byte[] codeplugContents) : base(parent, vector, codeplugContents)
         {
-            Id = 0x3C;
-            Description = "Hardware Button Configuration";
 
         }
 

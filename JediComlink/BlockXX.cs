@@ -1,42 +1,42 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.InteropServices;
-using System.Text;
-using System.Threading.Tasks;
+﻿//using System;
+//using System.Collections.Generic;
+//using System.Linq;
+//using System.Runtime.InteropServices;
+//using System.Text;
+//using System.Threading.Tasks;
 
-namespace JediComlink
-{
-    public class BlockXX : Block
-    {
-        #region Propeties
-        public Block BlockYY { get; set; }
+//namespace JediComlink
+//{
+//    public class BlockXX : Block
+//    {
+//        #region Propeties
+//        public Block BlockYY { get; set; }
 
-        #endregion
+//        #endregion
 
-        #region Definition
-        /*  0  1  2  3   4  5  6  7    8  9  A  B   C  D  E  F
-        */
+//        #region Definition
+//        /*  0  1  2  3   4  5  6  7    8  9  A  B   C  D  E  F
+//        */
 
-        private const int XXXXX = 0x00;
-        #endregion
+//        private const int XXXXX = 0x00;
+//        #endregion
 
-        public BlockXX(Block parent, int vector, byte[] codeplugContents) : base(parent, vector, codeplugContents)
-        {
-            Id = 0x99;
-            Description = "XXXXX";
-
-
-        }
-
-        public override string ToString()
-        {
-            var sb = new StringBuilder();
-            sb.AppendLine(GetTextHeader());
+//        public BlockXX(Block parent, int vector, byte[] codeplugContents) : base(parent, vector, codeplugContents)
+//        {
+//            Id = 0x99;
+//            Description = "XXXXX";
 
 
+//        }
 
-            return sb.ToString();
-        }
-    }
-}
+//        public override string ToString()
+//        {
+//            var sb = new StringBuilder();
+//            sb.AppendLine(GetTextHeader());
+
+
+
+//            return sb.ToString();
+//        }
+//    }
+//}

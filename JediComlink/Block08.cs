@@ -9,6 +9,9 @@ namespace JediComlink
 {
     public class Block08 : Block
     {
+        public override int Id { get => 0x08; }
+        public override string Description { get => "Softpot Interpol Vector"; }
+
         #region Propeties
         public Block09 Block09 { get; set; }
         //public Block09 Block09 { get; set; }
@@ -33,11 +36,7 @@ namespace JediComlink
 
         public Block08(Block parent, int vector, byte[] codeplugContents) : base(parent, vector, codeplugContents)
         {
-            Id = 0x08;
-            Description = "Softpot Interpol Vector";
-
             Block09 = new Block09(this, BLOCK_09_VECTOR, codeplugContents);
-
         }
 
         public override string ToString()
