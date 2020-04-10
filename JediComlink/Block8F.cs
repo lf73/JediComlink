@@ -32,9 +32,10 @@ namespace JediComlink
 
         public override string ToString()
         {
+            var s = new String(' ', Level * 2);
             var sb = new StringBuilder();
             sb.AppendLine(GetTextHeader());
-
+            sb.AppendLine(s + GetStringContents(2, Contents.Length - 2));
             return sb.ToString();
         }
     }

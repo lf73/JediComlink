@@ -13,7 +13,7 @@ namespace JediComlink
         public override string Description { get => "Unknown"; }
 
         #region Propeties
-        public Block30 Block30 { get; set; }
+
         #endregion
 
         #region Definition
@@ -27,14 +27,13 @@ namespace JediComlink
 
         public Block0C(Block parent, int vector, byte[] codeplugContents) : base(parent, vector, codeplugContents)
         {
-            Block30 = new Block30(this, BLOCK_30_VECTOR, codeplugContents);
+
         }
 
         public override string ToString()
         {
             var sb = new StringBuilder();
             sb.AppendLine(GetTextHeader());
-            sb.AppendLine(Block30.ToString());
 
             return sb.ToString();
         }

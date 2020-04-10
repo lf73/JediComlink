@@ -63,7 +63,7 @@ namespace JediComlink
         public string GetTextHeader()
         {
             var s = new String(' ', (Parent?.Level).GetValueOrDefault() * 2);
-            return Environment.NewLine + s + $"Block {Id:X2} Length {_contents.Length} Starting At {StartAddress:X4}" + Environment.NewLine +
+            return Environment.NewLine + s + $"Block {Id:X2} Length {_contents.Length} Starting At {StartAddress:X4}    {Description}" + Environment.NewLine +
                     s + "---------------------------";
         }
            
