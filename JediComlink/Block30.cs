@@ -80,7 +80,7 @@ namespace JediComlink
             get => Contents[EXTERNAL_CODEPLUG_SIZE] * 0x100 + Contents[EXTERNAL_CODEPLUG_SIZE + 1];
             set
             {
-                if (value < 0 || value > 0xFFFF) throw new ArgumentException("Out range 0x0000 to 0xFFFF");
+                if (value < 0 || value > 0xFFFF) throw new ArgumentException("Out of range 0x0000 to 0xFFFF");
                 Contents[EXTERNAL_CODEPLUG_SIZE] = (byte)(value / 0x100);
                 Contents[EXTERNAL_CODEPLUG_SIZE+1] = (byte)(value % 0x100);
             }

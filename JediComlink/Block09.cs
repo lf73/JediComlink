@@ -1,9 +1,5 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.InteropServices;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace JediComlink
 {
@@ -12,15 +8,23 @@ namespace JediComlink
         public override int Id { get => 0x09; }
         public override string Description { get => "Softpot Interpol"; }
 
-        #region Propeties
-        #endregion
-
         #region Definition
         /*  0  1  2  3   4  5  6  7    8  9  A  B   C  D  E  F
         0: 35 E8 32 AF  00 00 4F 50   50 50 3F 2C  28
         */
 
+        private const int UNKNOWN1 = 0x00; //01 02 03 04 05 06 07 08 09 0A 0B 0C
         #endregion
+
+        #region Propeties
+        public byte[] Unknown1
+        {
+            get => Contents.Slice(UNKNOWN1, 13).ToArray();
+            //set => XYZ = value; //TODO
+        }
+        #endregion
+
+
 
         public Block09(Block parent, int vector, byte[] codeplugContents) : base(parent, vector, codeplugContents)
         {
@@ -29,8 +33,10 @@ namespace JediComlink
 
         public override string ToString()
         {
+            var s = new String(' ', Level * 2);
             var sb = new StringBuilder();
             sb.AppendLine(GetTextHeader());
+            sb.AppendLine(s + $"Unknown1 Bytes: {FormatHex(Unknown1)}");
 
             return sb.ToString();
         }

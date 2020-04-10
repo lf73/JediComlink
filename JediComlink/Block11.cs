@@ -1,9 +1,5 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.InteropServices;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace JediComlink
 {
@@ -12,14 +8,20 @@ namespace JediComlink
         public override int Id { get => 0x11; }
         public override string Description { get => "AD Button Level"; }
 
-        #region Propeties
-        #endregion
-
         #region Definition
         /*  0  1  2  3   4  5  6  7    8  9  A  B   C  D  E  F
         0: 00 1F 30 70  85 CF 55 AA
         */
 
+        private const int UNKNOWN1 = 0x00; //01 02 03 04 05 06 07
+        #endregion
+
+        #region Propeties
+        public byte[] Unknown1
+        {
+            get => Contents.Slice(UNKNOWN1, 8).ToArray();
+            //set => XYZ = value; //TODO
+        }
         #endregion
 
         public Block11(Block parent, int vector, byte[] codeplugContents) : base(parent, vector, codeplugContents)
@@ -29,8 +31,10 @@ namespace JediComlink
 
         public override string ToString()
         {
+            var s = new String(' ', Level * 2);
             var sb = new StringBuilder();
             sb.AppendLine(GetTextHeader());
+            sb.AppendLine(s + $"Unknown1 Bytes: {FormatHex(Unknown1)}");
 
             return sb.ToString();
         }
