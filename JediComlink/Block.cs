@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Security.Cryptography;
 using System.Text;
 
 namespace JediComlink
@@ -8,7 +9,7 @@ namespace JediComlink
     public abstract class Block
     {
         public abstract int Id { get; }
-        
+
         public abstract string Description { get; }
 
         public Block Parent { get; set; }
@@ -16,7 +17,7 @@ namespace JediComlink
         public Codeplug Codeplug { get; set; }
 
         private byte[] _contents;
-        public Span<Byte> Contents
+        protected internal Span<Byte> Contents
         {
             get
             {
@@ -32,8 +33,6 @@ namespace JediComlink
 
         public int StartAddress { get; set; }
 
-        public int EndAddress { get; set; }
-
         protected Block() { }
 
         public Block(Block parent, int vector, byte[] codeplugContents)
@@ -42,13 +41,13 @@ namespace JediComlink
             Parent = parent;
             Level = parent.Level + 1;
 
-            StartAddress = parent.Contents[vector]  * 0x100 + parent.Contents[vector + 1];
+            StartAddress = parent.Contents[vector] * 0x100 + parent.Contents[vector + 1];
             var length = codeplugContents[StartAddress];
-            Contents = codeplugContents.AsSpan().Slice(StartAddress + 2, length-1);
+            Contents = codeplugContents.AsSpan().Slice(StartAddress + 2, length - 1);
 
             Codeplug.Children.Add(this);
         }
-        
+
         public string GetStringContents(int offset, int length)
         {
             var value = "";
@@ -66,7 +65,7 @@ namespace JediComlink
             return Environment.NewLine + s + $"Block {Id:X2} Length {_contents.Length} Starting At {StartAddress:X4}    {Description}" + Environment.NewLine +
                     s + "---------------------------";
         }
-           
+
         public abstract override string ToString();
 
         protected string FormatHex(byte[] data)
@@ -84,6 +83,30 @@ namespace JediComlink
         protected int GetDigits(byte nibbles)
         {
             return (nibbles >> 4) * 10 + (nibbles & 0x0f);
+        }
+
+        protected virtual void UpdateContents()
+        {
+
+        }
+
+        public byte[] GetBytes()
+        {
+            UpdateContents();
+            byte[] bytes = new byte[Contents.Length + 3];
+            bytes[0] = (byte)(Contents.Length + 1);
+            bytes[1] = (byte)Id;
+            for (int i = 0; i < Contents.Length; i++)
+            {
+                bytes[2 + i] = Contents[i];
+            }
+
+            int checksum = -0x55 + bytes[0] + bytes[1];
+            foreach (var b in Contents)
+                checksum += b;
+            bytes[bytes.Length - 1] = (byte)(checksum &= 0xFF);
+
+            return bytes;
         }
     }
 

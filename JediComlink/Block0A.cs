@@ -1,9 +1,6 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.InteropServices;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace JediComlink
 {
@@ -12,38 +9,40 @@ namespace JediComlink
         public override int Id { get => 0x0A; }
         public override string Description { get => "Softpot B/W Vector"; }
 
-        #region Propeties
-        public Block0B Block0B { get; set; }
-        //public Block0B Block0B { get; set; }
-        //public Block0B Block0B { get; set; }
-        //public Block0B Block0B { get; set; }
-        #endregion
-
         #region Definition
         /*  0  1  2  3   4  5  6  7    8  9  A  B   C  D  E  F
-        0: 01 0C 01 13  01 1A 01 21
+        0: 01 0C 01 13  01 1A 01 21  //TODO ??There's no count byte.. Is this fixed?
         */
+        #endregion
 
-        private const int BLOCK_0B_VECTOR = 0x00;
-        //private const int BLOCK_0B_VECTOR = 0x02;
-        //private const int BLOCK_0B_VECTOR = 0x04;
-        //private const int BLOCK_0B_VECTOR = 0x06;
+        #region Propeties
+        public List<Block0B> Block0BList { get; set; } = new List<Block0B>();
         #endregion
 
         public Block0A(Block parent, int vector, byte[] codeplugContents) : base(parent, vector, codeplugContents)
         {
-            Block0B = new Block0B(this, BLOCK_0B_VECTOR, codeplugContents);
-            //Block0B = new Block0B(this, BLOCK_0B_VECTOR, codeplugContents);
-            //Block0B = new Block0B(this, BLOCK_0B_VECTOR, codeplugContents);
-            //Block0B = new Block0B(this, BLOCK_0B_VECTOR, codeplugContents);
+            for (int i = 0; i < 4; i++) //4 Hardcoded for number of elements. This one is not dynamic like others?
+            {
+                Block0BList.Add(new Block0B(this, i * 2, codeplugContents));
+            }
         }
 
         public override string ToString()
         {
+            var s = new String(' ', Level * 2);
             var sb = new StringBuilder();
             sb.AppendLine(GetTextHeader());
-            sb.AppendLine(Block0B.ToString());
- 
+            sb.AppendLine(s + $"Block 0B Couunt: {Block0BList.Count}");
+            foreach (var block09 in Block0BList)
+            {
+                sb.AppendLine(s + $"Block 0B Vector: {block09.StartAddress:X4}");
+            }
+
+            foreach (var block09 in Block0BList)
+            {
+                sb.AppendLine(block09.ToString());
+            }
+
             return sb.ToString();
         }
     }
