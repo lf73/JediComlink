@@ -31,7 +31,7 @@ namespace JediComlink
 
         public int Level { get; set; }
 
-        public int StartAddress { get; set; }
+        public int Address { get; set; }
 
         protected Block() { }
 
@@ -41,9 +41,9 @@ namespace JediComlink
             Parent = parent;
             Level = parent.Level + 1;
 
-            StartAddress = parent.Contents[vector] * 0x100 + parent.Contents[vector + 1];
-            var length = codeplugContents[StartAddress];
-            Contents = codeplugContents.AsSpan().Slice(StartAddress + 2, length - 1);
+            Address = parent.Contents[vector] * 0x100 + parent.Contents[vector + 1];
+            var length = codeplugContents[Address];
+            Contents = codeplugContents.AsSpan().Slice(Address + 2, length - 1);
 
             Codeplug.Children.Add(this);
         }
@@ -62,7 +62,7 @@ namespace JediComlink
         public string GetTextHeader()
         {
             var s = new String(' ', (Parent?.Level).GetValueOrDefault() * 2);
-            return Environment.NewLine + s + $"Block {Id:X2} Length {_contents.Length} Starting At {StartAddress:X4}    {Description}" + Environment.NewLine +
+            return Environment.NewLine + s + $"Block {Id:X2} Length {_contents.Length} Starting At {Address:X4}    {Description}" + Environment.NewLine +
                     s + "---------------------------";
         }
 

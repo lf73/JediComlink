@@ -48,7 +48,7 @@ namespace JediComlink
             var sb = new StringBuilder();
             sb.AppendLine(GetTextHeader());
             sb.AppendLine(s + $"Unknown1 Bytes: {FormatHex(Unknown1)}");
-            sb.AppendLine(s + $"Block 0E Vector: {Block0E?.StartAddress:X4}");
+            sb.AppendLine(s + $"Block 0E Vector: {Block0E?.Address:X4}");
             sb.AppendLine(s + $"Unknown2 Bytes: {FormatHex(Unknown1)}");
 
             sb.AppendLine(Block0E?.ToString());

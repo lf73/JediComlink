@@ -13,9 +13,9 @@ namespace JediComlink
             Parent = parent;
             Level = parent.Level + 1;
 
-            StartAddress = parent.Contents[vector] * 0x100 + parent.Contents[vector + 1];
-            var length = codeplugContents[StartAddress] * 0x100 + codeplugContents[StartAddress + 1];
-            Contents = codeplugContents.AsSpan().Slice(StartAddress + 3, length - 1);
+            Address = parent.Contents[vector] * 0x100 + parent.Contents[vector + 1];
+            var length = codeplugContents[Address] * 0x100 + codeplugContents[Address + 1];
+            Contents = codeplugContents.AsSpan().Slice(Address + 3, length - 1);
 
             Codeplug.Children.Add(this);
         }

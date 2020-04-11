@@ -41,9 +41,9 @@ namespace JediComlink
             var s = new String(' ', Level * 2);
             var sb = new StringBuilder();
             sb.AppendLine(GetTextHeader());
-            sb.AppendLine(s + $"Block 04 Vector: {Block04?.StartAddress:X4}");
-            sb.AppendLine(s + $"Block 05 Vector: {Block05?.StartAddress:X4}");
-            sb.AppendLine(s + $"Block 0D Vector: {Block0D?.StartAddress:X4}");
+            sb.AppendLine(s + $"Block 04 Vector: {Block04?.Address:X4}");
+            sb.AppendLine(s + $"Block 05 Vector: {Block05?.Address:X4}");
+            sb.AppendLine(s + $"Block 0D Vector: {Block0D?.Address:X4}");
 
             sb.AppendLine(Block04.ToString());
             sb.AppendLine(Block05.ToString());

@@ -75,13 +75,13 @@ namespace JediComlink
             var s = new String(' ', Level * 2);
             var sb = new StringBuilder();
             sb.AppendLine(GetTextHeader());
-            sb.AppendLine(s + $"Block 06 Vector: {Block06?.StartAddress:X4}");
-            sb.AppendLine(s + $"Block 03 Vector: {Block03?.StartAddress:X4}");
-            sb.AppendLine(s + $"Block 0C Vector: {Block0C?.StartAddress:X4}");
+            sb.AppendLine(s + $"Block 06 Vector: {Block06?.Address:X4}");
+            sb.AppendLine(s + $"Block 03 Vector: {Block03?.Address:X4}");
+            sb.AppendLine(s + $"Block 0C Vector: {Block0C?.Address:X4}");
             sb.AppendLine(s + $"Unknown1 Bytes: {FormatHex(Unknown1)}");
-            sb.AppendLine(s + $"Block 0F Vector: {Block0F?.StartAddress:X4}");
+            sb.AppendLine(s + $"Block 0F Vector: {Block0F?.Address:X4}");
             sb.AppendLine(s + $"Unknown2 Bytes: {FormatHex(Unknown2)}");
-            sb.AppendLine(s + $"Block 11 Vector: {Block11?.StartAddress:X4}");
+            sb.AppendLine(s + $"Block 11 Vector: {Block11?.Address:X4}");
             sb.AppendLine(s + $"Unknown3 Bytes: {FormatHex(Unknown3)}");
 
             sb.AppendLine(Block06?.ToString());

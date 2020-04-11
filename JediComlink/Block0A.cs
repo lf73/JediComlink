@@ -35,7 +35,7 @@ namespace JediComlink
             sb.AppendLine(s + $"Block 0B Couunt: {Block0BList.Count}");
             foreach (var block09 in Block0BList)
             {
-                sb.AppendLine(s + $"Block 0B Vector: {block09.StartAddress:X4}");
+                sb.AppendLine(s + $"Block 0B Vector: {block09.Address:X4}");
             }
 
             foreach (var block09 in Block0BList)

@@ -107,9 +107,9 @@ namespace JediComlink
             Codeplug = codeplug;
             Level = 1;
 
-            StartAddress = 0x0000;
-            var length = codeplugContents[StartAddress];
-            Contents = codeplugContents.AsSpan().Slice(StartAddress + 2, length - 1);
+            Address = 0x0000;
+            var length = codeplugContents[Address];
+            Contents = codeplugContents.AsSpan().Slice(Address + 2, length - 1);
 
             Block02 = new Block02(this, BLOCK_02_VECTOR, codeplugContents);
             Block56 = new Block56(this, BLOCK_56_VECTOR, codeplugContents);
@@ -126,10 +126,10 @@ namespace JediComlink
             sb.AppendLine($"Unknown1 Bytes: {FormatHex(Unknown1)}");
             sb.AppendLine($"Internal Codeplug Size: {InternalCodeplugSize}");
             sb.AppendLine($"Unknown2 Bytes: {FormatHex(Unknown2)}");
-            sb.AppendLine($"Block 02 Vector: {Block02?.StartAddress:X4}");
-            sb.AppendLine($"Block 56 Vector: {Block56?.StartAddress:X4}");
+            sb.AppendLine($"Block 02 Vector: {Block02?.Address:X4}");
+            sb.AppendLine($"Block 56 Vector: {Block56?.Address:X4}");
             sb.AppendLine($"Unknown3 Bytes: {FormatHex(Unknown3)}");
-            sb.AppendLine($"Block 10 Vector: {Block10?.StartAddress:X4}");
+            sb.AppendLine($"Block 10 Vector: {Block10?.Address:X4}");
             sb.AppendLine($"Unknown4 Bytes: {FormatHex(Unknown4)}");
             sb.AppendLine($"Auth Code: {FormatHex(AuthCode)}");
 
