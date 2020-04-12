@@ -27,22 +27,7 @@ namespace JediComlink
         2: 9E 07 C4
         */
 
-        private const int BLOCK_56_VECTOR = 0x02;
-        //private const int BLOCK_56_VECTOR = 0x04;
-        //private const int BLOCK_56_VECTOR = 0x06;
-        //private const int BLOCK_56_VECTOR = 0x08;
-        //private const int BLOCK_56_VECTOR = 0x0A;
-        //private const int BLOCK_56_VECTOR = 0x0C;
-        //private const int BLOCK_56_VECTOR = 0x0E;
-        //private const int BLOCK_56_VECTOR = 0x10;
-        //private const int BLOCK_56_VECTOR = 0x12;
-        //private const int BLOCK_56_VECTOR = 0x14;
-        //private const int BLOCK_56_VECTOR = 0x16;
-        //private const int BLOCK_56_VECTOR = 0x18;
-        //private const int BLOCK_56_VECTOR = 0x1A;
-        //private const int BLOCK_56_VECTOR = 0x1C;
-        //private const int BLOCK_56_VECTOR = 0x1E;
-        //private const int BLOCK_56_VECTOR = 0x20;
+        private const int BLOCK_56_VECTOR = 0x01;
         #endregion
 
         public Block55() { }
@@ -56,7 +41,10 @@ namespace JediComlink
         public override int Serialize(byte[] codeplugContents, int address)
         {
             var contents = Contents.ToArray().AsSpan(); //TODO
-            return Serializer(codeplugContents, address, contents) + address;
+            var nextAddress = address + Contents.Length + BlockSizeAdjustment;
+            nextAddress = SerializeChild(Block56, BLOCK_56_VECTOR, codeplugContents, nextAddress, contents);
+            Serializer(codeplugContents, address, contents);
+            return nextAddress;
         }
 
         public override string ToString()

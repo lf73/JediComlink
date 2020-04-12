@@ -48,7 +48,9 @@ namespace JediComlink
 
             int checksum = -0x55 + codeplugContents[address] + codeplugContents[address + 1];
             foreach (var b in contents)
+            {
                 checksum += b;
+            }
             codeplugContents[address + contents.Length + 2] = (byte)(checksum &= 0xFF);
             return contents.Length + BlockSizeAdjustment; //Since adding the BlockSizeAdjustment may be able to eliminate the return.
         }

@@ -7,29 +7,28 @@ namespace JediComlink
 {
     public class Codeplug
     {
-        public Block01 InternalCodeplug { get; protected set; }
+        public Block01 InternalCodeplug { get; protected set; } = new Block01();
 
-        public Block30 ExternalCodeplug { get; protected set; }
+        public Block30 ExternalCodeplug { get; protected set; } = new Block30();
 
         public Codeplug(string path)
         {
             var contents = File.ReadAllBytes(path);
-
-            InternalCodeplug = new Block01();
             InternalCodeplug.Deserialize(contents, 0);
-
-
+            ExternalCodeplug.Deserialize(contents, InternalCodeplug.ExternalCodeplugVector);
         }
 
         public string GetText()
         {
-            return InternalCodeplug.ToString();
+            return InternalCodeplug.ToString() + Environment.NewLine + Environment.NewLine
+                + Environment.NewLine + ExternalCodeplug.ToString();
         }
 
-        public byte[] GetBytes()
+        public byte[] Serialize()
         {
-            byte[] bytes = new byte[InternalCodeplug.InternalCodeplugSize];
+            byte[] bytes = new byte[InternalCodeplug.ExternalCodeplugVector + ExternalCodeplug.ExternalCodeplugSize];
             InternalCodeplug.Serialize(bytes, 0);
+            ExternalCodeplug.Serialize(bytes, InternalCodeplug.ExternalCodeplugVector);
             return bytes;
         }
     }

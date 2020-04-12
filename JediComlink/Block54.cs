@@ -16,7 +16,7 @@ namespace JediComlink
         public override string Description { get => "Zone Chan Assignment"; }
 
         #region Propeties
-        public Block56 Block56 { get; set; }
+
         #endregion
 
         #region Definition
@@ -25,7 +25,6 @@ namespace JediComlink
         1: 02 01
         */
 
-        private const int BLOCK_56_VECTOR = 0x0C;
         #endregion
 
         public Block54() { }
@@ -33,20 +32,18 @@ namespace JediComlink
         public override void Deserialize(byte[] codeplugContents, int address)
         {
             Contents = Deserializer(codeplugContents, address);
-            Block56 = Deserialize<Block56>(Contents, BLOCK_56_VECTOR, codeplugContents);
         }
 
         public override int Serialize(byte[] codeplugContents, int address)
         {
             var contents = Contents.ToArray().AsSpan(); //TODO
-            return Serializer(codeplugContents, address, contents) + address;
+            return Serializer(codeplugContents, address, contents);
         }
 
         public override string ToString()
         {
             var sb = new StringBuilder();
             sb.AppendLine(GetTextHeader());
-            sb.AppendLine(Block56.ToString());
 
             return sb.ToString();
         }

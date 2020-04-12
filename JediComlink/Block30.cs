@@ -143,7 +143,21 @@ namespace JediComlink
         public override int Serialize(byte[] codeplugContents, int address)
         {
             var contents = Contents.ToArray().AsSpan(); //TODO
-            return Serializer(codeplugContents, address, contents) + address;
+            var nextAddress = address + Contents.Length + BlockSizeAdjustment;
+            nextAddress = SerializeChild(Block31, BLOCK_31_VECTOR, codeplugContents, nextAddress, contents);
+            nextAddress = SerializeChild(Block3D, BLOCK_3D_VECTOR, codeplugContents, nextAddress, contents);
+            nextAddress = SerializeChild(Block36, BLOCK_36_VECTOR, codeplugContents, nextAddress, contents);
+            nextAddress = SerializeChild(Block55, BLOCK_55_VECTOR, codeplugContents, nextAddress, contents);
+            nextAddress = SerializeChild(Block54, BLOCK_54_VECTOR, codeplugContents, nextAddress, contents);
+            nextAddress = SerializeChild(Block51, BLOCK_51_VECTOR, codeplugContents, nextAddress, contents);
+            nextAddress = SerializeChild(Block39, BLOCK_39_VECTOR, codeplugContents, nextAddress, contents);
+            nextAddress = SerializeChild(Block3B, BLOCK_3B_VECTOR, codeplugContents, nextAddress, contents);
+            nextAddress = SerializeChild(Block34, BLOCK_34_VECTOR, codeplugContents, nextAddress, contents);
+            nextAddress = SerializeChild(Block35, BLOCK_35_VECTOR, codeplugContents, nextAddress, contents);
+            nextAddress = SerializeChild(Block3C, BLOCK_3C_VECTOR, codeplugContents, nextAddress, contents);
+            nextAddress = SerializeChild(Block73, BLOCK_73_VECTOR, codeplugContents, nextAddress, contents);
+            Serializer(codeplugContents, address, contents);
+            return nextAddress;
         }
 
         public override string ToString()

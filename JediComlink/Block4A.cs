@@ -52,7 +52,14 @@ namespace JediComlink
         public override int Serialize(byte[] codeplugContents, int address)
         {
             var contents = Contents.ToArray().AsSpan(); //TODO
-            return Serializer(codeplugContents, address, contents) + address;
+            var nextAddress = address + Contents.Length + BlockSizeAdjustment;
+            nextAddress = SerializeChild(Block3F, BLOCK_3F_VECTOR, codeplugContents, nextAddress, contents);
+            nextAddress = SerializeChild(Block41, BLOCK_41_VECTOR, codeplugContents, nextAddress, contents);
+            nextAddress = SerializeChild(Block4B, BLOCK_4B_VECTOR, codeplugContents, nextAddress, contents);
+            nextAddress = SerializeChild(Block57, BLOCK_57_VECTOR, codeplugContents, nextAddress, contents);
+            nextAddress = SerializeChild(Block74, BLOCK_74_VECTOR, codeplugContents, nextAddress, contents);
+            Serializer(codeplugContents, address, contents);
+            return nextAddress;
         }
 
         public override string ToString()
