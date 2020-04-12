@@ -9,6 +9,9 @@ namespace JediComlink
 {
     public class Block9F : Block
     {
+        private byte[] _contents;
+        public Span<byte> Contents { get => _contents; set => _contents = value.ToArray(); }
+
         public override int Id { get => 0x9F; }
         public override string Description { get => "MDC Repeater ID Table"; }
 
@@ -22,9 +25,11 @@ namespace JediComlink
 
         #endregion
 
-        public Block9F(Block parent, int vector, byte[] codeplugContents) : base(parent, vector, codeplugContents)
-        {
+        public Block9F() { }
 
+        public override void Deserialize(byte[] codeplugContents, int address)
+        {
+            Contents = GetContents(codeplugContents, address);
         }
 
         public override string ToString()

@@ -5,6 +5,9 @@ namespace JediComlink
 {
     public class Block06 : Block
     {
+        private byte[] _contents;
+        public Span<byte> Contents { get => _contents; set => _contents = value.ToArray(); }
+
         public override int Id { get => 0x06; }
         public override string Description { get => "Softpot Vector"; }
 
@@ -26,23 +29,20 @@ namespace JediComlink
         public Block0A Block0A { get; set; }
         #endregion
 
+        public Block06() { }
 
-
-        public Block06(Block parent, int vector, byte[] codeplugContents) : base(parent, vector, codeplugContents)
+        public override void Deserialize(byte[] codeplugContents, int address)
         {
-            Block07 = new Block07(this, BLOCK_07_VECTOR, codeplugContents);
-            Block08 = new Block08(this, BLOCK_08_VECTOR, codeplugContents);
-            Block0A = new Block0A(this, BLOCK_0A_VECTOR, codeplugContents);
+            Contents = GetContents(codeplugContents, address);
+            Block07 = Deserialize<Block07>(Contents, BLOCK_07_VECTOR, codeplugContents);
+            Block08 = Deserialize<Block08>(Contents, BLOCK_08_VECTOR, codeplugContents);
+            Block0A = Deserialize<Block0A>(Contents, BLOCK_0A_VECTOR, codeplugContents);
         }
 
         public override string ToString()
         {
-            var s = new String(' ', Level * 2);
             var sb = new StringBuilder();
             sb.AppendLine(GetTextHeader());
-            sb.AppendLine(s + $"Block 07 Vector: {Block07?.Address:X4}");
-            sb.AppendLine(s + $"Block 08 Vector: {Block08?.Address:X4}");
-            sb.AppendLine(s + $"Block 0A Vector: {Block0A?.Address:X4}");
 
             sb.AppendLine(Block07.ToString());
             sb.AppendLine(Block08.ToString());

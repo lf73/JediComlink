@@ -9,6 +9,9 @@ namespace JediComlink
 {
     public class Block8F : BlockLong
     {
+        private byte[] _contents;
+        public Span<byte> Contents { get => _contents; set => _contents = value.ToArray(); }
+
         public override int Id { get => 0x8F; }
         public override string Description { get => "Status List"; }
 
@@ -25,17 +28,18 @@ namespace JediComlink
 
         #endregion
 
-        public Block8F(Block parent, int vector, byte[] codeplugContents) : base(parent, vector, codeplugContents)
+        public Block8F() { }
+
+        public override void Deserialize(byte[] codeplugContents, int address)
         {
- 
+            Contents = GetContents(codeplugContents, address);
         }
 
         public override string ToString()
         {
-            var s = new String(' ', Level * 2);
             var sb = new StringBuilder();
             sb.AppendLine(GetTextHeader());
-            sb.AppendLine(s + GetStringContents(2, Contents.Length - 2));
+            sb.AppendLine(GetStringContents(Contents, 2, Contents.Length - 2));
             return sb.ToString();
         }
     }

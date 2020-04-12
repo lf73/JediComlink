@@ -9,6 +9,9 @@ namespace JediComlink
 {
     public class Block4A : Block
     {
+        private byte[] _contents;
+        public Span<byte> Contents { get => _contents; set => _contents = value.ToArray(); }
+
         public override int Id { get => 0x4A; }
         public override string Description { get => "Trunk Configuration"; }
 
@@ -34,13 +37,16 @@ namespace JediComlink
         private const int BLOCK_74_VECTOR = 0x0D;
         #endregion
 
-        public Block4A(Block parent, int vector, byte[] codeplugContents) : base(parent, vector, codeplugContents)
+        public Block4A() { }
+
+        public override void Deserialize(byte[] codeplugContents, int address)
         {
-            Block3F = new Block3F(this, BLOCK_3F_VECTOR, codeplugContents);
-            Block41 = new Block41(this, BLOCK_41_VECTOR, codeplugContents);
-            Block4B = new Block4B(this, BLOCK_4B_VECTOR, codeplugContents);
-            Block57 = new Block57(this, BLOCK_57_VECTOR, codeplugContents);
-            Block74 = new Block74(this, BLOCK_74_VECTOR, codeplugContents);
+            Contents = GetContents(codeplugContents, address);
+            Block3F = Deserialize<Block3F>(Contents, BLOCK_3F_VECTOR, codeplugContents);
+            Block41 = Deserialize<Block41>(Contents, BLOCK_41_VECTOR, codeplugContents);
+            Block4B = Deserialize<Block4B>(Contents, BLOCK_4B_VECTOR, codeplugContents);
+            Block57 = Deserialize<Block57>(Contents, BLOCK_57_VECTOR, codeplugContents);
+            Block74 = Deserialize<Block74>(Contents, BLOCK_74_VECTOR, codeplugContents);
         }
 
         public override string ToString()

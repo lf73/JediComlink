@@ -9,11 +9,13 @@ namespace JediComlink
 {
     public class Block48 : Block
     {
+        private byte[] _contents;
+        public Span<byte> Contents { get => _contents; set => _contents = value.ToArray(); }
+
         public override int Id { get => 0x48; }
         public override string Description { get => "MDC System"; }
 
         #region Propeties
-        public Block03 Block03 { get; set; }
         #endregion
 
         #region Definition
@@ -22,19 +24,19 @@ namespace JediComlink
         1: 15 09 05 01  01 01 3C 00   00 15 01 00  00
         */
 
-        private const int BLOCK_03_VECTOR = 0x15;
         #endregion
 
-        public Block48(Block parent, int vector, byte[] codeplugContents) : base(parent, vector, codeplugContents)
+        public Block48() { }
+
+        public override void Deserialize(byte[] codeplugContents, int address)
         {
-            Block03 = new Block03(this, BLOCK_03_VECTOR, codeplugContents);
+            Contents = GetContents(codeplugContents, address);
         }
 
         public override string ToString()
         {
             var sb = new StringBuilder();
             sb.AppendLine(GetTextHeader());
-            sb.AppendLine(Block03.ToString());
 
             return sb.ToString();
         }

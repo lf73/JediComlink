@@ -9,6 +9,9 @@ namespace JediComlink
 {
     public class Block43 : BlockLong
     {
+        private byte[] _contents;
+        public Span<byte> Contents { get => _contents; set => _contents = value.ToArray(); }
+
         public override int Id { get => 0x43; }
         public override string Description { get => "Unknown"; }
 
@@ -22,17 +25,18 @@ namespace JediComlink
 
         #endregion
 
-        public Block43(Block parent, int vector, byte[] codeplugContents) : base(parent, vector, codeplugContents)
-        {
+        public Block43() { }
 
+        public override void Deserialize(byte[] codeplugContents, int address)
+        {
+            Contents = GetContents(codeplugContents, address);
         }
 
         public override string ToString()
         {
-            var s = new String(' ', Level * 2);
             var sb = new StringBuilder();
             sb.AppendLine(GetTextHeader());
-            sb.AppendLine(s + GetStringContents(2, Contents.Length - 2));
+            sb.AppendLine(GetStringContents(Contents, 2, Contents.Length - 2));
             return sb.ToString();
         }
     }

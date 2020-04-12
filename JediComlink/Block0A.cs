@@ -6,6 +6,9 @@ namespace JediComlink
 {
     public class Block0A : Block
     {
+        private byte[] _contents;
+        public Span<byte> Contents { get => _contents; set => _contents = value.ToArray(); }
+
         public override int Id { get => 0x0A; }
         public override string Description { get => "Softpot B/W Vector"; }
 
@@ -19,24 +22,22 @@ namespace JediComlink
         public List<Block0B> Block0BList { get; set; } = new List<Block0B>();
         #endregion
 
-        public Block0A(Block parent, int vector, byte[] codeplugContents) : base(parent, vector, codeplugContents)
+        public Block0A() { }
+
+        public override void Deserialize(byte[] codeplugContents, int address)
         {
+            Contents = GetContents(codeplugContents, address);
             for (int i = 0; i < 4; i++) //4 Hardcoded for number of elements. This one is not dynamic like others?
             {
-                Block0BList.Add(new Block0B(this, i * 2, codeplugContents));
+                Block0BList.Add(Deserialize<Block0B>(Contents, i * 2, codeplugContents));
             }
         }
 
         public override string ToString()
         {
-            var s = new String(' ', Level * 2);
             var sb = new StringBuilder();
             sb.AppendLine(GetTextHeader());
-            sb.AppendLine(s + $"Block 0B Couunt: {Block0BList.Count}");
-            foreach (var block09 in Block0BList)
-            {
-                sb.AppendLine(s + $"Block 0B Vector: {block09.Address:X4}");
-            }
+            sb.AppendLine($"Block 0B Couunt: {Block0BList.Count}");
 
             foreach (var block09 in Block0BList)
             {

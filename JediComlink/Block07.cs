@@ -9,6 +9,9 @@ namespace JediComlink
 {
     public class Block07 : Block
     {
+        private byte[] _contents;
+        public Span<byte> Contents { get => _contents; set => _contents = value.ToArray(); }
+
         public override int Id { get => 0x07; }
         public override string Description { get => "Softpot Radio"; }
 
@@ -38,17 +41,18 @@ namespace JediComlink
 
         #endregion
 
-        public Block07(Block parent, int vector, byte[] codeplugContents) : base(parent, vector, codeplugContents)
-        {
+        public Block07() { }
 
+        public override void Deserialize(byte[] codeplugContents, int address)
+        {
+            Contents = GetContents(codeplugContents, address);
         }
 
         public override string ToString()
         {
-            var s = new String(' ', Level * 2);
             var sb = new StringBuilder();
             sb.AppendLine(GetTextHeader());
-            sb.AppendLine(s + $"Unknown1 Bytes: {FormatHex(Unknown1)}");
+            sb.AppendLine($"Unknown1 Bytes: {FormatHex(Unknown1)}");
 
             return sb.ToString();
         }

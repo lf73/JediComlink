@@ -5,6 +5,9 @@ namespace JediComlink
 {
     public class Block56 : Block
     {
+        private byte[] _contents;
+        public Span<byte> Contents { get => _contents; set => _contents = value.ToArray(); }
+
         public override int Id { get => 0x56; }
         public override string Description { get => "Conv or 62: Trunk/Test Mode Personality"; }
 
@@ -36,20 +39,21 @@ namespace JediComlink
             //set => XYZ = value; //TODO
         }
         #endregion
+        
+        public Block56() { }
 
-        public Block56(Block parent, int vector, byte[] codeplugContents) : base(parent, vector, codeplugContents)
+        public override void Deserialize(byte[] codeplugContents, int address)
         {
-            Block0E = new Block0E(this, BLOCK_0E_VECTOR, codeplugContents);
+            Contents = GetContents(codeplugContents, address);
+            Block0E = Deserialize<Block0E>(Contents, BLOCK_0E_VECTOR, codeplugContents);
         }
 
         public override string ToString()
         {
-            var s = new String(' ', Level * 2);
             var sb = new StringBuilder();
             sb.AppendLine(GetTextHeader());
-            sb.AppendLine(s + $"Unknown1 Bytes: {FormatHex(Unknown1)}");
-            sb.AppendLine(s + $"Block 0E Vector: {Block0E?.Address:X4}");
-            sb.AppendLine(s + $"Unknown2 Bytes: {FormatHex(Unknown1)}");
+            sb.AppendLine($"Unknown1 Bytes: {FormatHex(Unknown1)}");
+            sb.AppendLine($"Unknown2 Bytes: {FormatHex(Unknown2)}");
 
             sb.AppendLine(Block0E?.ToString());
 

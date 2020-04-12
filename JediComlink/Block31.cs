@@ -9,6 +9,9 @@ namespace JediComlink
 {
     public class Block31 : Block
     {
+        private byte[] _contents;
+        public Span<byte> Contents { get => _contents; set => _contents = value.ToArray(); }
+
         public override int Id { get => 0x31; }
         public override string Description { get => "Radio Wide"; }
 
@@ -27,9 +30,13 @@ namespace JediComlink
         private const int BLOCK_90_VECTOR = 0x02;
         #endregion
 
-        public Block31(Block parent, int vector, byte[] codeplugContents) : base(parent, vector, codeplugContents)
+        public Block31() { }
+
+        public override void Deserialize(byte[] codeplugContents, int address)
         {
-            Block90 = new Block90(this, BLOCK_90_VECTOR, codeplugContents);
+            Contents = GetContents(codeplugContents, address);
+            Block90 = Deserialize<Block90>(Contents, BLOCK_90_VECTOR, codeplugContents);
+
         }
 
         public override string ToString()

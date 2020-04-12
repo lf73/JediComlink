@@ -5,6 +5,9 @@ namespace JediComlink
 {
     public class Block01 : Block
     {
+        private byte[] _contents;
+        public Span<byte> Contents { get => _contents; set => _contents = value.ToArray(); }
+
         public override int Id { get => 0x01; }
         public override string Description { get => "Internal Radio"; }
 
@@ -32,7 +35,7 @@ namespace JediComlink
 
         #region Propeties
         public int ExternalCodeplugVector
-    {
+        {
             get => Contents[EXTERNAL_CODEPLUG_VECTOR] * 0x100 + Contents[EXTERNAL_CODEPLUG_VECTOR + 1];
             set
             {
@@ -44,16 +47,16 @@ namespace JediComlink
 
         public string Serial
         {
-            get => GetStringContents(SERIAL, 10);
+            get => GetStringContents(Contents, SERIAL, 10);
             //set => XYZ = value; //TODO
         }
 
         public string Model
         {
-            get => GetStringContents(MODEL, 16);
+            get => GetStringContents(Contents, MODEL, 16);
             //set => XYZ = value; //TODO
         }
-        
+
         public byte[] Unknown1 //TODO  Maybe code plug version?
         {
             get => Contents.Slice(UNKNOWN1, 2).ToArray();
@@ -77,7 +80,7 @@ namespace JediComlink
         }
 
         public Block02 Block02 { get; set; }
-        
+
         public Block56 Block56 { get; set; }
         public byte[] Unknown3
         {
@@ -100,20 +103,21 @@ namespace JediComlink
         }
         #endregion
 
- 
 
-        public Block01(Codeplug codeplug, byte[] codeplugContents)
+        public override void Deserialize(byte[] codeplugContents, int address)
         {
-            Codeplug = codeplug;
-            Level = 1;
-
-            Address = 0x0000;
+            var Address = 0x0000;
             var length = codeplugContents[Address];
             Contents = codeplugContents.AsSpan().Slice(Address + 2, length - 1);
 
-            Block02 = new Block02(this, BLOCK_02_VECTOR, codeplugContents);
-            Block56 = new Block56(this, BLOCK_56_VECTOR, codeplugContents);
-            Block10 = new Block10(this, BLOCK_10_VECTOR, codeplugContents);
+            Block02 = Deserialize<Block02>(Contents, BLOCK_02_VECTOR, codeplugContents);
+            Block56 = Deserialize<Block56>(Contents, BLOCK_56_VECTOR, codeplugContents);
+            Block10 = Deserialize<Block10>(Contents, BLOCK_10_VECTOR, codeplugContents);
+        }
+
+        public Block01(byte[] codeplugContents)
+        {
+            Deserialize(codeplugContents, 0);
         }
 
         public override string ToString()
@@ -126,10 +130,7 @@ namespace JediComlink
             sb.AppendLine($"Unknown1 Bytes: {FormatHex(Unknown1)}");
             sb.AppendLine($"Internal Codeplug Size: {InternalCodeplugSize}");
             sb.AppendLine($"Unknown2 Bytes: {FormatHex(Unknown2)}");
-            sb.AppendLine($"Block 02 Vector: {Block02?.Address:X4}");
-            sb.AppendLine($"Block 56 Vector: {Block56?.Address:X4}");
             sb.AppendLine($"Unknown3 Bytes: {FormatHex(Unknown3)}");
-            sb.AppendLine($"Block 10 Vector: {Block10?.Address:X4}");
             sb.AppendLine($"Unknown4 Bytes: {FormatHex(Unknown4)}");
             sb.AppendLine($"Auth Code: {FormatHex(AuthCode)}");
 

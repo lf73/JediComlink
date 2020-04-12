@@ -132,7 +132,6 @@
     <Compile Include="BlockA4.cs" />
     <Compile Include="BlockA5.cs" />
     <Compile Include="BlockA9.cs" />
-    <Compile Include="BlockXX.cs" />
     <Compile Include="Block3E.cs" />
     <Compile Include="Block3D.cs" />
     <Compile Include="Codeplug.cs" />

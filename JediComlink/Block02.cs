@@ -9,6 +9,9 @@ namespace JediComlink
 {
     public class Block02 : Block
     {
+        private byte[] _contents;
+        public Span<byte> Contents { get => _contents; set => _contents = value.ToArray(); }
+
         public override int Id { get => 0x02; }
         public override string Description { get => "HWConfig Radio"; }
 
@@ -60,29 +63,25 @@ namespace JediComlink
 
         #endregion
 
+        public Block02() { }
 
-        public Block02(Block parent, int vector, byte[] codeplugContents) : base(parent, vector, codeplugContents)
+        public override void Deserialize(byte[] codeplugContents, int address)
         {
-            Block06 = new Block06(this, BLOCK_06_VECTOR, codeplugContents);
-            Block03 = new Block03(this, BLOCK_03_VECTOR, codeplugContents);
-            Block0C = new Block0C(this, BLOCK_0C_VECTOR, codeplugContents);
-            Block0F = new Block0F(this, BLOCK_0F_VECTOR, codeplugContents);
-            Block11 = new Block11(this, BLOCK_11_VECTOR, codeplugContents);
+            Contents = GetContents(codeplugContents, address);
+            Block06 = Deserialize<Block06>(Contents, BLOCK_06_VECTOR, codeplugContents);
+            Block03 = Deserialize<Block03>(Contents, BLOCK_03_VECTOR, codeplugContents);
+            Block0C = Deserialize<Block0C>(Contents, BLOCK_0C_VECTOR, codeplugContents);
+            Block0F = Deserialize<Block0F>(Contents, BLOCK_0F_VECTOR, codeplugContents);
+            Block11 = Deserialize<Block11>(Contents, BLOCK_11_VECTOR, codeplugContents);
         }
 
         public override string ToString()
         {
-            var s = new String(' ', Level * 2);
             var sb = new StringBuilder();
             sb.AppendLine(GetTextHeader());
-            sb.AppendLine(s + $"Block 06 Vector: {Block06?.Address:X4}");
-            sb.AppendLine(s + $"Block 03 Vector: {Block03?.Address:X4}");
-            sb.AppendLine(s + $"Block 0C Vector: {Block0C?.Address:X4}");
-            sb.AppendLine(s + $"Unknown1 Bytes: {FormatHex(Unknown1)}");
-            sb.AppendLine(s + $"Block 0F Vector: {Block0F?.Address:X4}");
-            sb.AppendLine(s + $"Unknown2 Bytes: {FormatHex(Unknown2)}");
-            sb.AppendLine(s + $"Block 11 Vector: {Block11?.Address:X4}");
-            sb.AppendLine(s + $"Unknown3 Bytes: {FormatHex(Unknown3)}");
+            sb.AppendLine($"Unknown1 Bytes: {FormatHex(Unknown1)}");
+            sb.AppendLine($"Unknown2 Bytes: {FormatHex(Unknown2)}");
+            sb.AppendLine($"Unknown3 Bytes: {FormatHex(Unknown3)}");
 
             sb.AppendLine(Block06?.ToString());
             sb.AppendLine(Block03?.ToString());

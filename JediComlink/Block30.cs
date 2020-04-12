@@ -5,6 +5,9 @@ namespace JediComlink
 {
     public class Block30 : Block
     {
+        private byte[] _contents;
+        public Span<byte> Contents { get => _contents; set => _contents = value.ToArray(); }
+
         public override int Id { get => 0x30; }
         public override string Description { get => "External Radio"; }
 
@@ -49,13 +52,13 @@ namespace JediComlink
 
         public string Serial
         {
-            get => GetStringContents(SERIAL, 10);
+            get => GetStringContents(Contents, SERIAL, 10);
             //set => XYZ = value; //TODO
         }
 
         public string Model
         {
-            get => GetStringContents(MODEL, 16);
+            get => GetStringContents(Contents, MODEL, 16);
             //set => XYZ = value; //TODO
         }
 
@@ -118,48 +121,38 @@ namespace JediComlink
         }
         #endregion
 
-        public Block30(Block parent, int vector, byte[] codeplugContents) : base(parent, vector, codeplugContents)
+        public Block30() { }
+
+        public override void Deserialize(byte[] codeplugContents, int address)
         {
-            Block31 = new Block31(this, BLOCK_31_VECTOR, codeplugContents);
-            Block3D = new Block3D(this, BLOCK_3D_VECTOR, codeplugContents);
-            Block36 = new Block36(this, BLOCK_36_VECTOR, codeplugContents);
-            Block55 = new Block55(this, BLOCK_55_VECTOR, codeplugContents);
-            Block54 = new Block54(this, BLOCK_54_VECTOR, codeplugContents);
-            Block51 = new Block51(this, BLOCK_51_VECTOR, codeplugContents);
-            Block39 = new Block39(this, BLOCK_39_VECTOR, codeplugContents);
-            Block3B = new Block3B(this, BLOCK_3B_VECTOR, codeplugContents);
-            Block34 = new Block34(this, BLOCK_34_VECTOR, codeplugContents);
-            Block35 = new Block35(this, BLOCK_35_VECTOR, codeplugContents);
-            Block3C = new Block3C(this, BLOCK_3C_VECTOR, codeplugContents);
-            Block73 = new Block73(this, BLOCK_73_VECTOR, codeplugContents);
+            Contents = GetContents(codeplugContents, address);
+            Block31 = Deserialize<Block31>(Contents, BLOCK_31_VECTOR, codeplugContents);
+            Block3D = Deserialize<Block3D>(Contents, BLOCK_3D_VECTOR, codeplugContents);
+            Block36 = Deserialize<Block36>(Contents, BLOCK_36_VECTOR, codeplugContents);
+            Block55 = Deserialize<Block55>(Contents, BLOCK_55_VECTOR, codeplugContents);
+            Block54 = Deserialize<Block54>(Contents, BLOCK_54_VECTOR, codeplugContents);
+            Block51 = Deserialize<Block51>(Contents, BLOCK_51_VECTOR, codeplugContents);
+            Block39 = Deserialize<Block39>(Contents, BLOCK_39_VECTOR, codeplugContents);
+            Block3B = Deserialize<Block3B>(Contents, BLOCK_3B_VECTOR, codeplugContents);
+            Block34 = Deserialize<Block34>(Contents, BLOCK_34_VECTOR, codeplugContents);
+            Block35 = Deserialize<Block35>(Contents, BLOCK_35_VECTOR, codeplugContents);
+            Block3C = Deserialize<Block3C>(Contents, BLOCK_3C_VECTOR, codeplugContents);
+            Block73 = Deserialize<Block73>(Contents, BLOCK_73_VECTOR, codeplugContents);
         }
 
         public override string ToString()
         {
-            var s = new String(' ', Level * 2);
             var sb = new StringBuilder();
             sb.AppendLine(GetTextHeader());
-            sb.AppendLine(s + $"Unknown1 Bytes: {FormatHex(Unknown1)}");
-            sb.AppendLine(s + $"Serial: {Serial}");
-            sb.AppendLine(s + $"Model: {Model}");
-            sb.AppendLine(s + $"Codeplug Time: {TimeStamp}");
-            sb.AppendLine(s + $"Unknown2 Bytes: {FormatHex(Unknown2)}");
-            sb.AppendLine(s + $"External Codeplug Size: {ExternalCodeplugSize}");
-            sb.AppendLine(s + $"Block 31 Vector: {Block31?.Address:X4}");
-            sb.AppendLine(s + $"Block 3D Vector: {Block3D?.Address:X4}");
-            sb.AppendLine(s + $"Block 36 Vector: {Block36?.Address:X4}");
-            sb.AppendLine(s + $"Block 55 Vector: {Block55?.Address:X4}");
-            sb.AppendLine(s + $"Block 54 Vector: {Block54?.Address:X4}");
-            sb.AppendLine(s + $"Block 51 Vector: {Block51?.Address:X4}");
-            sb.AppendLine(s + $"Unknown3 Bytes: {FormatHex(Unknown3)}");
-            sb.AppendLine(s + $"Block 39 Vector: {Block39?.Address:X4}");
-            sb.AppendLine(s + $"Block 3B Vector: {Block3B?.Address:X4}");
-            sb.AppendLine(s + $"Block 34 Vector: {Block34?.Address:X4}");
-            sb.AppendLine(s + $"Block 35 Vector: {Block35?.Address:X4}");
-            sb.AppendLine(s + $"Block 3C Vector: {Block3C?.Address:X4}");
-            sb.AppendLine(s + $"Block 73 Vector: {Block73?.Address:X4}");
-            sb.AppendLine(s + $"Unknown4 Bytes: {FormatHex(Unknown4)}");
-            sb.AppendLine(s + $"Unknown5 Bytes: {FormatHex(Unknown5)}");
+            sb.AppendLine($"Unknown1 Bytes: {FormatHex(Unknown1)}");
+            sb.AppendLine($"Serial: {Serial}");
+            sb.AppendLine($"Model: {Model}");
+            sb.AppendLine($"Codeplug Time: {TimeStamp}");
+            sb.AppendLine($"Unknown2 Bytes: {FormatHex(Unknown2)}");
+            sb.AppendLine($"External Codeplug Size: {ExternalCodeplugSize}");
+            sb.AppendLine($"Unknown3 Bytes: {FormatHex(Unknown3)}");
+            sb.AppendLine($"Unknown4 Bytes: {FormatHex(Unknown4)}");
+            sb.AppendLine($"Unknown5 Bytes: {FormatHex(Unknown5)}");
 
             sb.AppendLine(Block31.ToString());
             sb.AppendLine(Block3D.ToString());

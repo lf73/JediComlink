@@ -9,6 +9,9 @@ namespace JediComlink
 {
     public class Block03 : Block
     {
+        private byte[] _contents;
+        public Span<byte> Contents { get => _contents; set => _contents = value.ToArray(); }
+
         public override int Id { get => 0x03; }
         public override string Description { get => "HWConfig Vector"; }
 
@@ -28,22 +31,20 @@ namespace JediComlink
         public Block0D Block0D { get; set; }
         #endregion
 
- 
-        public Block03(Block parent, int vector, byte[] codeplugContents) : base(parent, vector, codeplugContents)
-        {
-            Block04 = new Block04(this, BLOCK_04_VECTOR, codeplugContents);
-            Block05 = new Block05(this, BLOCK_05_VECTOR, codeplugContents);
-            Block0D = new Block0D(this, BLOCK_0D_VECTOR, codeplugContents);
-        }
+        public Block03() { }
 
+        public override void Deserialize(byte[] codeplugContents, int address)
+        {
+            Contents = GetContents(codeplugContents, address);
+            Block04 = Deserialize<Block04>(Contents, BLOCK_04_VECTOR, codeplugContents);
+            Block05 = Deserialize<Block05>(Contents, BLOCK_05_VECTOR, codeplugContents);
+            Block0D = Deserialize<Block0D>(Contents, BLOCK_0D_VECTOR, codeplugContents);
+        }
+ 
         public override string ToString()
         {
-            var s = new String(' ', Level * 2);
             var sb = new StringBuilder();
             sb.AppendLine(GetTextHeader());
-            sb.AppendLine(s + $"Block 04 Vector: {Block04?.Address:X4}");
-            sb.AppendLine(s + $"Block 05 Vector: {Block05?.Address:X4}");
-            sb.AppendLine(s + $"Block 0D Vector: {Block0D?.Address:X4}");
 
             sb.AppendLine(Block04.ToString());
             sb.AppendLine(Block05.ToString());

@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Security.Cryptography;
 using System.Text;
+using System.Windows.Forms;
 
 namespace JediComlink
 {
@@ -12,43 +12,16 @@ namespace JediComlink
 
         public abstract string Description { get; }
 
-        public Block Parent { get; set; }
-
-        public Codeplug Codeplug { get; set; }
-
-        private byte[] _contents;
-        protected internal Span<Byte> Contents
-        {
-            get
-            {
-                return _contents.AsSpan();
-            }
-            set
-            {
-                _contents = value.ToArray();
-            }
-        }
-
-        public int Level { get; set; }
-
-        public int Address { get; set; }
-
         protected Block() { }
 
-        public Block(Block parent, int vector, byte[] codeplugContents)
-        {
-            Codeplug = parent.Codeplug;
-            Parent = parent;
-            Level = parent.Level + 1;
+        //public Block(Block parent, int vector, byte[] codeplugContents)
+        //{
+        //    var Address = parent.Contents[vector] * 0x100 + parent.Contents[vector + 1];
+        //    var length = codeplugContents[Address];
+        //    Contents = codeplugContents.AsSpan().Slice(Address + 2, length - 1);
+        //}
 
-            Address = parent.Contents[vector] * 0x100 + parent.Contents[vector + 1];
-            var length = codeplugContents[Address];
-            Contents = codeplugContents.AsSpan().Slice(Address + 2, length - 1);
-
-            Codeplug.Children.Add(this);
-        }
-
-        public string GetStringContents(int offset, int length)
+        public string GetStringContents(Span<byte> Contents, int offset, int length)
         {
             var value = "";
             foreach (var c in Contents.Slice(offset, length))
@@ -61,9 +34,8 @@ namespace JediComlink
 
         public string GetTextHeader()
         {
-            var s = new String(' ', (Parent?.Level).GetValueOrDefault() * 2);
-            return Environment.NewLine + s + $"Block {Id:X2} Length {_contents.Length} Starting At {Address:X4}    {Description}" + Environment.NewLine +
-                    s + "---------------------------";
+            return Environment.NewLine + $"Block {Id:X2}  {Description}" + Environment.NewLine +
+                    "---------------------------";
         }
 
         public abstract override string ToString();
@@ -85,28 +57,42 @@ namespace JediComlink
             return (nibbles >> 4) * 10 + (nibbles & 0x0f);
         }
 
-        protected virtual void UpdateContents()
+        public byte[] Serialize()
         {
+            //byte[] bytes = new byte[Contents.Length + 3];
+            //bytes[0] = (byte)(Contents.Length + 1);
+            //bytes[1] = (byte)Id;
+            //for (int i = 0; i < Contents.Length; i++)
+            //{
+            //    bytes[2 + i] = Contents[i];
+            //}
 
+            //int checksum = -0x55 + bytes[0] + bytes[1];
+            //foreach (var b in Contents)
+            //    checksum += b;
+            //bytes[bytes.Length - 1] = (byte)(checksum &= 0xFF);
+
+            //return bytes;
+            return null;
         }
 
-        public byte[] GetBytes()
+        public abstract void Deserialize(byte[] codeplugContents, int address);
+
+        public virtual Span<byte> GetContents(byte[] codeplugContents, int address)
         {
-            UpdateContents();
-            byte[] bytes = new byte[Contents.Length + 3];
-            bytes[0] = (byte)(Contents.Length + 1);
-            bytes[1] = (byte)Id;
-            for (int i = 0; i < Contents.Length; i++)
-            {
-                bytes[2 + i] = Contents[i];
-            }
+            var length = codeplugContents[address];
+            return codeplugContents.AsSpan().Slice(address + 2, length - 1).ToArray();
+        }
 
-            int checksum = -0x55 + bytes[0] + bytes[1];
-            foreach (var b in Contents)
-                checksum += b;
-            bytes[bytes.Length - 1] = (byte)(checksum &= 0xFF);
+        protected static T Deserialize<T>(Span<byte> parentContents, int vector, byte[] codeplugContents) where T : Block, new()
+        {
+            var address = parentContents[vector] * 0x100 + parentContents[vector + 1];
 
-            return bytes;
+            if (address == 0) return null;
+
+            var x = new T();
+            x.Deserialize(codeplugContents, address);
+            return (T)x;
         }
     }
 
@@ -119,7 +105,7 @@ namespace JediComlink
       //          checksum -= Contents[Length + 2];
       //          checksum -= Contents[Length + 3];
       //          checksum &= 0xFFFF;
-      //          //sb.AppendLine(s + $"Checksum {checksum:X4}");
+      //          //sb.AppendLine($"Checksum {checksum:X4}");
       //      }
       //      else
       //      {
@@ -128,7 +114,7 @@ namespace JediComlink
       //              checksum += b;
       //          //checksum -= Contents[Length + 1];
       //          checksum &= 0xFF;
-      //          //sb.AppendLine(s + $"Checksum {checksum:X2}");
+      //          //sb.AppendLine($"Checksum {checksum:X2}");
       //      }
 
 

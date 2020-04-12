@@ -627,7 +627,7 @@ namespace JediComlink
         {
  
             var codeplug = new Codeplug(@"c:\JediDumps\466AWA2867H01UCD6PW1BN-Codeplug.bin");
-            var x = codeplug.GetBytes();
+           // var x = codeplug.GetBytes();
             File.WriteAllText(@"c:\JediDumps\TestParse.txt", codeplug.GetText());
                 //int i = 0;
 

@@ -12,12 +12,12 @@ namespace JediComlink
     {
         public Block01 InternalCodeplug { get; protected set; }
 
-        public List<Block> Children { get; protected set; } = new List<Block>();
+        public Block30 ExternalCodeplug { get; protected set; }
 
         public Codeplug(string path)
         {           
             var contents = File.ReadAllBytes(path);
-            InternalCodeplug = new Block01(this, contents);
+            InternalCodeplug = new Block01(contents);
         }
 
         public string GetText()
@@ -29,15 +29,15 @@ namespace JediComlink
         {
             byte[] bytes = new byte[InternalCodeplug.InternalCodeplugSize];
             int i = 0;
-            var blockBytes = InternalCodeplug.GetBytes();
+            var blockBytes = InternalCodeplug.Serialize();
             Array.Copy(blockBytes, 0, bytes, i, blockBytes.Length);
-            i += blockBytes.Length;
-            foreach (var block in Children)
-            {
-                blockBytes = block.GetBytes();
-                Array.Copy(blockBytes, 0, bytes, i, blockBytes.Length);
-                i += blockBytes.Length;
-            }
+            //i += blockBytes.Length;
+            //foreach (var block in Children)
+            //{
+            //    blockBytes = block.GetBytes();
+            //    Array.Copy(blockBytes, 0, bytes, i, blockBytes.Length);
+            //    i += blockBytes.Length;
+            //}
 
             return bytes;
         }

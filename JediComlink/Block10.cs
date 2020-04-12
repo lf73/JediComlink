@@ -9,6 +9,9 @@ namespace JediComlink
 {
     public class Block10 : Block
     {
+        private byte[] _contents;
+        public Span<byte> Contents { get => _contents; set => _contents = value.ToArray(); }
+
         public override int Id { get => 0x10; }
         public override string Description { get => "Feature Descriptor Block"; }
 
@@ -27,18 +30,20 @@ namespace JediComlink
         private const int FLASHCODE = 0x1B;
         #endregion
 
-        public Block10(Block parent, int vector, byte[] codeplugContents) : base(parent, vector, codeplugContents)
+        public Block10() { }
+
+        public override void Deserialize(byte[] codeplugContents, int address)
         {
+            Contents = GetContents(codeplugContents, address);
             var flashCode = FormatHex(Contents.Slice(FLASHCODE, 6).ToArray()).Replace(" ", "");
             FlashCode = flashCode.Substring(0, 6) + '-' + flashCode.Substring(6);
         }
 
         public override string ToString()
         {
-            var s = new String(' ', Level * 2);
             var sb = new StringBuilder();
             sb.AppendLine(GetTextHeader());
-            sb.AppendLine(s + $"FlashCode: {FlashCode}");
+            sb.AppendLine($"FlashCode: {FlashCode}");
             return sb.ToString();
         }
     }

@@ -9,6 +9,9 @@ namespace JediComlink
 {
     public class Block3C : Block
     {
+        private byte[] _contents;
+        public Span<byte> Contents { get => _contents; set => _contents = value.ToArray(); }
+
         public override int Id { get => 0x3C; }
         public override string Description { get => "Hardware Button Configuration"; }
 
@@ -23,9 +26,11 @@ namespace JediComlink
 
         #endregion
 
-        public Block3C(Block parent, int vector, byte[] codeplugContents) : base(parent, vector, codeplugContents)
-        {
+        public Block3C() { }
 
+        public override void Deserialize(byte[] codeplugContents, int address)
+        {
+            Contents = GetContents(codeplugContents, address);
         }
 
         public override string ToString()
