@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace JediComlink
 {
-    public class Block08 : Block
+    public class Block08 : Block //Block Vector Array
     {
         private byte[] _contents;
         public Span<byte> Contents { get => _contents; set => _contents = value.ToArray(); }
@@ -44,9 +44,9 @@ namespace JediComlink
             var nextAddress = address + Contents.Length + BlockSizeAdjustment;
 
             int i = 0;
-            foreach (var block09 in Block09List)
+            foreach (var block in Block09List)
             {
-                nextAddress = SerializeChild(block09, i * 2 + 1, codeplugContents, nextAddress, contents);
+                nextAddress = SerializeChild(block, i * 2 + 1, codeplugContents, nextAddress, contents);
                 i++;
             }
 
@@ -60,9 +60,9 @@ namespace JediComlink
             sb.AppendLine(GetTextHeader());
             sb.AppendLine($"Block 09 Couunt: {Block09List.Count}");
 
-            foreach (var block09 in Block09List)
+            foreach (var block in Block09List)
             {
-                sb.AppendLine(block09.ToString());
+                sb.AppendLine(block.ToString());
             }
 
             return sb.ToString();

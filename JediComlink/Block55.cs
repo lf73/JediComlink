@@ -7,18 +7,13 @@ using System.Threading.Tasks;
 
 namespace JediComlink
 {
-    public class Block55 : BlockLong
+    public class Block55 : BlockLong //Block Vector Array
     {
         private byte[] _contents;
         public Span<byte> Contents { get => _contents; set => _contents = value.ToArray(); }
 
         public override int Id { get => 0x55; }
         public override string Description { get => "Personality Vector"; }
-
-        #region Propeties
-        public Block56 Block56 { get; set; }
-
-        #endregion
 
         #region Definition
         /*  0  1  2  3   4  5  6  7    8  9  A  B   C  D  E  F
@@ -30,19 +25,33 @@ namespace JediComlink
         private const int BLOCK_56_VECTOR = 0x01;
         #endregion
 
+        #region Propeties
+        public List<Block56> Block56List { get; set; } = new List<Block56>();
+        #endregion
+
         public Block55() { }
 
         public override void Deserialize(byte[] codeplugContents, int address)
         {
             Contents = Deserializer(codeplugContents, address);
-            Block56 = Deserialize<Block56>(Contents, BLOCK_56_VECTOR, codeplugContents);
+            for (int i = 0; i < Contents[0]; i++)
+            {
+                Block56List.Add(Deserialize<Block56>(Contents, i * 2 + 1, codeplugContents));
+            }
         }
 
         public override int Serialize(byte[] codeplugContents, int address)
         {
             var contents = Contents.ToArray().AsSpan(); //TODO
             var nextAddress = address + Contents.Length + BlockSizeAdjustment;
-            nextAddress = SerializeChild(Block56, BLOCK_56_VECTOR, codeplugContents, nextAddress, contents);
+
+            int i = 0;
+            foreach (var block in Block56List)
+            {
+                nextAddress = SerializeChild(block, i * 2 + 1, codeplugContents, nextAddress, contents);
+                i++;
+            }
+
             Serializer(codeplugContents, address, contents);
             return nextAddress;
         }
@@ -51,7 +60,12 @@ namespace JediComlink
         {
             var sb = new StringBuilder();
             sb.AppendLine(GetTextHeader());
-            sb.AppendLine(Block56.ToString());
+            sb.AppendLine($"Block 56 Couunt: {Block56List.Count}");
+
+            foreach (var block in Block56List)
+            {
+                sb.AppendLine(block.ToString());
+            }
 
             return sb.ToString();
         }
