@@ -1,13 +1,11 @@
 ﻿using System;
+using System.Security.Permissions;
 using System.Text;
 
 namespace JediComlink
 {
     public class Block01 : Block
     {
-        private byte[] _contents;
-        public Span<byte> Contents { get => _contents; set => _contents = value.ToArray(); }
-
         public override int Id { get => 0x01; }
         public override string Description { get => "Internal Radio"; }
 
@@ -19,6 +17,7 @@ namespace JediComlink
         3: 03 22 BB C8  89 54 02 69   30 B0 
         */
 
+        private const int CONTENTS_LENGTH = 0x3A;
         private const int EXTERNAL_CODEPLUG_VECTOR = 0x00; //01
         private const int SERIAL = 0x02; //03 04 05 06 07 08 09 0A 0B
         private const int MODEL = 0x0C; //0D 0E 0F 10 11 12 13 14 15 16 17 18 19 1A 1B
@@ -34,90 +33,66 @@ namespace JediComlink
         #endregion
 
         #region Propeties
-        public int ExternalCodeplugVector
-        {
-            get => Contents[EXTERNAL_CODEPLUG_VECTOR] * 0x100 + Contents[EXTERNAL_CODEPLUG_VECTOR + 1];
-            set
-            {
-                if (value < 0 || value > 0xFFFF) throw new ArgumentException("Out of range 0x0000 to 0xFFFF");
-                Contents[EXTERNAL_CODEPLUG_VECTOR] = (byte)(value / 0x100);
-                Contents[EXTERNAL_CODEPLUG_VECTOR + 1] = (byte)(value % 0x100);
-            }
-        }
-
-        public string Serial
-        {
-            get => GetStringContents(Contents, SERIAL, 10);
-            //set => XYZ = value; //TODO
-        }
-
-        public string Model
-        {
-            get => GetStringContents(Contents, MODEL, 16);
-            //set => XYZ = value; //TODO
-        }
-
-        public byte[] Unknown1 //TODO  Maybe code plug version?
-        {
-            get => Contents.Slice(UNKNOWN1, 2).ToArray();
-            //set => XYZ = value; //TODO
-        }
-        public int InternalCodeplugSize
-        {
-            get => Contents[INTERNAL_CODEPLUG_SIZE] * 0x100 + Contents[INTERNAL_CODEPLUG_SIZE + 1];
-            set
-            {
-                if (value < 0 || value > 0xFFFF) throw new ArgumentException("Out of range 0x0000 to 0xFFFF");
-                Contents[INTERNAL_CODEPLUG_SIZE] = (byte)(value / 0x100);
-                Contents[INTERNAL_CODEPLUG_SIZE + 1] = (byte)(value % 0x100);
-            }
-        }
-
-        public byte[] Unknown2
-        {
-            get => Contents.Slice(UNKNOWN2, 4).ToArray();
-            //set => XYZ = value; //TODO
-        }
-
+        public int ExternalCodeplugVector { get; set; }
+        public string Serial { get; set; }
+        public string Model { get; set; }
+        public byte[] Unknown1 { get; set; }
+        public int InternalCodeplugSize { get; set; }
+        public byte[] Unknown2 { get; set; }
         public Block02 Block02 { get; set; }
-
         public Block56 Block56 { get; set; }
-        public byte[] Unknown3
-        {
-            get => Contents.Slice(UNKNOWN3, 4).ToArray();
-            //set => XYZ = value; //TODO
-        }
-
+        public byte[] Unknown3 { get; set; }
         public Block10 Block10 { get; set; }
-
-        public byte[] Unknown4
-        {
-            get => Contents.Slice(UNKNOWN4, 2).ToArray();
-            //set => XYZ = value; //TODO
-        }
-
-        public byte[] AuthCode
-        {
-            get => Contents.Slice(AUTH_CODE, 10).ToArray();
-            //set => XYZ = value; //TODO
-        }
+        public byte[] Unknown4 { get; set; }
+        public byte[] AuthCode { get; set; }
         #endregion
 
-
-        public override void Deserialize(byte[] codeplugContents, int address)
-        {
-            var Address = 0x0000;
-            var length = codeplugContents[Address];
-            Contents = codeplugContents.AsSpan().Slice(Address + 2, length - 1);
-
-            Block02 = Deserialize<Block02>(Contents, BLOCK_02_VECTOR, codeplugContents);
-            Block56 = Deserialize<Block56>(Contents, BLOCK_56_VECTOR, codeplugContents);
-            Block10 = Deserialize<Block10>(Contents, BLOCK_10_VECTOR, codeplugContents);
-        }
+        public Block01() { }
 
         public Block01(byte[] codeplugContents)
         {
             Deserialize(codeplugContents, 0);
+        }
+
+        public override void Deserialize(byte[] codeplugContents, int address)
+        {
+            var length = codeplugContents[address];
+            var contents = codeplugContents.AsSpan().Slice(address + 2, length - 1);
+
+            ExternalCodeplugVector = contents[EXTERNAL_CODEPLUG_VECTOR] * 0x100 + contents[EXTERNAL_CODEPLUG_VECTOR + 1];
+            Serial = GetStringContents(contents, SERIAL, 10);
+            Model = GetStringContents(contents, MODEL, 16);
+            Unknown1 = contents.Slice(UNKNOWN1, 2).ToArray();
+            InternalCodeplugSize = contents[INTERNAL_CODEPLUG_SIZE] * 0x100 + contents[INTERNAL_CODEPLUG_SIZE + 1];
+            Unknown2 = contents.Slice(UNKNOWN2, 4).ToArray();
+            Block02 = Deserialize<Block02>(contents, BLOCK_02_VECTOR, codeplugContents);
+            Block56 = Deserialize<Block56>(contents, BLOCK_56_VECTOR, codeplugContents);
+            Unknown3 = contents.Slice(UNKNOWN3, 4).ToArray();
+            Block10 = Deserialize<Block10>(contents, BLOCK_10_VECTOR, codeplugContents);
+            Unknown4 = contents.Slice(UNKNOWN4, 2).ToArray();
+            AuthCode = contents.Slice(AUTH_CODE, 10).ToArray();
+        }
+
+        public override int Serialize(byte[] codeplugContents, int address)
+        {
+            var contents = new byte[CONTENTS_LENGTH].AsSpan();
+            var nextAddress = address + CONTENTS_LENGTH + BlockSizeAdjustment;
+            contents[EXTERNAL_CODEPLUG_VECTOR] = (byte)(ExternalCodeplugVector / 0x100);
+            contents[EXTERNAL_CODEPLUG_VECTOR + 1] = (byte)(ExternalCodeplugVector % 0x100);
+            Encoding.ASCII.GetBytes(Serial).AsSpan().CopyTo(contents.Slice(SERIAL, 10));
+            Encoding.ASCII.GetBytes(Model).AsSpan().CopyTo(contents.Slice(MODEL, 16));
+            Unknown1.AsSpan().CopyTo(contents.Slice(UNKNOWN1));
+            contents[INTERNAL_CODEPLUG_SIZE] = (byte)(InternalCodeplugSize / 0x100);
+            contents[INTERNAL_CODEPLUG_SIZE + 1] = (byte)(InternalCodeplugSize % 0x100);
+            Unknown2.AsSpan().CopyTo(contents.Slice(UNKNOWN2));
+            nextAddress = SerializeChild(Block02, BLOCK_02_VECTOR, codeplugContents, nextAddress, contents);
+            nextAddress = SerializeChild(Block56, BLOCK_56_VECTOR, codeplugContents, nextAddress, contents);
+            Unknown3.AsSpan().CopyTo(contents.Slice(UNKNOWN3));
+            nextAddress = SerializeChild(Block10, BLOCK_10_VECTOR, codeplugContents, nextAddress, contents);
+            Unknown4.AsSpan().CopyTo(contents.Slice(UNKNOWN4));
+            AuthCode.AsSpan().CopyTo(contents.Slice(AUTH_CODE));
+            Serializer(codeplugContents, address, contents);
+            return nextAddress;
         }
 
         public override string ToString()

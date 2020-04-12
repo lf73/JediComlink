@@ -12,15 +12,63 @@ namespace JediComlink
 
         public abstract string Description { get; }
 
-        protected Block() { }
+        protected virtual int BlockSizeAdjustment { get => 3; }
 
-        //public Block(Block parent, int vector, byte[] codeplugContents)
-        //{
-        //    var Address = parent.Contents[vector] * 0x100 + parent.Contents[vector + 1];
-        //    var length = codeplugContents[Address];
-        //    Contents = codeplugContents.AsSpan().Slice(Address + 2, length - 1);
-        //}
+        public abstract void Deserialize(byte[] codeplugContents, int address);
 
+        public abstract int Serialize(byte[] codeplugContents, int address);
+
+        public abstract override string ToString();
+
+
+
+        protected static T Deserialize<T>(Span<byte> parentContents, int vector, byte[] codeplugContents) where T : Block, new()
+        {
+            var address = parentContents[vector] * 0x100 + parentContents[vector + 1];
+
+            if (address == 0) return null;
+
+            var x = new T();
+            x.Deserialize(codeplugContents, address);
+            return (T)x;
+        }
+
+        public virtual Span<byte> Deserializer(byte[] codeplugContents, int address)
+        {
+            var length = codeplugContents[address];
+            return codeplugContents.AsSpan().Slice(address + 2, length - 1).ToArray();
+            //TODO Set a new property such as HasValidChecksum  
+        }
+
+        protected virtual int Serializer(byte[] codeplugContents, int address, Span<byte> contents)
+        {
+            codeplugContents[address] = (byte)(contents.Length + 1);
+            codeplugContents[address + 1] = (byte)Id;
+            contents.CopyTo(codeplugContents.AsSpan(address + 2));
+
+            int checksum = -0x55 + codeplugContents[address] + codeplugContents[address + 1];
+            foreach (var b in contents)
+                checksum += b;
+            codeplugContents[address + contents.Length + 2] = (byte)(checksum &= 0xFF);
+            return contents.Length + BlockSizeAdjustment; //Since adding the BlockSizeAdjustment may be able to eliminate the return.
+        }
+
+        protected int SerializeChild(Block child, int vector, byte[] codeplugContents, int address, Span<byte> contents)
+        {
+            if (child != null)
+            {
+                contents[vector] = (byte)(address / 0x100);
+                contents[vector + 1] = (byte)(address % 0x100);
+                return child.Serialize(codeplugContents, address);
+            }
+            else
+            {
+                return address;
+            }
+        }
+
+        #region Helper Methods
+        //TODO Consider moving these helper functions
         public string GetStringContents(Span<byte> Contents, int offset, int length)
         {
             var value = "";
@@ -38,8 +86,6 @@ namespace JediComlink
                     "---------------------------";
         }
 
-        public abstract override string ToString();
-
         protected string FormatHex(byte[] data)
         {
             var sb = new StringBuilder();
@@ -56,67 +102,7 @@ namespace JediComlink
         {
             return (nibbles >> 4) * 10 + (nibbles & 0x0f);
         }
+        #endregion
 
-        public byte[] Serialize()
-        {
-            //byte[] bytes = new byte[Contents.Length + 3];
-            //bytes[0] = (byte)(Contents.Length + 1);
-            //bytes[1] = (byte)Id;
-            //for (int i = 0; i < Contents.Length; i++)
-            //{
-            //    bytes[2 + i] = Contents[i];
-            //}
-
-            //int checksum = -0x55 + bytes[0] + bytes[1];
-            //foreach (var b in Contents)
-            //    checksum += b;
-            //bytes[bytes.Length - 1] = (byte)(checksum &= 0xFF);
-
-            //return bytes;
-            return null;
-        }
-
-        public abstract void Deserialize(byte[] codeplugContents, int address);
-
-        public virtual Span<byte> GetContents(byte[] codeplugContents, int address)
-        {
-            var length = codeplugContents[address];
-            return codeplugContents.AsSpan().Slice(address + 2, length - 1).ToArray();
-        }
-
-        protected static T Deserialize<T>(Span<byte> parentContents, int vector, byte[] codeplugContents) where T : Block, new()
-        {
-            var address = parentContents[vector] * 0x100 + parentContents[vector + 1];
-
-            if (address == 0) return null;
-
-            var x = new T();
-            x.Deserialize(codeplugContents, address);
-            return (T)x;
-        }
     }
-
-    //ToDo  Add in Checksum
-      //if (LongChecksum)
-      //      {
-      //          int checksum = -0x5555;
-      //          foreach (var b in Contents)
-      //              checksum += b;
-      //          checksum -= Contents[Length + 2];
-      //          checksum -= Contents[Length + 3];
-      //          checksum &= 0xFFFF;
-      //          //sb.AppendLine($"Checksum {checksum:X4}");
-      //      }
-      //      else
-      //      {
-      //          int checksum = -0x55;
-      //          foreach (var b in Contents)
-      //              checksum += b;
-      //          //checksum -= Contents[Length + 1];
-      //          checksum &= 0xFF;
-      //          //sb.AppendLine($"Checksum {checksum:X2}");
-      //      }
-
-
-
 }

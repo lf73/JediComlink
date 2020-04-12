@@ -31,8 +31,14 @@ namespace JediComlink
 
         public override void Deserialize(byte[] codeplugContents, int address)
         {
-            Contents = GetContents(codeplugContents, address);
+            Contents = Deserializer(codeplugContents, address);
             Block48 = Deserialize<Block48>(Contents, BLOCK_48_VECTOR, codeplugContents);
+        }
+
+        public override int Serialize(byte[] codeplugContents, int address)
+        {
+            var contents = Contents.ToArray().AsSpan(); //TODO
+            return Serializer(codeplugContents, address, contents) + address;
         }
 
         public override string ToString()

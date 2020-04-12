@@ -28,9 +28,12 @@ namespace JediComlink
         public byte[] GetBytes()
         {
             byte[] bytes = new byte[InternalCodeplug.InternalCodeplugSize];
-            int i = 0;
-            var blockBytes = InternalCodeplug.Serialize();
-            Array.Copy(blockBytes, 0, bytes, i, blockBytes.Length);
+            InternalCodeplug.Serialize(bytes, 0);
+            return bytes;
+
+            //int i = 0;
+            //var blockBytes = InternalCodeplug.Serialize();
+            //Array.Copy(blockBytes, 0, bytes, i, blockBytes.Length);
             //i += blockBytes.Length;
             //foreach (var block in Children)
             //{
@@ -39,7 +42,7 @@ namespace JediComlink
             //    i += blockBytes.Length;
             //}
 
-            return bytes;
+            //return bytes;
         }
 
 
