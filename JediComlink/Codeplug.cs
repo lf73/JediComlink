@@ -1,10 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Security.Cryptography;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace JediComlink
 {
@@ -15,9 +12,13 @@ namespace JediComlink
         public Block30 ExternalCodeplug { get; protected set; }
 
         public Codeplug(string path)
-        {           
+        {
             var contents = File.ReadAllBytes(path);
-            InternalCodeplug = new Block01(contents);
+
+            InternalCodeplug = new Block01();
+            InternalCodeplug.Deserialize(contents, 0);
+
+
         }
 
         public string GetText()
@@ -30,21 +31,6 @@ namespace JediComlink
             byte[] bytes = new byte[InternalCodeplug.InternalCodeplugSize];
             InternalCodeplug.Serialize(bytes, 0);
             return bytes;
-
-            //int i = 0;
-            //var blockBytes = InternalCodeplug.Serialize();
-            //Array.Copy(blockBytes, 0, bytes, i, blockBytes.Length);
-            //i += blockBytes.Length;
-            //foreach (var block in Children)
-            //{
-            //    blockBytes = block.GetBytes();
-            //    Array.Copy(blockBytes, 0, bytes, i, blockBytes.Length);
-            //    i += blockBytes.Length;
-            //}
-
-            //return bytes;
         }
-
-
     }
 }

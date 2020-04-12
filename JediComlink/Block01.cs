@@ -49,11 +49,6 @@ namespace JediComlink
 
         public Block01() { }
 
-        public Block01(byte[] codeplugContents)
-        {
-            Deserialize(codeplugContents, 0);
-        }
-
         public override void Deserialize(byte[] codeplugContents, int address)
         {
             var length = codeplugContents[address];
