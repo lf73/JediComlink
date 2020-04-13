@@ -54,6 +54,15 @@ namespace JediComlink
             var nextAddress = address + Contents.Length + BlockSizeAdjustment;
             nextAddress = SerializeChild(Block0E, BLOCK_0E_VECTOR, codeplugContents, nextAddress, contents);
             Serializer(codeplugContents, address, contents);
+
+            if (nextAddress == 0x01F4)
+            {
+                //Keep From Fragmenting next block between Internal and External EEPROM
+                codeplugContents[0x01FE] = 0xC0; // Unknown Byte.  Maybe doesn't matter
+                nextAddress = 0x200;
+                //TODO Maybe this can be moved to to superclass?
+            }
+
             return nextAddress;
         }
 

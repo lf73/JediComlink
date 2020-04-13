@@ -68,7 +68,7 @@ namespace JediComlink
         {
             var sb = new StringBuilder();
             sb.AppendLine(GetTextHeader());
-            sb.AppendLine($"Block 56 or 62 Couunt: {Block56or62List.Count}");
+            sb.AppendLine($"Block 56 or 62 Count: {Block56or62List.Count}");
 
             foreach (var block in Block56or62List)
             {

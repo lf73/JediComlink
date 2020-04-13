@@ -15,9 +15,20 @@ namespace JediComlink
         public override int Id { get => 0x3D; }
         public override string Description { get => "Signaling Vector"; }
 
+        #region Definition
+        /*  0  1  2  3   4  5  6  7    8  9  A  B   C  D  E  F
+        0: 03 1B 04 26  00 00 00 00   00 00 00 00  04 72
+        */
+
+        private const int BLOCK_3E_VECTOR = 0x00;
+        private const int BLOCK_44_VECTOR = 0x02;
+        private const int BLOCK_4A_VECTOR = 0x04;
+        private const int BLOCK_A0_VECTOR = 0x0C;
+        #endregion
+
         #region Propeties
         public Block Block3E { get; set; }
-        public byte[] UnknownPointer1 { get; set; }
+        public Block44 Block44 { get; set; }
         public Block Block4A { get; set; }
         public byte[] UnknownPointer2 { get; set; }
         public byte[] UnknownPointer3 { get; set; }
@@ -30,22 +41,23 @@ namespace JediComlink
         public override void Deserialize(byte[] codeplugContents, int address)
         {
             Contents = Deserializer(codeplugContents, address);
-            Block3E = Deserialize<Block3E>(Contents, 0x00, codeplugContents);
-            UnknownPointer1 = Contents.Slice(0x02, 2).ToArray();
-            Block4A = Deserialize<Block4A>(Contents, 0x04, codeplugContents);
+            Block3E = Deserialize<Block3E>(Contents, BLOCK_3E_VECTOR, codeplugContents);
+            Block44 = Deserialize<Block44>(Contents, BLOCK_44_VECTOR, codeplugContents);
+            Block4A = Deserialize<Block4A>(Contents, BLOCK_4A_VECTOR, codeplugContents);
             UnknownPointer2 = Contents.Slice(0x06, 2).ToArray();
             UnknownPointer3 = Contents.Slice(0x08, 2).ToArray();
             UnknownPointer4 = Contents.Slice(0x0A, 2).ToArray();
-            BlockA0 = Deserialize<BlockA0>(Contents, 0x0C, codeplugContents);
+            BlockA0 = Deserialize<BlockA0>(Contents, BLOCK_A0_VECTOR, codeplugContents);
         }
 
         public override int Serialize(byte[] codeplugContents, int address)
         {
             var contents = Contents.ToArray().AsSpan(); //TODO
             var nextAddress = address + Contents.Length + BlockSizeAdjustment;
-            nextAddress = SerializeChild(Block3E, 0x00, codeplugContents, nextAddress, contents);
-            nextAddress = SerializeChild(Block4A, 0x04, codeplugContents, nextAddress, contents);
-            nextAddress = SerializeChild(BlockA0, 0x0C, codeplugContents, nextAddress, contents);
+            nextAddress = SerializeChild(Block3E, BLOCK_3E_VECTOR, codeplugContents, nextAddress, contents);
+            nextAddress = SerializeChild(Block44, BLOCK_44_VECTOR, codeplugContents, nextAddress, contents);
+            nextAddress = SerializeChild(Block4A, BLOCK_4A_VECTOR, codeplugContents, nextAddress, contents);
+            nextAddress = SerializeChild(BlockA0, BLOCK_A0_VECTOR, codeplugContents, nextAddress, contents);
             Serializer(codeplugContents, address, contents);
             return nextAddress;
         }
@@ -54,13 +66,13 @@ namespace JediComlink
         {
             var sb = new StringBuilder();
             sb.AppendLine(GetTextHeader());
-            sb.AppendLine(Block3E.ToString());
-            sb.AppendLine($"Unknown Pointer: {FormatHex(UnknownPointer1)}");
-            sb.AppendLine(Block4A.ToString());
+            sb.AppendLine(Block3E?.ToString());
+            sb.AppendLine(Block44?.ToString());
+            sb.AppendLine(Block4A?.ToString());
             sb.AppendLine($"Unknown Pointer: {FormatHex(UnknownPointer2)}");
             sb.AppendLine($"Unknown Pointer: {FormatHex(UnknownPointer3)}");
             sb.AppendLine($"Unknown Pointer: {FormatHex(UnknownPointer4)}");
-            sb.AppendLine(BlockA0.ToString());
+            sb.AppendLine(BlockA0?.ToString());
             return sb.ToString();
         }
     }
