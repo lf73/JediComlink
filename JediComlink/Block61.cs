@@ -35,7 +35,19 @@ namespace JediComlink
         public override int Serialize(byte[] codeplugContents, int address)
         {
             var contents = Contents.ToArray().AsSpan(); //TODO
-            return Serializer(codeplugContents, address, contents) + address;
+            var nextAddress = address + Contents.Length + BlockSizeAdjustment;
+
+            //TODO Not sure why this appears in at least two files. Appears to be junk?
+            byte[] rawData = {
+                0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x13, 0x5B, 0x00, 0x00,
+                0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x03,
+                0x22, 0x03, 0x22, 0x03, 0x22, 0x03, 0x22, 0x9A, 0x00, 0x00, 0x00, 0x00,
+                0x00, 0x00, 0x00, 0x00};
+            rawData.CopyTo(codeplugContents.AsSpan(nextAddress));
+            nextAddress += rawData.Length;
+
+            Serializer(codeplugContents, address, contents);
+            return nextAddress;
         }
 
         public override string ToString()

@@ -625,9 +625,20 @@ namespace JediComlink
 
         private void ParseButton_Click(object sender, EventArgs e)
         {
- 
-            var codeplug = new Codeplug(@"c:\JediDumps\466AWA2867H01UCD6PW1BN-Codeplug.bin");
+
+            //var codeplug = new Codeplug(@"c:\JediDumps\466AWA2867H01UCD6PW1BN-Codeplug.bin");
+            //var contents = File.ReadAllBytes(@"c:\JediDumps\466AWA2867H01UCD6PW1BN-Codeplug.bin");
+            var codeplug = new Codeplug(@"c:\JediDumps\432CDN0002H01KDD9PW1BN-Codeplug.bin");
+            var contents = File.ReadAllBytes(@"c:\JediDumps\432CDN0002H01KDD9PW1BN-Codeplug.bin");
             var x = codeplug.Serialize();
+            for (int i = 0; i < x.Length; i++)
+            {
+                if (contents[i] != x[i])
+                {
+                    break;
+                }
+            }
+
             File.WriteAllText(@"c:\JediDumps\TestParse.txt", codeplug.GetText());
                 //int i = 0;
 

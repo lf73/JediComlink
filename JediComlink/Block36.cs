@@ -17,7 +17,6 @@ namespace JediComlink
 
         #region Propeties
         public Block37 Block37 { get; set; }
-        public Block90 Block90 { get; set; }
         #endregion
 
         #region Definition
@@ -28,7 +27,6 @@ namespace JediComlink
         */
 
         private const int BLOCK_37_VECTOR = 0x00;
-        private const int BLOCK_90_VECTOR = 0x06;
         #endregion
 
         public Block36() { }
@@ -37,7 +35,6 @@ namespace JediComlink
         {
             Contents = Deserializer(codeplugContents, address);
             Block37 = Deserialize<Block37>(Contents, BLOCK_37_VECTOR, codeplugContents);
-            Block90 = Deserialize<Block90>(Contents, BLOCK_90_VECTOR, codeplugContents);
         }
 
         public override int Serialize(byte[] codeplugContents, int address)
@@ -45,7 +42,6 @@ namespace JediComlink
             var contents = Contents.ToArray().AsSpan(); //TODO
             var nextAddress = address + Contents.Length + BlockSizeAdjustment;
             nextAddress = SerializeChild(Block37, BLOCK_37_VECTOR, codeplugContents, nextAddress, contents);
-            nextAddress = SerializeChild(Block90, BLOCK_90_VECTOR, codeplugContents, nextAddress, contents);
             Serializer(codeplugContents, address, contents);
             return nextAddress;
         }
@@ -55,7 +51,6 @@ namespace JediComlink
             var sb = new StringBuilder();
             sb.AppendLine(GetTextHeader());
             sb.AppendLine(Block37.ToString());
-            sb.AppendLine(Block90.ToString());
 
             return sb.ToString();
         }

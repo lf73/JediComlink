@@ -16,7 +16,6 @@ namespace JediComlink
         public override string Description { get => "Radio Wide"; }
 
         #region Propeties
-        public Block90 Block90 { get; set; }
         #endregion
 
         #region Definition
@@ -27,7 +26,6 @@ namespace JediComlink
         3: 00 00 00 00  00 00
         */
 
-        private const int BLOCK_90_VECTOR = 0x02;
         #endregion
 
         public Block31() { }
@@ -35,24 +33,18 @@ namespace JediComlink
         public override void Deserialize(byte[] codeplugContents, int address)
         {
             Contents = Deserializer(codeplugContents, address);
-            Block90 = Deserialize<Block90>(Contents, BLOCK_90_VECTOR, codeplugContents);
-
         }
 
         public override int Serialize(byte[] codeplugContents, int address)
         {
             var contents = Contents.ToArray().AsSpan(); //TODO
-            var nextAddress = address + Contents.Length + BlockSizeAdjustment;
-            nextAddress = SerializeChild(Block90, BLOCK_90_VECTOR, codeplugContents, nextAddress, contents);
-            Serializer(codeplugContents, address, contents);
-            return nextAddress;
+            return Serializer(codeplugContents, address, contents) + address;
         }
 
         public override string ToString()
         {
             var sb = new StringBuilder();
             sb.AppendLine(GetTextHeader());
-            sb.AppendLine(Block90.ToString());
 
             return sb.ToString();
         }

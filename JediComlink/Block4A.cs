@@ -32,8 +32,8 @@ namespace JediComlink
 
         private const int BLOCK_3F_VECTOR = 0x00;
         private const int BLOCK_41_VECTOR = 0x02;
-        private const int BLOCK_4B_VECTOR = 0x0A;
         private const int BLOCK_57_VECTOR = 0x04;
+        private const int BLOCK_4B_VECTOR = 0x0A;
         private const int BLOCK_74_VECTOR = 0x0D;
         #endregion
 
@@ -44,8 +44,8 @@ namespace JediComlink
             Contents = Deserializer(codeplugContents, address);
             Block3F = Deserialize<Block3F>(Contents, BLOCK_3F_VECTOR, codeplugContents);
             Block41 = Deserialize<Block41>(Contents, BLOCK_41_VECTOR, codeplugContents);
-            Block4B = Deserialize<Block4B>(Contents, BLOCK_4B_VECTOR, codeplugContents);
             Block57 = Deserialize<Block57>(Contents, BLOCK_57_VECTOR, codeplugContents);
+            Block4B = Deserialize<Block4B>(Contents, BLOCK_4B_VECTOR, codeplugContents);
             Block74 = Deserialize<Block74>(Contents, BLOCK_74_VECTOR, codeplugContents);
         }
 
@@ -55,8 +55,8 @@ namespace JediComlink
             var nextAddress = address + Contents.Length + BlockSizeAdjustment;
             nextAddress = SerializeChild(Block3F, BLOCK_3F_VECTOR, codeplugContents, nextAddress, contents);
             nextAddress = SerializeChild(Block41, BLOCK_41_VECTOR, codeplugContents, nextAddress, contents);
-            nextAddress = SerializeChild(Block4B, BLOCK_4B_VECTOR, codeplugContents, nextAddress, contents);
             nextAddress = SerializeChild(Block57, BLOCK_57_VECTOR, codeplugContents, nextAddress, contents);
+            nextAddress = SerializeChild(Block4B, BLOCK_4B_VECTOR, codeplugContents, nextAddress, contents);
             nextAddress = SerializeChild(Block74, BLOCK_74_VECTOR, codeplugContents, nextAddress, contents);
             Serializer(codeplugContents, address, contents);
             return nextAddress;
@@ -68,8 +68,8 @@ namespace JediComlink
             sb.AppendLine(GetTextHeader());
             sb.AppendLine(Block3F.ToString());
             sb.AppendLine(Block41.ToString());
-            sb.AppendLine(Block4B.ToString());
             sb.AppendLine(Block57.ToString());
+            sb.AppendLine(Block4B.ToString());
             sb.AppendLine(Block74.ToString());
 
             return sb.ToString();

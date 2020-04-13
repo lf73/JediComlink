@@ -26,7 +26,7 @@ namespace JediComlink
         #endregion
 
         #region Propeties
-        public List<Block56> Block56List { get; set; } = new List<Block56>();
+        public List<Block> Block56or62List { get; set; } = new List<Block>();
         #endregion
 
         public Block55() { }
@@ -36,7 +36,15 @@ namespace JediComlink
             Contents = Deserializer(codeplugContents, address);
             for (int i = 0; i < Contents[0]; i++)
             {
-                Block56List.Add(Deserialize<Block56>(Contents, i * 2 + 1, codeplugContents));
+                var childAddress = Contents[i * 2 + 1] * 0x100 + Contents[i * 2 + 2];
+                if (codeplugContents[childAddress + 1] == 0x56)
+                {
+                    Block56or62List.Add(Deserialize<Block56>(Contents, i * 2 + 1, codeplugContents));
+                }
+                else
+                {
+                    Block56or62List.Add(Deserialize<Block62>(Contents, i * 2 + 1, codeplugContents));
+                }
             }
         }
 
@@ -46,7 +54,7 @@ namespace JediComlink
             var nextAddress = address + Contents.Length + BlockSizeAdjustment;
 
             int i = 0;
-            foreach (var block in Block56List)
+            foreach (var block in Block56or62List)
             {
                 nextAddress = SerializeChild(block, i * 2 + 1, codeplugContents, nextAddress, contents);
                 i++;
@@ -60,9 +68,9 @@ namespace JediComlink
         {
             var sb = new StringBuilder();
             sb.AppendLine(GetTextHeader());
-            sb.AppendLine($"Block 56 Couunt: {Block56List.Count}");
+            sb.AppendLine($"Block 56 or 62 Couunt: {Block56or62List.Count}");
 
-            foreach (var block in Block56List)
+            foreach (var block in Block56or62List)
             {
                 sb.AppendLine(block.ToString());
             }

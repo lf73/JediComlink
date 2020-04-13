@@ -19,7 +19,7 @@ namespace JediComlink
         */
 
         private const int UNKNOWN1 = 0x00; //TO 18
-        private const int BLOCK_0E_VECTOR = 0x19; //0A
+        private const int BLOCK_0E_VECTOR = 0x19; //1A
         private const int UNKNOWN2 = 0x1B; //1C 1D 1E 1F 20 21 22
 
         #endregion

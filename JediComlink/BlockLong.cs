@@ -24,7 +24,7 @@ namespace JediComlink
             codeplugContents[address + 2] = (byte)Id;
             contents.CopyTo(codeplugContents.AsSpan(address + 3));
 
-            int checksum = -0x5555 + codeplugContents[address] + codeplugContents[address + 1];
+            int checksum = -0x5555 + codeplugContents[address] + codeplugContents[address + 1] + codeplugContents[address + 2];
             foreach (var b in contents)
             {
                 checksum += b;
@@ -32,9 +32,9 @@ namespace JediComlink
 
             checksum &= 0xFFFF;
 
-            codeplugContents[address + contents.Length + 2] = (byte)(checksum / 0x100);
-            codeplugContents[address + contents.Length + 3] = (byte)(checksum % 0x100);
-            return contents.Length + 4;
+            codeplugContents[address + contents.Length + 3] = (byte)(checksum / 0x100);
+            codeplugContents[address + contents.Length + 4] = (byte)(checksum % 0x100);
+            return contents.Length + 5;
         }
 
     }
