@@ -103,9 +103,9 @@
     <Content Include="jedi_master_starwars_yoda_icon_1320166700243190687_mFq_icon.ico" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\JediCodeplug\JediCodeplug.csproj">
+    <ProjectReference Include="..\JediCodeplug\JediComlink.JediCodeplug.csproj">
       <Project>{d679836f-c1f3-4620-9a44-174813dddfbd}</Project>
-      <Name>JediCodeplug</Name>
+      <Name>JediComlink.JediCodeplug</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

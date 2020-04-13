@@ -1,0 +1,126 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace JediCodeplug
+{
+    public static class AuthCode
+    {
+        public static void Calculate()
+        {
+            byte[] serial = {
+        0x34, 0x36, 0x36, 0x41, 0x59, 0x4C, 0x33, 0x30, 0x35, 0x38
+    }; //466AYL3058  -- XORed at end
+
+            byte[] model = {
+        0x48, 0x30, 0x31, 0x55, 0x43, 0x48, 0x36, 0x50,
+        0x57, 0x31, 0x42, 0x4E, 0x00, 0x00, 0x00, 0x00
+    }; //H  0  1  U  C  F  6  P  W  1  B  N  _  _  _  _
+
+
+            byte[] flashCode = {
+        0x61, 0x0A, 0x0B, 0x0C, 0x34, 0x2B, 0x40, 0x6F,
+        0x07, 0x29, 0x11, 0x1C, 0x05, 0x62, 0x01, 0xA1
+    };
+
+            //0x03000, 0x0B000, 0x13000, 0x1B000, 0x23000, 0x2B000, 0x33000, 0x3B000
+            byte[] flashSignature = {
+		//0xFF, 0xBD, 0x43, 0xCE, 0x41, 0xFF, 0xFF, 0x06
+		0xFF, 0xCC, 0x05, 0xCE, 0x51, 0xFF, 0xFF, 0x41
+    };
+
+            byte[] block10 = {
+    0x37, 0x10, 0x59, 0x7E, 0xF2, 0xD8, 0x20, 0xFB, 0x00,
+    0xC2, 0x44, 0x00, 0x00, 0x48, 0x40, 0x00, 0x00, 0x00,
+    0x80, 0x00, 0x00, 0x00, 0x00, 0x50, 0xFA, 0x21, 0x00,
+    0x01, 0x00, 0x00, 0x00
+    };
+
+            byte[] order = {
+    0x16, 0x3D, 0x03, 0x2D, 0x35, 0x07, 0x21, 0x41, 0x4B, 0x32, 0x2E, 0x17, 0x28, 0x05, 0x08, 0x4E,
+    0x45, 0x40, 0x43, 0x01, 0x13, 0x46, 0x09, 0x0D, 0x36, 0x39, 0x2B, 0x33, 0x31, 0x1A, 0x3B, 0x12,
+    0x3E, 0x14, 0x25, 0x38, 0x0F, 0x1C, 0x4A, 0x1B, 0x27, 0x42, 0x0A, 0x47, 0x48, 0x1E, 0x02, 0x4D,
+    0x44, 0x11, 0x4F, 0x04, 0x2A, 0x3F, 0x2C, 0x15, 0x24, 0x2F, 0x0E, 0x1D, 0x0C, 0x06, 0x3A, 0x29,
+    0x22, 0x26, 0x1F, 0x20, 0x19, 0x30, 0x49, 0x10, 0x18, 0x37, 0x3C, 0x23, 0x0B, 0x34, 0x4C, 0x00
+    };
+
+            byte[] key = {
+        0x00, 0x99, 0xAC, 0x35, 0xC7, 0x5E, 0x6B, 0xF2
+    };
+
+            byte[] authCodeCalc = new byte[10];
+
+            var buffer = new List<Byte>();
+            buffer.AddRange(model);
+            buffer.AddRange(flashCode);
+            buffer.AddRange(flashSignature);
+            buffer.Add(0x00);
+            buffer.Add(0x00);
+            buffer.Add(0x00);
+            buffer.AddRange(block10);
+            buffer.Add(0x00);
+            buffer.Add(0x00);
+            buffer.Add(0x00);
+            buffer.Add(0x00);
+            buffer.Add(0x00);
+            buffer.Add(0x00);
+
+            var i = 0;
+            var j = 0;
+            byte z = 0;
+            foreach (byte o in order)
+            {
+                byte a = buffer[o];
+
+                a ^= z; //eora byte_70
+                z = a; //staa byte_70
+
+                a = (byte)((sbyte)(a) >> 1); //asra    ;Arithmetic Shift Right
+                a = (byte)(a >> 1); //lsra    ;Logical Shift Right 
+                a ^= z; //eora byte_70
+
+                byte b = a; //tab
+
+                a = (byte)(a << 1); //asla (or lsla)  ;Logical Shift Left
+
+                a &= 0xF0; //anda #$F0
+
+                b = (byte)((sbyte)(b) >> 1); //asrb    ;Arithmetic Shift Right
+
+                if ((b & 0x80) == 0x80)  //bmi  ;Is MSB (aka Negative Bit) Set?
+                {
+                    b = (byte)(~b); //comb
+                }
+
+                b &= 0x0f; //andb #$F
+
+                a = (byte)(a + b); //aba
+
+                b = z; //ldab byte_70
+                b &= 0x7; //andb #7
+
+                a ^= key[b]; //ldx #$D8B9  -- abx  -- eora 0,x
+
+                z = a; //staa byte_70
+
+                if (++i % 8 == 0)
+                {
+                    authCodeCalc[j++] = z;
+                    z = 0;
+                }
+            }
+
+            for (int x = 0; x < 10; x++)
+            {
+                authCodeCalc[x] = (byte)(authCodeCalc[x] ^ serial[x]);
+            }
+
+            byte[] authCode = { 0x66, 0x82, 0xBE, 0xD8, 0x40, 0x59, 0x52, 0x42, 0x71, 0x8C };
+            Console.WriteLine("Calculated: " + String.Join(" ", Array.ConvertAll(authCode, x => x.ToString("X2"))));
+            Console.WriteLine("Existing:   " + String.Join(" ", Array.ConvertAll(authCodeCalc, x => x.ToString("X2"))));
+        }
+
+    }
+}

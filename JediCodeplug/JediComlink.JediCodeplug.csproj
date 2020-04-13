@@ -1,0 +1,139 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{D679836F-C1F3-4620-9A44-174813DDDFBD}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>JediCodeplug</RootNamespace>
+    <AssemblyName>JediCodeplug</AssemblyName>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <Deterministic>true</Deterministic>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Buffers, Version=4.0.2.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Buffers.4.4.0\lib\netstandard2.0\System.Buffers.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Core" />
+    <Reference Include="System.Memory, Version=4.0.1.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Memory.4.5.2\lib\netstandard2.0\System.Memory.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Numerics" />
+    <Reference Include="System.Numerics.Vectors, Version=4.1.3.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Numerics.Vectors.4.4.0\lib\net46\System.Numerics.Vectors.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Runtime.CompilerServices.Unsafe, Version=4.0.4.1, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Runtime.CompilerServices.Unsafe.4.5.2\lib\netstandard2.0\System.Runtime.CompilerServices.Unsafe.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="AuthCode.cs" />
+    <Compile Include="Block.cs" />
+    <Compile Include="InternalBlocks\Block01.cs" />
+    <Compile Include="InternalBlocks\Block02.cs" />
+    <Compile Include="InternalBlocks\Block03.cs" />
+    <Compile Include="InternalBlocks\Block04.cs" />
+    <Compile Include="InternalBlocks\Block05.cs" />
+    <Compile Include="InternalBlocks\Block06.cs" />
+    <Compile Include="InternalBlocks\Block07.cs" />
+    <Compile Include="InternalBlocks\Block08.cs" />
+    <Compile Include="InternalBlocks\Block09.cs" />
+    <Compile Include="InternalBlocks\Block0A.cs" />
+    <Compile Include="InternalBlocks\Block0B.cs" />
+    <Compile Include="InternalBlocks\Block0C.cs" />
+    <Compile Include="InternalBlocks\Block0D.cs" />
+    <Compile Include="InternalBlocks\Block0E.cs" />
+    <Compile Include="InternalBlocks\Block0F.cs" />
+    <Compile Include="InternalBlocks\Block10.cs" />
+    <Compile Include="InternalBlocks\Block11.cs" />
+    <Compile Include="ExternalBlocks\Block30.cs" />
+    <Compile Include="ExternalBlocks\Block31.cs" />
+    <Compile Include="ExternalBlocks\Block34.cs" />
+    <Compile Include="ExternalBlocks\Block35.cs" />
+    <Compile Include="ExternalBlocks\Block36.cs" />
+    <Compile Include="ExternalBlocks\Block37.cs" />
+    <Compile Include="ExternalBlocks\Block38.cs" />
+    <Compile Include="ExternalBlocks\Block39.cs" />
+    <Compile Include="ExternalBlocks\Block3A.cs" />
+    <Compile Include="ExternalBlocks\Block3B.cs" />
+    <Compile Include="ExternalBlocks\Block3C.cs" />
+    <Compile Include="ExternalBlocks\Block3D.cs" />
+    <Compile Include="ExternalBlocks\Block3E.cs" />
+    <Compile Include="ExternalBlocks\Block3F.cs" />
+    <Compile Include="ExternalBlocks\Block41.cs" />
+    <Compile Include="ExternalBlocks\Block42.cs" />
+    <Compile Include="ExternalBlocks\Block43.cs" />
+    <Compile Include="ExternalBlocks\Block44.cs" />
+    <Compile Include="ExternalBlocks\Block47.cs" />
+    <Compile Include="ExternalBlocks\Block48.cs" />
+    <Compile Include="ExternalBlocks\Block4A.cs" />
+    <Compile Include="ExternalBlocks\Block4B.cs" />
+    <Compile Include="ExternalBlocks\Block51.cs" />
+    <Compile Include="ExternalBlocks\Block52.cs" />
+    <Compile Include="ExternalBlocks\Block53.cs" />
+    <Compile Include="ExternalBlocks\Block54.cs" />
+    <Compile Include="ExternalBlocks\Block55.cs" />
+    <Compile Include="ExternalBlocks\Block56.cs" />
+    <Compile Include="ExternalBlocks\Block57.cs" />
+    <Compile Include="ExternalBlocks\Block58.cs" />
+    <Compile Include="ExternalBlocks\Block59.cs" />
+    <Compile Include="ExternalBlocks\Block5A.cs" />
+    <Compile Include="ExternalBlocks\Block61.cs" />
+    <Compile Include="ExternalBlocks\Block62.cs" />
+    <Compile Include="ExternalBlocks\Block63.cs" />
+    <Compile Include="ExternalBlocks\Block67.cs" />
+    <Compile Include="ExternalBlocks\Block73.cs" />
+    <Compile Include="ExternalBlocks\Block74.cs" />
+    <Compile Include="ExternalBlocks\Block8E.cs" />
+    <Compile Include="ExternalBlocks\Block8F.cs" />
+    <Compile Include="ExternalBlocks\Block90.cs" />
+    <Compile Include="ExternalBlocks\Block91.cs" />
+    <Compile Include="ExternalBlocks\Block92.cs" />
+    <Compile Include="ExternalBlocks\Block93.cs" />
+    <Compile Include="ExternalBlocks\Block9F.cs" />
+    <Compile Include="ExternalBlocks\BlockA0.cs" />
+    <Compile Include="ExternalBlocks\BlockA1.cs" />
+    <Compile Include="ExternalBlocks\BlockA2.cs" />
+    <Compile Include="ExternalBlocks\BlockA3.cs" />
+    <Compile Include="ExternalBlocks\BlockA4.cs" />
+    <Compile Include="ExternalBlocks\BlockA5.cs" />
+    <Compile Include="ExternalBlocks\BlockA9.cs" />
+    <Compile Include="BlockLong.cs" />
+    <Compile Include="Codeplug.cs" />
+    <Compile Include="ModelDecoder.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SerialDecoder.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>
