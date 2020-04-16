@@ -1,8 +1,10 @@
 ﻿using System;
+using System.CodeDom;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading;
 using System.Windows.Forms;
@@ -385,7 +387,6 @@ namespace JediComlink
                 }
 
                 backgroundWorker.ReportProgress(0, $"\r\n\r\nOutput File: {fileName}\r\n\r\n");
-
                 ExitSBEP();
                 Reset();
             }
@@ -398,7 +399,7 @@ namespace JediComlink
             {
                 serialPort.Close();
                 sw.Stop();
-                backgroundWorker.ReportProgress(0, $"Finished {sw.ElapsedMilliseconds:N0}");
+                backgroundWorker.ReportProgress(100, $"Finished {sw.ElapsedMilliseconds:N0}");
             }
 
             // SendSbep(new byte[] { 0xF1, 0x19 });
@@ -593,11 +594,10 @@ namespace JediComlink
 
         private void backgroundWorker_ProgressChanged(object sender, ProgressChangedEventArgs e)
         {
-
             Status.AppendText(e.UserState as string);
             Status.AppendText("\r\n");
+            if (e.ProgressPercentage == 100) UpdateCodeplug();
         }
-
 
 
         private static readonly byte[] SB9600CRCTable = {
@@ -748,6 +748,50 @@ namespace JediComlink
         private void ComPortComboBox_SelectedValueChanged(object sender, EventArgs e)
         {
             ComPort = this.ComPortComboBox.Text;
+        }
+
+
+        private void Home_Load(object sender, EventArgs e)
+        {
+            _codeplug = new Codeplug(@"c:\JediDumps\432CDN0002H01KDD9PW1BN-Codeplug.bin");
+            UpdateCodeplug();
+            Status.Text = _codeplug.InternalCodeplug.ToString();
+
+        }
+
+        private void UpdateCodeplug()
+        {
+            //Declare local funtion for recursion and list extraction
+            static void PopulateNode(TreeNode node, Object obj)
+            {
+                if (obj is Block block)
+                {
+                    node = node.Nodes.Add(block.Description);
+                    node.Tag = block;
+                }
+                foreach (var property in obj.GetType().GetProperties())
+                {
+                    if (property.GetValue(obj) is Block val)
+                        PopulateNode(node, val);
+                    else if (property.GetValue(obj) is IEnumerable<Block> blocks)
+                        foreach (var blockItem in blocks)
+                            PopulateNode(node, blockItem);
+                }
+            }
+
+            CodeplugView.BeginUpdate();
+            var root = CodeplugView.Nodes.Add("Codeplug");
+            root.Tag = _codeplug;
+            PopulateNode(root, _codeplug);
+            CodeplugView.ExpandAll();
+            CodeplugView.EndUpdate();
+        }
+
+        private Codeplug _codeplug;
+
+        private void CodeplugView_AfterSelect(object sender, TreeViewEventArgs e)
+        {
+            propertyGrid1.SelectedObject = e.Node.Tag;
         }
     }
 }
