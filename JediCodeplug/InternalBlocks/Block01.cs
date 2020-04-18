@@ -21,14 +21,14 @@ namespace JediCodeplug
         private const int EXTERNAL_CODEPLUG_VECTOR = 0x00; //01
         private const int SERIAL = 0x02; //03 04 05 06 07 08 09 0A 0B
         private const int MODEL = 0x0C; //0D 0E 0F 10 11 12 13 14 15 16 17 18 19 1A 1B
-        private const int UNKNOWN1 = 0x1C; //1D
+        private const int CODEPLUG_VERSION = 0x1C; //1D
         private const int INTERNAL_CODEPLUG_SIZE = 0x1E; //1F
-        private const int UNKNOWN2 = 0x20; //21 22 23
+        private const int UNKNOWN1 = 0x20; //21 22 23
         private const int BLOCK_02_VECTOR = 0x24; //25
         private const int BLOCK_56_VECTOR = 0x26; //27
-        private const int UNKNOWN3 = 0x28; //29 2A 2B
+        private const int UNKNOWN2 = 0x28; //29 2A 2B
         private const int BLOCK_10_VECTOR = 0x2C; //2D
-        private const int UNKNOWN4 = 0x2e; //2F
+        private const int UNKNOWN3 = 0x2e; //2F
         private const int AUTH_CODE = 0x30; //31 32 33 34 35 36 37 38 39
         #endregion
 
@@ -36,14 +36,14 @@ namespace JediCodeplug
         public int ExternalCodeplugVector { get; set; }
         public string Serial { get; set; }
         public string Model { get; set; }
-        public byte[] Unknown1 { get; set; }
+        public int CodeplugVersion { get; set; }
         public int InternalCodeplugSize { get; set; }
-        public byte[] Unknown2 { get; set; }
+        public byte[] Unknown1 { get; set; }
         public Block02 Block02 { get; set; }
         public Block56 Block56 { get; set; }
-        public byte[] Unknown3 { get; set; }
+        public byte[] Unknown2 { get; set; }
         public Block10 Block10 { get; set; }
-        public byte[] Unknown4 { get; set; }
+        public byte[] Unknown3 { get; set; }
         public byte[] AuthCode { get; set; }
         #endregion
 
@@ -51,20 +51,19 @@ namespace JediCodeplug
 
         public override void Deserialize(byte[] codeplugContents, int address)
         {
-            var length = codeplugContents[address];
-            var contents = codeplugContents.AsSpan().Slice(address + 2, length - 1);
+            var contents = Deserializer(codeplugContents, address);
 
             ExternalCodeplugVector = contents[EXTERNAL_CODEPLUG_VECTOR] * 0x100 + contents[EXTERNAL_CODEPLUG_VECTOR + 1];
             Serial = GetStringContents(contents, SERIAL, 10);
             Model = GetStringContents(contents, MODEL, 16);
-            Unknown1 = contents.Slice(UNKNOWN1, 2).ToArray();
+            CodeplugVersion = contents[CODEPLUG_VERSION] * 0x100 + contents[CODEPLUG_VERSION + 1];
             InternalCodeplugSize = contents[INTERNAL_CODEPLUG_SIZE] * 0x100 + contents[INTERNAL_CODEPLUG_SIZE + 1];
-            Unknown2 = contents.Slice(UNKNOWN2, 4).ToArray();
+            Unknown1 = contents.Slice(UNKNOWN1, 4).ToArray();
             Block02 = Deserialize<Block02>(contents, BLOCK_02_VECTOR, codeplugContents);
             Block56 = Deserialize<Block56>(contents, BLOCK_56_VECTOR, codeplugContents);
-            Unknown3 = contents.Slice(UNKNOWN3, 4).ToArray();
+            Unknown2 = contents.Slice(UNKNOWN2, 4).ToArray();
             Block10 = Deserialize<Block10>(contents, BLOCK_10_VECTOR, codeplugContents);
-            Unknown4 = contents.Slice(UNKNOWN4, 2).ToArray();
+            Unknown3 = contents.Slice(UNKNOWN3, 2).ToArray();
             AuthCode = contents.Slice(AUTH_CODE, 10).ToArray();
         }
 
@@ -76,38 +75,19 @@ namespace JediCodeplug
             contents[EXTERNAL_CODEPLUG_VECTOR + 1] = (byte)(ExternalCodeplugVector % 0x100);
             Encoding.ASCII.GetBytes(Serial).AsSpan().CopyTo(contents.Slice(SERIAL, 10));
             Encoding.ASCII.GetBytes(Model).AsSpan().CopyTo(contents.Slice(MODEL, 16));
-            Unknown1.AsSpan().CopyTo(contents.Slice(UNKNOWN1));
+            contents[CODEPLUG_VERSION] = (byte)(CodeplugVersion / 0x100);
+            contents[CODEPLUG_VERSION + 1] = (byte)(CodeplugVersion % 0x100);
             contents[INTERNAL_CODEPLUG_SIZE] = (byte)(InternalCodeplugSize / 0x100);
             contents[INTERNAL_CODEPLUG_SIZE + 1] = (byte)(InternalCodeplugSize % 0x100);
-            Unknown2.AsSpan().CopyTo(contents.Slice(UNKNOWN2));
+            Unknown1.AsSpan().CopyTo(contents.Slice(UNKNOWN1));
             nextAddress = SerializeChild(Block02, BLOCK_02_VECTOR, codeplugContents, nextAddress, contents);
             nextAddress = SerializeChild(Block56, BLOCK_56_VECTOR, codeplugContents, nextAddress, contents);
-            Unknown3.AsSpan().CopyTo(contents.Slice(UNKNOWN3));
+            Unknown2.AsSpan().CopyTo(contents.Slice(UNKNOWN2));
             nextAddress = SerializeChild(Block10, BLOCK_10_VECTOR, codeplugContents, nextAddress, contents);
-            Unknown4.AsSpan().CopyTo(contents.Slice(UNKNOWN4));
+            Unknown3.AsSpan().CopyTo(contents.Slice(UNKNOWN3));
             AuthCode.AsSpan().CopyTo(contents.Slice(AUTH_CODE));
             Serializer(codeplugContents, address, contents);
             return nextAddress;
-        }
-
-        public override string ToString()
-        {
-            var sb = new StringBuilder();
-            sb.AppendLine(GetTextHeader());
-            sb.AppendLine($"External Codeplug Vector: {ExternalCodeplugVector:X4}");
-            sb.AppendLine($"Serial: {Serial}");
-            sb.AppendLine($"Model: {Model}");
-            sb.AppendLine($"Unknown1 Bytes: {FormatHex(Unknown1)}");
-            sb.AppendLine($"Internal Codeplug Size: {InternalCodeplugSize}");
-            sb.AppendLine($"Unknown2 Bytes: {FormatHex(Unknown2)}");
-            sb.AppendLine($"Unknown3 Bytes: {FormatHex(Unknown3)}");
-            sb.AppendLine($"Unknown4 Bytes: {FormatHex(Unknown4)}");
-            sb.AppendLine($"Auth Code: {FormatHex(AuthCode)}");
-
-            sb.AppendLine(Block02.ToString());
-            sb.AppendLine(Block56.ToString());
-            sb.AppendLine(Block10.ToString());
-            return sb.ToString();
         }
     }
 }

@@ -40,13 +40,5 @@ namespace JediCodeplug
             var contents = Contents.ToArray().AsSpan(); //TODO
             return Serializer(codeplugContents, address, contents) + address;
         }
-
-        public override string ToString()
-        {
-            var sb = new StringBuilder();
-            sb.AppendLine(GetTextHeader());
-
-            return sb.ToString();
-        }
     }
 }

@@ -65,17 +65,5 @@ namespace JediCodeplug
 
             return nextAddress;
         }
-
-        public override string ToString()
-        {
-            var sb = new StringBuilder();
-            sb.AppendLine(GetTextHeader());
-            sb.AppendLine($"Unknown1 Bytes: {FormatHex(Unknown1)}");
-            sb.AppendLine($"Unknown2 Bytes: {FormatHex(Unknown2)}");
-
-            sb.AppendLine(Block0E?.ToString());
-
-            return sb.ToString();
-        }
     }
 }

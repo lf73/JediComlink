@@ -63,19 +63,5 @@ namespace JediCodeplug
             Serializer(codeplugContents, address, contents);
             return nextAddress;
         }
-
-        public override string ToString()
-        {
-            var sb = new StringBuilder();
-            sb.AppendLine(GetTextHeader());
-            sb.AppendLine(Block3F.ToString());
-            sb.AppendLine(Block41.ToString());
-            sb.AppendLine($"Unknown Bytes: {FormatHex(UnknownBytes1)}");
-            sb.AppendLine(Block42.ToString());
-            sb.AppendLine($"Unknown Bytes: {FormatHex(UnknownBytes2)}");
-            sb.AppendLine(Block8E.ToString());
-            sb.AppendLine(Block90.ToString());
-            return sb.ToString();
-        }
     }
 }

@@ -1,6 +1,9 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.ComponentModel;
+using System.Linq;
+using System.Reflection;
 using System.Text;
 
 namespace JediCodeplug
@@ -17,9 +20,7 @@ namespace JediCodeplug
 
         public abstract int Serialize(byte[] codeplugContents, int address);
 
-        public abstract override string ToString();
-
-
+        public override string ToString() => $"Block {Id:X2} {Description}";
 
         protected static T Deserialize<T>(Span<byte> parentContents, int vector, byte[] codeplugContents) where T : Block, new()
         {
@@ -81,12 +82,6 @@ namespace JediCodeplug
             return value;
         }
 
-        public string GetTextHeader()
-        {
-            return Environment.NewLine + $"Block {Id:X2}  {Description}" + Environment.NewLine +
-                    "---------------------------";
-        }
-
         protected string FormatHex(byte[] data)
         {
             var sb = new StringBuilder();
@@ -94,9 +89,15 @@ namespace JediCodeplug
             foreach (var b in data)
             {
                 sb.Append(b.ToString("X2"));
-                if (l < data.Length) sb.Append(l++ % 16 == 0 ? "\n" : " ");
+                sb.Append(" ");
+                //if (l < data.Length) sb.Append(l++ % 16 == 0 ? "\n" : " ");
             }
             return sb.ToString();
+        }
+
+        protected string FormatBinaryValue(int val)
+        {
+            return Convert.ToString(val, 2).PadLeft(8, '0');
         }
 
         protected int GetDigits(byte nibbles)
@@ -105,5 +106,58 @@ namespace JediCodeplug
         }
         #endregion
 
+        public string GetTextDump()
+        {
+            var sb = new StringBuilder();
+            const string SEP = "--------------------------------------------------------------------------------------------";
+
+            static string GetName(PropertyInfo p) => p.GetCustomAttribute<DisplayNameAttribute>()?.DisplayName ?? p.Name;
+
+            static string FormatProperty(Object o) => o switch
+            {
+                byte byteVal => $"{byteVal:X2}",
+                int intVal => $"{intVal:X2}",
+                IEnumerable<byte> bytes => String.Join(" ", Array.ConvertAll(bytes.ToArray(), x => x.ToString("X2"))),
+                null => "",
+                _ => o.ToString(),
+            };
+
+            void Dump(Block block, int level = 0)
+            {
+                string spacer = new string(' ', (level++ * 4));
+                sb.AppendLine($"{spacer}Block {block.Id:X2} {block.Description}");
+                sb.AppendLine($"{spacer}{SEP}");
+                spacer = new string(' ', (level * 4));
+                foreach (var property in block.GetType().GetProperties()
+                        .Where(x => x.Name != "Id"
+                                && x.Name != "Description"
+                                && x.Name != "Contents"
+                                && !(x.GetValue(block) is IEnumerable<Object>)
+                                && !(x.GetValue(block) is Block)))
+                    sb.AppendLine($"{spacer}{GetName(property)}: {FormatProperty(property.GetValue(block))}");
+
+                //Go through children
+                foreach (var property in block.GetType().GetProperties())
+                {
+                    if (property.GetValue(block) is Block val)
+                    {
+                        Dump(val, level);
+                    }
+                    else if (property.GetValue(block) is IEnumerable<Block> blocks)
+                    {
+                        sb.AppendLine($"{spacer}{GetName(property)}: Contains {blocks.Count()} items");
+                        sb.AppendLine($"{spacer}{SEP}");
+                        level++;
+                        foreach (var blockItem in blocks)
+                            Dump(blockItem, level);
+                        level--;
+                    }
+                }
+                sb.AppendLine();
+            }
+
+            Dump(this);
+            return sb.ToString();
+        }
     }
 }

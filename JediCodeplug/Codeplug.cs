@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Text;
 
 namespace JediCodeplug
 {
@@ -18,10 +16,9 @@ namespace JediCodeplug
             ExternalCodeplug.Deserialize(contents, InternalCodeplug.ExternalCodeplugVector);
         }
 
-        public string GetText()
+        public string GetTextDump()
         {
-            return InternalCodeplug.ToString() + Environment.NewLine + Environment.NewLine
-                + Environment.NewLine + ExternalCodeplug.ToString();
+            return InternalCodeplug?.GetTextDump() ?? "" + ExternalCodeplug?.GetTextDump() ?? "";
         }
 
         public byte[] Serialize()
@@ -40,7 +37,7 @@ namespace JediCodeplug
                 0x00, 0x00, 0x00, 0x00, 0x00, 0x00
             };
 
-            rawData.CopyTo(bytes.AsSpan(bytes.Length-rawData.Length));
+            rawData.CopyTo(bytes.AsSpan(bytes.Length - rawData.Length));
 
 
 

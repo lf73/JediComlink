@@ -372,7 +372,8 @@ namespace JediComlink
                 using (var fs = new FileStream(fileName, FileMode.Create, FileAccess.Write))
                 {
 
-                    for (int msb = 0x00; msb < 0x100; msb++)
+                    for (int msb = 0x00; msb < 0x0f; msb++)
+                    //for (int msb = 0x00; msb < 0x100; msb++)
                     {
                         for (int lsb = 0; lsb < 0xFF; lsb += 0x20)
                         {
@@ -388,7 +389,7 @@ namespace JediComlink
 
                 backgroundWorker.ReportProgress(0, $"\r\n\r\nOutput File: {fileName}\r\n\r\n");
                 ExitSBEP();
-                Reset();
+                Reset();                
             }
             catch (Exception ex)
             {
@@ -399,6 +400,7 @@ namespace JediComlink
             {
                 serialPort.Close();
                 sw.Stop();
+                _codeplug = new Codeplug(fileName);
                 backgroundWorker.ReportProgress(100, $"Finished {sw.ElapsedMilliseconds:N0}");
             }
 
@@ -640,7 +642,7 @@ namespace JediComlink
                 }
             }
 
-            File.WriteAllText(@"c:\JediDumps\TestParse.txt", codeplug.GetText());
+            File.WriteAllText(@"c:\JediDumps\TestParse.txt", codeplug.GetTextDump());
                 //int i = 0;
 
                 //while (i < 0x1500)
@@ -753,9 +755,9 @@ namespace JediComlink
 
         private void Home_Load(object sender, EventArgs e)
         {
-            _codeplug = new Codeplug(@"c:\JediDumps\432CDN0002H01KDD9PW1BN-Codeplug.bin");
+            _codeplug = new Codeplug(@"MTS2000-2020-04-17_19-15-43.hex");
             UpdateCodeplug();
-            Status.Text = _codeplug.InternalCodeplug.ToString();
+            Status.Text = _codeplug.GetTextDump();
 
         }
 
@@ -785,6 +787,7 @@ namespace JediComlink
             PopulateNode(root, _codeplug);
             CodeplugView.ExpandAll();
             CodeplugView.EndUpdate();
+            Status.Text = _codeplug.InternalCodeplug.ToString() + "\n\n" + _codeplug.ExternalCodeplug.ToString();
         }
 
         private Codeplug _codeplug;

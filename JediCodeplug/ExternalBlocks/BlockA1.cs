@@ -53,19 +53,5 @@ namespace JediCodeplug
             Serializer(codeplugContents, address, contents);
             return nextAddress;
         }
-
-        public override string ToString()
-        {
-            var sb = new StringBuilder();
-            sb.AppendLine(GetTextHeader());
-            sb.AppendLine($"Block A2 Count: {BlockA2List.Count}");
-
-            foreach (var block in BlockA2List)
-            {
-                sb.AppendLine(block.ToString());
-            }
-
-            return sb.ToString();
-        }
     }
 }

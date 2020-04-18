@@ -159,34 +159,5 @@ namespace JediCodeplug
             Serializer(codeplugContents, address, contents);
             return nextAddress;
         }
-
-        public override string ToString()
-        {
-            var sb = new StringBuilder();
-            sb.AppendLine(GetTextHeader());
-            sb.AppendLine($"Unknown1 Bytes: {FormatHex(Unknown1)}");
-            sb.AppendLine($"Serial: {Serial}");
-            sb.AppendLine($"Model: {Model}");
-            sb.AppendLine($"Codeplug Time: {TimeStamp}");
-            sb.AppendLine($"Unknown2 Bytes: {FormatHex(Unknown2)}");
-            sb.AppendLine($"External Codeplug Size: {ExternalCodeplugSize}");
-            sb.AppendLine($"Unknown3 Bytes: {FormatHex(Unknown3)}");
-            sb.AppendLine($"Unknown4 Bytes: {FormatHex(Unknown4)}");
-            sb.AppendLine($"Unknown5 Bytes: {FormatHex(Unknown5)}");
-
-            sb.AppendLine(Block31.ToString());
-            sb.AppendLine(Block3D.ToString());
-            sb.AppendLine(Block36.ToString());
-            sb.AppendLine(Block55.ToString());
-            sb.AppendLine(Block54.ToString());
-            sb.AppendLine(Block51.ToString());
-            sb.AppendLine(Block39.ToString());
-            sb.AppendLine(Block3B.ToString());
-            sb.AppendLine(Block34.ToString());
-            sb.AppendLine(Block35.ToString());
-            sb.AppendLine(Block3C.ToString());
-            sb.AppendLine(Block73.ToString());
-            return sb.ToString();
-        }
     }
 }
