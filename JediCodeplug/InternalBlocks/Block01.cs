@@ -49,16 +49,13 @@ namespace JediCodeplug
         [DisplayName("Unknown Byte Values 1")]
         public byte[] Unknown1 { get; set; }
 
-        [Browsable(false)]
         public Block02 Block02 { get; set; }
 
-        [Browsable(false)]
         public Block56 Block56 { get; set; }
 
         [DisplayName("Unknown Byte Values 2")]
         public byte[] Unknown2 { get; set; }
 
-        [Browsable(false)]
         public Block10 Block10 { get; set; }
 
         [DisplayName("Unknown Byte Values 3")]

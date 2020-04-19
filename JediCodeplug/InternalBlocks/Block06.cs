@@ -20,13 +20,10 @@ namespace JediCodeplug
         #endregion
 
         #region Propeties
-        [Browsable(false)]
         public Block07 Block07 { get; set; }
 
-        [Browsable(false)]
         public Block08 Block08 { get; set; }
 
-        [Browsable(false)]
         public Block0A Block0A { get; set; }
         #endregion
 

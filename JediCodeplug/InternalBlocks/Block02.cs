@@ -32,13 +32,11 @@ namespace JediCodeplug
         #endregion
 
         #region Propeties
-        [Browsable(false)]
+
         public Block06 Block06 { get; set; }
 
-        [Browsable(false)]
         public Block03 Block03 { get; set; }
 
-        [Browsable(false)]
         public Block0C Block0C { get; set; }
 
         [DisplayName("Unknown Byte Value 1")]
@@ -66,13 +64,11 @@ namespace JediCodeplug
         [DisplayName("Unknown Byte Values 3")]
         public byte[] Unknown3 { get; set; }
 
-        [Browsable(false)]
         public Block0F Block0F { get; set; }
 
         [DisplayName("Unknown Byte Values 4")]
         public byte[] Unknown4 { get; set; }
 
-        [Browsable(false)]
         public Block11 Block11 { get; set; }
 
         [DisplayName("Unknown Byte Values 5")]

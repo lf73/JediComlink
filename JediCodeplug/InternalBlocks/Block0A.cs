@@ -15,7 +15,6 @@ namespace JediCodeplug
         #endregion
 
         #region Propeties
-        [Browsable(false)]
         public Block0B[] Block0BList { get; } = new Block0B[4];
         #endregion
 
