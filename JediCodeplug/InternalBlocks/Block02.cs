@@ -1,12 +1,12 @@
 ﻿using System;
-using System.Text;
+using System.ComponentModel;
 
 namespace JediCodeplug
 {
     public class Block02 : Block
     {
         public override int Id { get => 0x02; }
-        public override string Description { get => "HWConfig Radio"; }
+        public override string Description { get => "Hardware Config Radio"; }
 
         #region Definition
         /*  0  1  2  3   4  5  6  7    8  9  A  B   C  D  E  F
@@ -32,19 +32,50 @@ namespace JediCodeplug
         #endregion
 
         #region Propeties
+        [Browsable(false)]
         public Block06 Block06 { get; set; }
+
+        [Browsable(false)]
         public Block03 Block03 { get; set; }
+
+        [Browsable(false)]
         public Block0C Block0C { get; set; }
+
+        [DisplayName("Unknown Byte Value 1")]
         public byte[] Unknown1 { get; set; }
-        public byte[] Unknown2 { get; set; }
-        public int RssiAlignment { get; set; } //Unsed on 800mhz
-        public byte[] Unknown3 { get; set; }
-        public int InternalMicPreAmpGain { get; set; } //0 to 7
-        public int ExternalMicPreAmpGain { get; set; } //0 to 7
+
+        [DisplayName("Internal Mic Pre-Amp Gain")]
+        [Description("Range 0 to 7")]
+        public int InternalMicPreAmpGain { get; set; }
+
+        [DisplayName("External Mic Pre-Amp Gain")]
+        [Description("Range 0 to 7")]
+        public int ExternalMicPreAmpGain { get; set; }
+
+        [DisplayName("Unknown Mic Bits")]
+        [Description("Probably Not Used")]
         public int UnknownMicBits { get; set; }
+
+        [DisplayName("Unknown Byte Values 2")]
+        public byte[] Unknown2 { get; set; }
+
+        [DisplayName("RSSI Alignment")]
+        [Description("N/A on 800mhz Models")]
+        public int RssiAlignment { get; set; }
+
+        [DisplayName("Unknown Byte Values 3")]
+        public byte[] Unknown3 { get; set; }
+
+        [Browsable(false)]
         public Block0F Block0F { get; set; }
+
+        [DisplayName("Unknown Byte Values 4")]
         public byte[] Unknown4 { get; set; }
+
+        [Browsable(false)]
         public Block11 Block11 { get; set; }
+
+        [DisplayName("Unknown Byte Values 5")]
         public byte[] Unknown5 { get; set; }
         #endregion
 
@@ -93,25 +124,5 @@ namespace JediCodeplug
             Serializer(codeplugContents, address, contents);
             return nextAddress;
         }
-
-        //public override string ToString()
-        //{
-        //    var sb = new StringBuilder();
-        //    sb.AppendLine(GetTextHeader());
-        //    sb.AppendLine($"Unknown1 Bytes: {FormatHex(Unknown1)}");
-        //    sb.AppendLine($"Internal Mic Pre-Amp Gain: {InternalMicPreAmpGain}");
-        //    sb.AppendLine($"External Mic Pre-Amp Gain: {ExternalMicPreAmpGain}");
-        //    sb.AppendLine($"Unknown2 Bytes: {FormatHex(Unknown2)}");
-        //    sb.AppendLine($"RSSI Alignment: {RssiAlignment}");
-        //    sb.AppendLine($"Unknown3 Bytes: {FormatHex(Unknown3)}");
-        //    sb.AppendLine($"Unknown4 Bytes: {FormatHex(Unknown4)}");
-        //    sb.AppendLine($"Unknown5 Bytes: {FormatHex(Unknown5)}");
-        //    sb.AppendLine(Block06?.ToString());
-        //    sb.AppendLine(Block03?.ToString());
-        //    sb.AppendLine(Block0C?.ToString());
-        //    sb.AppendLine(Block0F?.ToString());
-        //    sb.AppendLine(Block11?.ToString());
-        //    return sb.ToString();
-        //}
     }
 }

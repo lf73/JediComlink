@@ -1,13 +1,10 @@
 using System;
-using System.Text;
+using System.ComponentModel;
 
 namespace JediCodeplug
 {
     public class Block0C : Block
     {
-        private byte[] _contents;
-        public Span<byte> Contents { get => _contents; set => _contents = value.ToArray(); }
-
         public override int Id { get => 0x0C; }
         public override string Description { get => "Unknown"; }
 
@@ -17,27 +14,27 @@ namespace JediCodeplug
         1: 01 AE 00 22  01 38 00 1E   00 D8 00 20  01 58
         */
 
+        private const int CONTENTS_LENGTH = 0x1E;
         private const int UNKNOWN1 = 0x00; //thru 0x1D
         #endregion
 
         #region Propeties
-        public byte[] Unknown1
-        {
-            get => Contents.Slice(UNKNOWN1, 30).ToArray();
-            //set => XYZ = value; //TODO
-        }
+        [DisplayName("Unknown Byte Values 1")]
+        public byte[] Unknown1 { get; set; }
         #endregion
 
         public Block0C() { }
 
         public override void Deserialize(byte[] codeplugContents, int address)
         {
-            Contents = Deserializer(codeplugContents, address);
+            var contents = Deserializer(codeplugContents, address);
+            Unknown1 = contents.Slice(UNKNOWN1, 0x1E).ToArray();
         }
 
         public override int Serialize(byte[] codeplugContents, int address)
         {
-            var contents = Contents.ToArray().AsSpan(); //TODO
+            var contents = new byte[CONTENTS_LENGTH].AsSpan();
+            Unknown1.AsSpan().CopyTo(contents.Slice(UNKNOWN1));
             return Serializer(codeplugContents, address, contents) + address;
         }
     }

@@ -10,8 +10,10 @@ namespace JediCodeplug
 {
     public abstract class Block
     {
+        [Browsable(false)]
         public abstract int Id { get; }
 
+        [Browsable(false)]
         public abstract string Description { get; }
 
         protected virtual int BlockSizeAdjustment { get => 3; }

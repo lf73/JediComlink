@@ -1,6 +1,5 @@
 using System;
 using System.ComponentModel;
-using System.Text;
 
 namespace JediCodeplug
 {
@@ -109,28 +108,5 @@ namespace JediCodeplug
             contents[RX_SQ_ATT_25_0] = RxSquelchAttenuator25k0;
             return Serializer(codeplugContents, address, contents) + address;
         }
-
-
-            //}
-
-            //public override string ToString()
-            //{
-            //    var sb = new StringBuilder();
-            //    sb.AppendLine(GetTextHeader());
-            //    sb.AppendLine($"Unknown1 Byte: {Unknown1:X2}");
-            //    sb.AppendLine($"Unknown2 Byte: {Unknown2:X2}");
-            //    sb.AppendLine($"TX Deviation Balance Compensation: {TxDeviationBalanceCompensation}");
-            //    sb.AppendLine($"TX Deviation Limit: {TxDeviationLimit}");
-            //    sb.AppendLine($"RX Front End Bandpass Filter: {RxFrontEndBandpassFilter}");
-            //    sb.AppendLine($"Unknown3 Byte: {Unknown3:X2}");
-            //    sb.AppendLine($"TX Power High: {TxPowerHigh}");
-            //    sb.AppendLine($"Unknown4 Byte: {Unknown4:X2}");
-            //    sb.AppendLine($"Unknown5 Byte: {Unknown5:X2}");
-            //    sb.AppendLine($"TX Power Low: {TxPowerLow}");
-            //    sb.AppendLine($"Squelch Attenuator 12.5Khz: {RxSquelchAttenuator12k5}");
-            //    sb.AppendLine($"Squelch Attenuator 20khz: {RxSquelchAttenuator20k0}");
-            //    sb.AppendLine($"Squelch Attenuator 25/30Khz: {RxSquelchAttenuator25k0}");
-
-            //    return sb.ToString();
     }
 }

@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Security.Permissions;
+using System.ComponentModel;
 using System.Text;
 
 namespace JediCodeplug
@@ -33,17 +33,38 @@ namespace JediCodeplug
         #endregion
 
         #region Propeties
+        [DisplayName("External Codeplug Vector")]
         public int ExternalCodeplugVector { get; set; }
+
         public string Serial { get; set; }
+
         public string Model { get; set; }
+
+        [DisplayName("Codeplug Version")]
         public int CodeplugVersion { get; set; }
+
+        [DisplayName("Internal Codeplug Size")]
         public int InternalCodeplugSize { get; set; }
+
+        [DisplayName("Unknown Byte Values 1")]
         public byte[] Unknown1 { get; set; }
+
+        [Browsable(false)]
         public Block02 Block02 { get; set; }
+
+        [Browsable(false)]
         public Block56 Block56 { get; set; }
+
+        [DisplayName("Unknown Byte Values 2")]
         public byte[] Unknown2 { get; set; }
+
+        [Browsable(false)]
         public Block10 Block10 { get; set; }
+
+        [DisplayName("Unknown Byte Values 3")]
         public byte[] Unknown3 { get; set; }
+
+        [DisplayName("Auth Code")]
         public byte[] AuthCode { get; set; }
         #endregion
 

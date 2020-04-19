@@ -1,17 +1,11 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.InteropServices;
-using System.Text;
-using System.Threading.Tasks;
+using System.ComponentModel;
 
 namespace JediCodeplug
 {
     public class Block08 : Block //Block Vector Array
     {
-        private byte[] _contents;
-        public Span<byte> Contents { get => _contents; set => _contents = value.ToArray(); }
-
         public override int Id { get => 0x08; }
         public override string Description { get => "Softpot Interpol Vector"; }
 
@@ -20,9 +14,11 @@ namespace JediCodeplug
         0: 06 00 A1 00  B1 00 C1 00   D1 00 E1 00  F1
         */
 
+        private const int COUNT = 0x00;
         #endregion
 
         #region Propeties
+        [BrowsableAttribute(false)]
         public List<Block09> Block09List { get; set; } = new List<Block09>();
         #endregion
 
@@ -30,18 +26,19 @@ namespace JediCodeplug
 
         public override void Deserialize(byte[] codeplugContents, int address)
         {
-            Contents = Deserializer(codeplugContents, address);
+            var contents = Deserializer(codeplugContents, address);
 
-            for (int i = 0; i < Contents[0]; i++)
+            for (int i = 0; i < contents[COUNT]; i++)
             {
-                Block09List.Add(Deserialize<Block09>(Contents, i * 2 + 1, codeplugContents));
+                Block09List.Add(Deserialize<Block09>(contents, i * 2 + 1, codeplugContents));
             }
         }
 
         public override int Serialize(byte[] codeplugContents, int address)
         {
-            var contents = Contents.ToArray().AsSpan(); //TODO
-            var nextAddress = address + Contents.Length + BlockSizeAdjustment;
+            var contentsLength = 1 + (2 * Block09List.Count);
+            var contents = new byte[contentsLength].AsSpan();
+            var nextAddress = address + contentsLength + BlockSizeAdjustment;
 
             int i = 0;
             foreach (var block in Block09List)

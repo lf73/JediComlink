@@ -1,12 +1,12 @@
 using System;
-using System.Text;
+using System.ComponentModel;
 
 namespace JediCodeplug
 {
     public class Block05 : Block
     {
         public override int Id { get => 0x05; }
-        public override string Description { get => "HWConfig Secure"; }
+        public override string Description { get => "Hardware Config Secure"; }
 
         #region Definition
         /*  0  1  2  3   4  5  6  7    8  9  A  B   C  D  E  F
@@ -24,18 +24,35 @@ namespace JediCodeplug
         #endregion
 
         #region Propeties
+        [DisplayName("Unknown Byte Value 1")]
         public int Unknown1 { get; set; }
+
+        [DisplayName("Unknown Mic Bits")]
+        [Description("Probably Unused")]
         public int UnknownMicBits { get; set; }
-        public int InternalMicPreAmpGain { get; set; } //0 to 7
-        public int ExternalMicPreAmpGain { get; set; } //0 to 7
+
+        [DisplayName("Internal Mic Pre-Amp Gain")]
+        [Description("Range 0 to 7")]
+        public int InternalMicPreAmpGain { get; set; }
+
+        [DisplayName("External Mic Pre-Amp Gain")]
+        [Description("Range 0 to 7")]
+        public int ExternalMicPreAmpGain { get; set; }
+
+        [DisplayName("Unknown Byte Value 2")]
         public int Unknown2 { get; set; }
+
+        [DisplayName("Unknown Byte Value 3")]
         public int Unknown3 { get; set; }
+
+        [DisplayName("Unknown Byte Value 4")]
         public int Unknown4 { get; set; }
+
+        [DisplayName("Unknown Byte Value 5")]
         public int Unknown5 { get; set; }
+
+        [DisplayName("Unknown Byte Value 6")]
         public int Unknown6 { get; set; }
-
-
-
         #endregion
 
         public Block05() { }

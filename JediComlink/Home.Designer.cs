@@ -54,10 +54,10 @@
             // 
             // ReadButton
             // 
-            this.ReadButton.Location = new System.Drawing.Point(28, 35);
-            this.ReadButton.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.ReadButton.Location = new System.Drawing.Point(51, 65);
+            this.ReadButton.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.ReadButton.Name = "ReadButton";
-            this.ReadButton.Size = new System.Drawing.Size(52, 26);
+            this.ReadButton.Size = new System.Drawing.Size(95, 48);
             this.ReadButton.TabIndex = 0;
             this.ReadButton.Text = "Read";
             this.ReadButton.UseVisualStyleBackColor = true;
@@ -65,10 +65,10 @@
             // 
             // WriteButton
             // 
-            this.WriteButton.Location = new System.Drawing.Point(106, 35);
-            this.WriteButton.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.WriteButton.Location = new System.Drawing.Point(194, 65);
+            this.WriteButton.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.WriteButton.Name = "WriteButton";
-            this.WriteButton.Size = new System.Drawing.Size(52, 26);
+            this.WriteButton.Size = new System.Drawing.Size(95, 48);
             this.WriteButton.TabIndex = 1;
             this.WriteButton.Text = "Write";
             this.WriteButton.UseVisualStyleBackColor = true;
@@ -76,13 +76,13 @@
             // 
             // Status
             // 
-            this.Status.Location = new System.Drawing.Point(7, 65);
-            this.Status.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.Status.Location = new System.Drawing.Point(13, 120);
+            this.Status.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.Status.Multiline = true;
             this.Status.Name = "Status";
             this.Status.ReadOnly = true;
             this.Status.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.Status.Size = new System.Drawing.Size(807, 407);
+            this.Status.Size = new System.Drawing.Size(1476, 748);
             this.Status.TabIndex = 2;
             // 
             // serialPort
@@ -98,10 +98,10 @@
             // 
             // ParseButton
             // 
-            this.ParseButton.Location = new System.Drawing.Point(188, 35);
-            this.ParseButton.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.ParseButton.Location = new System.Drawing.Point(345, 65);
+            this.ParseButton.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.ParseButton.Name = "ParseButton";
-            this.ParseButton.Size = new System.Drawing.Size(52, 26);
+            this.ParseButton.Size = new System.Drawing.Size(95, 48);
             this.ParseButton.TabIndex = 3;
             this.ParseButton.Text = "Parse";
             this.ParseButton.UseVisualStyleBackColor = true;
@@ -120,10 +120,10 @@
             "COM7",
             "COM8",
             "COM9"});
-            this.ComPortComboBox.Location = new System.Drawing.Point(439, 35);
-            this.ComPortComboBox.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.ComPortComboBox.Location = new System.Drawing.Point(805, 65);
+            this.ComPortComboBox.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.ComPortComboBox.Name = "ComPortComboBox";
-            this.ComPortComboBox.Size = new System.Drawing.Size(139, 21);
+            this.ComPortComboBox.Size = new System.Drawing.Size(252, 32);
             this.ComPortComboBox.TabIndex = 4;
             this.ComPortComboBox.Text = "COM1";
             this.ComPortComboBox.SelectedValueChanged += new System.EventHandler(this.ComPortComboBox_SelectedValueChanged);
@@ -134,9 +134,10 @@
             this.tabControl1.Controls.Add(this.tabPage2);
             this.tabControl1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tabControl1.Location = new System.Drawing.Point(0, 0);
+            this.tabControl1.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
-            this.tabControl1.Size = new System.Drawing.Size(824, 500);
+            this.tabControl1.Size = new System.Drawing.Size(1511, 923);
             this.tabControl1.TabIndex = 5;
             // 
             // tabPage1
@@ -146,10 +147,11 @@
             this.tabPage1.Controls.Add(this.ReadButton);
             this.tabPage1.Controls.Add(this.ParseButton);
             this.tabPage1.Controls.Add(this.WriteButton);
-            this.tabPage1.Location = new System.Drawing.Point(4, 22);
+            this.tabPage1.Location = new System.Drawing.Point(4, 33);
+            this.tabPage1.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
             this.tabPage1.Name = "tabPage1";
-            this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage1.Size = new System.Drawing.Size(816, 474);
+            this.tabPage1.Padding = new System.Windows.Forms.Padding(6, 6, 6, 6);
+            this.tabPage1.Size = new System.Drawing.Size(1503, 886);
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "tabPage1";
             this.tabPage1.UseVisualStyleBackColor = true;
@@ -157,10 +159,11 @@
             // tabPage2
             // 
             this.tabPage2.Controls.Add(this.splitContainer1);
-            this.tabPage2.Location = new System.Drawing.Point(4, 22);
+            this.tabPage2.Location = new System.Drawing.Point(4, 33);
+            this.tabPage2.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
             this.tabPage2.Name = "tabPage2";
-            this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage2.Size = new System.Drawing.Size(816, 474);
+            this.tabPage2.Padding = new System.Windows.Forms.Padding(6, 6, 6, 6);
+            this.tabPage2.Size = new System.Drawing.Size(1503, 886);
             this.tabPage2.TabIndex = 1;
             this.tabPage2.Text = "tabPage2";
             this.tabPage2.UseVisualStyleBackColor = true;
@@ -168,7 +171,8 @@
             // splitContainer1
             // 
             this.splitContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.splitContainer1.Location = new System.Drawing.Point(3, 3);
+            this.splitContainer1.Location = new System.Drawing.Point(6, 6);
+            this.splitContainer1.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
             this.splitContainer1.Name = "splitContainer1";
             // 
             // splitContainer1.Panel1
@@ -178,38 +182,40 @@
             // splitContainer1.Panel2
             // 
             this.splitContainer1.Panel2.Controls.Add(this.propertyGrid1);
-            this.splitContainer1.Size = new System.Drawing.Size(810, 468);
-            this.splitContainer1.SplitterDistance = 234;
+            this.splitContainer1.Size = new System.Drawing.Size(1491, 874);
+            this.splitContainer1.SplitterDistance = 430;
+            this.splitContainer1.SplitterWidth = 7;
             this.splitContainer1.TabIndex = 0;
             // 
             // CodeplugView
             // 
             this.CodeplugView.Dock = System.Windows.Forms.DockStyle.Fill;
             this.CodeplugView.Location = new System.Drawing.Point(0, 0);
+            this.CodeplugView.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
             this.CodeplugView.Name = "CodeplugView";
-            this.CodeplugView.Size = new System.Drawing.Size(234, 468);
+            this.CodeplugView.Size = new System.Drawing.Size(430, 874);
             this.CodeplugView.TabIndex = 0;
             this.CodeplugView.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.CodeplugView_AfterSelect);
             // 
             // propertyGrid1
             // 
             this.propertyGrid1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.propertyGrid1.HelpVisible = false;
             this.propertyGrid1.Location = new System.Drawing.Point(0, 0);
+            this.propertyGrid1.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
             this.propertyGrid1.Name = "propertyGrid1";
             this.propertyGrid1.PropertySort = System.Windows.Forms.PropertySort.NoSort;
-            this.propertyGrid1.Size = new System.Drawing.Size(572, 468);
+            this.propertyGrid1.Size = new System.Drawing.Size(1054, 874);
             this.propertyGrid1.TabIndex = 0;
             this.propertyGrid1.ToolbarVisible = false;
             // 
             // Home
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(11F, 24F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(824, 500);
+            this.ClientSize = new System.Drawing.Size(1511, 923);
             this.Controls.Add(this.tabControl1);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
-            this.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.Name = "Home";
             this.Text = "Jedi Comlink";
             this.Load += new System.EventHandler(this.Home_Load);

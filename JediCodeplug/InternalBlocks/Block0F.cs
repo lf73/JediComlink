@@ -1,5 +1,5 @@
 using System;
-using System.Text;
+using System.ComponentModel;
 
 namespace JediCodeplug
 {
@@ -18,14 +18,24 @@ namespace JediCodeplug
         private const int UNKNOWN2 = 0x08;
         private const int RX_VCO = 0x09; //0A
         private const int UNKNOWN3 = 0x0B;
-
         #endregion
 
         #region Propeties
+        [DisplayName("Unknown Byte Value 1")]
         public byte[] Unknown1 { get; set; }
-        public decimal TxVcoCrossover { get; set; } //Unsed on 800mhz
+
+        [DisplayName("TX VCO Crossover")]
+        [Description("Unused on 800mhz")]
+        public decimal TxVcoCrossover { get; set; }
+
+        [DisplayName("Unknown Byte Value 2")]
         public byte Unknown2 { get; set; }
-        public decimal RxVcoCrossover { get; set; } //Unsed on 800mhz
+
+        [DisplayName("RX VCO Crossover")]
+        [Description("Unused on 800mhz")]
+        public decimal RxVcoCrossover { get; set; }
+
+        [DisplayName("Unknown Byte Value 3")]
         public byte Unknown3 { get; set; }
         #endregion
 
@@ -54,9 +64,9 @@ namespace JediCodeplug
 
         private static Span<byte> MapFrequency(decimal freq)
         {
-            byte msb = 0;
-            byte lsb = 0;
-
+            var offset = (freq - 103.0m) / .005m;
+            byte msb = (byte)(offset / 0x100);
+            byte lsb = (byte)(offset % 0x100);
             return new byte[] { msb, lsb };
         }
 

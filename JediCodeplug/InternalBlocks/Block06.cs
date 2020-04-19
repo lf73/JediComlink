@@ -1,13 +1,10 @@
 using System;
-using System.Text;
+using System.ComponentModel;
 
 namespace JediCodeplug
 {
     public class Block06 : Block
     {
-        private byte[] _contents;
-        public Span<byte> Contents { get => _contents; set => _contents = value.ToArray(); }
-
         public override int Id { get => 0x06; }
         public override string Description { get => "Softpot Vector"; }
 
@@ -16,16 +13,20 @@ namespace JediCodeplug
         0: 00 7A 00 91  01 01
         */
 
+        private const int CONTENTS_LENGTH = 0x06;
         private const int BLOCK_07_VECTOR = 0x00; //01
         private const int BLOCK_08_VECTOR = 0x02; //03
         private const int BLOCK_0A_VECTOR = 0x04; //05
         #endregion
 
         #region Propeties
+        [Browsable(false)]
         public Block07 Block07 { get; set; }
 
+        [Browsable(false)]
         public Block08 Block08 { get; set; }
 
+        [Browsable(false)]
         public Block0A Block0A { get; set; }
         #endregion
 
@@ -33,16 +34,16 @@ namespace JediCodeplug
 
         public override void Deserialize(byte[] codeplugContents, int address)
         {
-            Contents = Deserializer(codeplugContents, address);
-            Block07 = Deserialize<Block07>(Contents, BLOCK_07_VECTOR, codeplugContents);
-            Block08 = Deserialize<Block08>(Contents, BLOCK_08_VECTOR, codeplugContents);
-            Block0A = Deserialize<Block0A>(Contents, BLOCK_0A_VECTOR, codeplugContents);
+            var contents = Deserializer(codeplugContents, address);
+            Block07 = Deserialize<Block07>(contents, BLOCK_07_VECTOR, codeplugContents);
+            Block08 = Deserialize<Block08>(contents, BLOCK_08_VECTOR, codeplugContents);
+            Block0A = Deserialize<Block0A>(contents, BLOCK_0A_VECTOR, codeplugContents);
         }
 
         public override int Serialize(byte[] codeplugContents, int address)
         {
-            var contents = Contents.ToArray().AsSpan(); //TODO
-            var nextAddress = address + Contents.Length + BlockSizeAdjustment;
+            var contents = new byte[CONTENTS_LENGTH].AsSpan();
+            var nextAddress = address + CONTENTS_LENGTH + BlockSizeAdjustment;
             nextAddress = SerializeChild(Block07, BLOCK_07_VECTOR, codeplugContents, nextAddress, contents);
             nextAddress = SerializeChild(Block08, BLOCK_08_VECTOR, codeplugContents, nextAddress, contents);
             nextAddress = SerializeChild(Block0A, BLOCK_0A_VECTOR, codeplugContents, nextAddress, contents);
