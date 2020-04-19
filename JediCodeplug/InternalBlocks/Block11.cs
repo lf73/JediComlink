@@ -27,7 +27,7 @@ namespace JediCodeplug
         public override void Deserialize(byte[] codeplugContents, int address)
         {
             var contents = Deserializer(codeplugContents, address);
-            Unknown1 = contents.Slice(UNKNOWN1, 0x12).ToArray();
+            Unknown1 = contents.Slice(UNKNOWN1, 0x08).ToArray();
         }
 
         public override int Serialize(byte[] codeplugContents, int address)
