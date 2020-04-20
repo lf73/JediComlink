@@ -54,7 +54,7 @@ namespace JediCodeplug
         public override int Serialize(byte[] codeplugContents, int address)
         {
             var contents = new byte[CONTENTS_LENGTH].AsSpan();
-            Unknown1.CopyTo(contents.Slice(UNKNOWN1, 13));
+            Unknown1.CopyTo(contents.Slice(UNKNOWN1));
             MapFrequency(TxVcoCrossover).CopyTo(contents.Slice(TX_VCO, 2));
             contents[UNKNOWN2] = Unknown2;
             MapFrequency(RxVcoCrossover).CopyTo(contents.Slice(RX_VCO, 2));

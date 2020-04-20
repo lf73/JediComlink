@@ -108,6 +108,10 @@
       <Project>{d679836f-c1f3-4620-9a44-174813dddfbd}</Project>
       <Name>JediComlink.JediCodeplug</Name>
     </ProjectReference>
+    <ProjectReference Include="..\JediEmulator\JediComlink.JediEmulator.csproj">
+      <Project>{b9925cb3-342c-4681-8677-333dfb01f957}</Project>
+      <Name>JediComlink.JediEmulator</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

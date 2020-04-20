@@ -9,6 +9,7 @@ using System.Text;
 using System.Threading;
 using System.Windows.Forms;
 using JediCodeplug;
+using JediEmulator;
 
 namespace JediComlink
 {
@@ -18,157 +19,6 @@ namespace JediComlink
         public Home()
         {
             InitializeComponent();
-        }
-
-        private void Test()
-        {
-            var codeplug = File.ReadAllBytes("image.hex");
-            var changeLog = new StringBuilder();
-            serialPort.BaudRate = 9600;
-            serialPort.PortName = "COM4";
-            serialPort.ReadTimeout = 25;
-            serialPort.Open();
-            byte[] buffer  = new byte[50];
-            int offset = 0;
-
-            while (!backgroundWorker.CancellationPending)
-            {
-                try
-                {
-                    buffer[offset] = (byte)serialPort.ReadByte();
-                    serialPort.Write(buffer, offset, 1);
-                    offset++;
-                }
-                catch (TimeoutException) //Awful way to do this. Change to a timing.
-                {
-                    if (offset > 0)
-                    {
-                        //serialPort.Write(buffer, 0, offset);
-
-                        /*
-                         * 
-                         * 1A 12 1A 06 DB 
-                            03 04 02 F6 
-                            02 46 B7 
-                         */
-
-
-                        var token = buffer.AsSpan(0, offset - 1);
-
-                        if (token.SequenceEqual(new byte[] { 0x01, 0x02, 0x00, 0x40 }))
-                        {
-                            backgroundWorker.ReportProgress(0, "ENTER TEST MODE");
-                        }
-                        else if (token.SequenceEqual(new byte[] { 0x00, 0x01, 0x01, 0x08 }))
-                        {
-                            backgroundWorker.ReportProgress(0, "Memory Access");
-                        }
-                        else if (buffer[0] == 0x08 && buffer[1] == 0x00 && buffer[2] == 0x00 && buffer[3] == 0xC0 && buffer[4] == 0xAB)
-                        {
-                            backgroundWorker.ReportProgress(0, "Request Firmware Version");
-                            //  0x08 0x73  8.73   (0x40 unknown)
-                            serialPort.Write(new byte[] { 0x08, 0x08, 0x73, 0x40, 0x44 }, 0, 5);
-                        }
-                        else if (buffer[0] == 0x00 && buffer[1] == 0x12 && buffer[2] == 0x01 && buffer[3] == 0x06 && buffer[4] == 0x02)
-                        {
-                            backgroundWorker.ReportProgress(0, "ENTER SBEP MODE");
-                            serialPort.Write(new byte[] { 0x50 }, 0, 1);
-                        }
-                        else if (buffer[0] == 0xF1 && buffer[1] == 0x19 && buffer[2] == 0xF5)
-                        {
-                            backgroundWorker.ReportProgress(0, "Req RadioKey??");
-                            serialPort.Write(new byte[] { 0x50 }, 0, 1);
-                            serialPort.Write(new byte[] { 0xF2 }, 0, 1);
-                            serialPort.Write(new byte[] { 0x87, 0x01, 0x85 }, 0, 3);
-                        }
-                        else if (buffer.AsSpan(0, 2).SequenceEqual(new byte[] { 0xF5, 0x11 }))
-                        {
-                            var len = buffer[2];
-                            var location = buffer[4] * 256 + buffer[5];
-                            var bytes = codeplug.AsSpan(location, len);
-
-                            backgroundWorker.ReportProgress(0, $"Read Memory  {len} bytes at 0x{location.ToString("x2")}");
-                            serialPort.Write(new byte[] { 0x50 }, 0, 1);
-
-                            if (len + 4 < 16)
-                            {
-                                byte packetLength = (byte)(len + 4 + 0xf0);
-                                SendSbep2((new byte[] { packetLength, 0x80, buffer[3], buffer[4], buffer[5] }).Concat(bytes.ToArray()).ToArray());
-                            }
-                            else
-                            {
-                                byte packetLength = (byte)(len + 4);
-                                SendSbep2((new byte[] { 0xFF, 0x80, 0x00, packetLength, buffer[3], buffer[4], buffer[5] }).Concat(bytes.ToArray()).ToArray());
-                            }
-
-                            //serialPort.Write(new byte[] { 0xF8 }, 0, 1);
-                            //serialPort.Write(new byte[] { 0x80, 0x00, 0x00, 0x00, 0x3B, 0x01, 0x02, 0x00, 0x49 }, 0, 9);
-                        }
-                        else if (buffer.AsSpan(0, 2).SequenceEqual(new byte[] { 0xFF, 0x17 }))
-                        {
-                            var len = buffer[3] - 4;
-                            var location = buffer[5] * 256 + buffer[6];
-
-                            backgroundWorker.ReportProgress(0, $"Write Memory  {len} bytes at 0x{location.ToString("x2")}");
-                            serialPort.Write(new byte[] { 0x50 }, 0, 1);
-
-                            for(int i=location, j = 7; i < location + len; i++, j++)
-                            {
-                                if (codeplug[i] != buffer[j])
-                                {
-                                    changeLog.AppendLine($" --> {i:X2}  {codeplug[i]:X2}   {buffer[j]:X2}");
-                                }
-                                codeplug[i] = buffer[j];
-                            }
-
-                            SendSbep2(new byte[] { 0xF4, 0x84, buffer[4], buffer[5], buffer[6] });
-
-                        }
-                        //else if (buffer.AsSpan(0, 7).SequenceEqual(new byte[] { 0xF5, 0x11, 0x02, 0x00, 0x02, 0x26, 0xCF }))
-                        //{
-                        //    backgroundWorker.ReportProgress(0, "Read Memory 2 bytes at 0x0226");
-                        //    serialPort.Write(new byte[] { 0x50 }, 0, 1);
-                        //    serialPort.Write(new byte[] { 0xF6 }, 0, 1);
-                        //    serialPort.Write(new byte[] { 0x80, 0x00, 0x02, 0x26, 0x08, 0x0C, 0x4D }, 0, 7);
-                        //}
-                        //else if (buffer.AsSpan(0, 7).SequenceEqual(new byte[] { 0xF5, 0x11, 0x20, 0x00, 0x00, 0x00, 0xD9 }))
-                        //{
-                        //    backgroundWorker.ReportProgress(0, "Read Memory");
-                        //    serialPort.Write(new byte[] { 0x50 }, 0, 1);
-                        //    serialPort.Write(new byte[] { 0xFF }, 0, 1);
-                        //    serialPort.Write(new byte[] { 0x80, 0x00, 0x24 }, 0, 3);
-                        //    serialPort.Write(new byte[] { 0x80, 0x00, 0x02, 0x26, 0x08, 0x0C, 0x4D }, 0, 7);
-                        //}
-                        else if (token.SequenceEqual(new byte[] { 0xF1, 0x10 }))
-                        {
-                            backgroundWorker.ReportProgress(0, "RESET");
-                            serialPort.Write(new byte[] { 0x50 }, 0, 1);
-                        }
-                        else if (token.SequenceEqual(new byte[] { 0x1A, 0x12, 0x1A, 0x06 }))
-                        {
-                            backgroundWorker.ReportProgress(0, "Unknown -- Called from Read Flash 0x1A, 0x12, 0x1A, 0x06");
-                        }
-                        else if (token.SequenceEqual(new byte[] { 0x03, 0x04, 0x02 }))
-                        {
-                            backgroundWorker.ReportProgress(0, "Unknown -- Called from Read Flash 0x03, 0x04, 0x02");
-                            serialPort.Write(new byte[] { 0x50 }, 0, 1);
-                        }
-                        else
-                        {
-                            serialPort.Write(new byte[] { 0x50 }, 0, 1);
-                            string output = "";
-                            for (int i = 0; i < offset; i++) output += buffer[i].ToString("X2") + " ";
-                            backgroundWorker.ReportProgress(0, output);
-                        }
-
-                        offset = 0;
-                        for (int i = 0; i < offset; i++) buffer[i] = 0;
-                    }
-                }
-            }
-            serialPort.Close();
-            System.IO.File.WriteAllBytes("image.hex", codeplug);
-            backgroundWorker.ReportProgress(0, changeLog.ToString());
         }
 
         private void GetBlock01()
@@ -200,7 +50,7 @@ namespace JediComlink
 
                 int checkSumCalc = -0X55 + 0x3B + 0x01; //Seed + Block Size + Block ID
 
-                for (int i = 0; i < bytes.Length -1; i++)
+                for (int i = 0; i < bytes.Length - 1; i++)
                 {
                     checkSumCalc += bytes[i];
                 }
@@ -240,11 +90,11 @@ namespace JediComlink
                 //   0x09, 0xBA, 0xD0 };
 
 
-            //newBlcok = File.ReadAllBytes("Block01.HEX");
+                //newBlcok = File.ReadAllBytes("Block01.HEX");
 
-            //newBlcok[11] = 0x34;  //Was 33
+                //newBlcok[11] = 0x34;  //Was 33
 
-            int newCheckSumCalc = -0X55 + 0x3B + 0x01; //Seed + Block Size + Block ID
+                int newCheckSumCalc = -0X55 + 0x3B + 0x01; //Seed + Block Size + Block ID
                 for (int i = 0; i < newBlcok.Length - 1; i++)
                 {
                     newCheckSumCalc += newBlcok[i];
@@ -275,36 +125,8 @@ namespace JediComlink
             }
         }
 
-        private void SendSbep2(byte[] data)
-        {
-            var msg = new byte[data.Length + 1];
-            var crc = 0;
-            for (int i = 0; i < data.Length; i++)
-            {
-                crc = (crc + data[i]) & 0xff;
-                msg[i] = data[i];
-            }
-            crc ^= 0xFF;
-            msg[msg.Length - 1] = (byte)crc;
-
-            //backgroundWorker.ReportProgress(0, "WRITE: " + String.Join(" ", Array.ConvertAll(msg, x => x.ToString("X2"))));
-
-            serialPort.Write(msg, 0, msg.Length);
-        }
-
-
-        static byte x = 0;
         private void backgroundWorker_DoWork(object sender, DoWorkEventArgs e)
         {
-//            Test();
-  //          return;
-            //if (DateTime.Now.Day == 29)
-            //{
-            //    //GetBlock01();
-            //    Test();
-            //    return;
-            //}
-
             var sw = new System.Diagnostics.Stopwatch();
             sw.Restart();
 
@@ -389,7 +211,7 @@ namespace JediComlink
 
                 backgroundWorker.ReportProgress(0, $"\r\n\r\nOutput File: {fileName}\r\n\r\n");
                 ExitSBEP();
-                Reset();                
+                Reset();
             }
             catch (Exception ex)
             {
@@ -450,7 +272,7 @@ namespace JediComlink
 
         private void ExitSBEP()
         {
-            serialPort.Write(new byte[] {0xF1, 0x10, 0xFE }, 0, 3);
+            serialPort.Write(new byte[] { 0xF1, 0x10, 0xFE }, 0, 3);
             Thread.Sleep(25);
             serialPort.DtrEnable = false;
             Thread.Sleep(25);
@@ -477,7 +299,7 @@ namespace JediComlink
             crc = SB9600CRCTable[crc ^ value];
             crc = SB9600CRCTable[crc ^ operation];
 
-            var msg = new byte[] {address, subaddress, value, operation, (byte)crc};
+            var msg = new byte[] { address, subaddress, value, operation, (byte)crc };
             backgroundWorker.ReportProgress(0, "Sending " + String.Join(" ", Array.ConvertAll(msg, x => x.ToString("X2"))));
 
             serialPort.DtrEnable = true;
@@ -551,11 +373,11 @@ namespace JediComlink
             }
 
             var data = new List<byte>();
-            for (int i=0; i < datalen; i++)
+            for (int i = 0; i < datalen; i++)
             {
                 byte x = (byte)serialPort.ReadByte();
                 msg.Add(x);
-                if (i+1 < datalen) data.Add(x);
+                if (i + 1 < datalen) data.Add(x);
             }
 
             var crc = 0;
@@ -582,7 +404,7 @@ namespace JediComlink
 
         private void ReadButton_Click(object sender, EventArgs e)
         {
-            if(backgroundWorker.IsBusy)
+            if (backgroundWorker.IsBusy)
             {
                 backgroundWorker.CancelAsync();
                 ReadButton.BackColor = System.Drawing.Color.LightGray;
@@ -643,73 +465,6 @@ namespace JediComlink
             }
 
             File.WriteAllText(@"c:\JediDumps\TestParse.txt", codeplug.GetTextDump());
-                //int i = 0;
-
-                //while (i < 0x1500)
-                //{
-                //    int checkSumCalc = 0;
-                //    bool extendedChecksumFlag = false;
-
-                //    int size = bytes[i++];
-
-                //    if (size == 0 || size == 1) //Likely need some kind of bit check
-                //    {
-                //        checkSumCalc = -0X5555 + size + bytes[i];
-                //        size = (size) * 256 + bytes[i++];
-                //        extendedChecksumFlag = true;
-                //    }
-                //    else
-                //    {
-                //        checkSumCalc = -0X55 + size;
-                //    }
-
-                //    if (size == 0) {
-                //        fs.WriteLine("pad 0");
-                //        continue;
-                //    }
-
-                //    int startOfBlock = i;
-
-                //    int blockType = bytes[i++];
-                //    if (blockType == 0x61) size = 0x221;  //s/b block 5b
-                //    if (blockType == 0x3c) size = 0x7b;
-
-                //    int endOfBlock = i + size -1;
-
-                //    var block = new byte[size-1]; //Size includes block type
-                //    checkSumCalc += blockType;
-
-                //    for (int j=0; i < endOfBlock; i++, j++)
-                //    {
-                //        block[j] = bytes[i];
-                //        checkSumCalc += bytes[i];
-                //    }
-
-
-                //    int checkSum = 0;
-                //    if (extendedChecksumFlag)
-                //    {
-                //        checkSum = bytes[i++] * 256 + bytes[i++];
-                //        checkSumCalc &= 0xffff;
-                //        //Todo
-                //    }
-                //    else
-                //    {
-                //        checkSumCalc &= 0xff;
-                //        checkSum = bytes[i++];
-                //    }
-
-                //    fs.WriteLine($"Block {blockType:X2}");
-                //    fs.WriteLine($"# {size - 1} bytes starting at 0x{startOfBlock:X4} with checksum of 0x{checkSum:X2}");
-                //    fs.WriteLine($"# \"{FormatHexPreview(block)}\"");
-                //    if (checkSum != checkSumCalc) fs.WriteLine($"#Failed Checksum! Expected {checkSum:X2} Calculated {checkSumCalc:X2}");
-
-                //    fs.WriteLine(FormatHex(block));
-                //    fs.WriteLine("");
-                //}
-
-    
-
         }
 
         private string FormatHex(byte[] data)
@@ -724,26 +479,9 @@ namespace JediComlink
             return sb.ToString();
         }
 
-        private string FormatHexPreview(byte[] data)
-        {
-            var sb = new StringBuilder();
-            foreach (var b in data)
-            {
-                if (b < 32 || b > 127)
-                {
-                    sb.Append(".");
-                }
-                else
-                {
-                    sb.Append((char)b);
-                }
-            }
-            return sb.ToString();
-        }
-
         private void WriteButton_Click(object sender, EventArgs e)
         {
-           
+
 
         }
 
@@ -795,6 +533,31 @@ namespace JediComlink
         private void CodeplugView_AfterSelect(object sender, TreeViewEventArgs e)
         {
             propertyGrid1.SelectedObject = e.Node.Tag;
+        }
+
+        Emulator _emulator = null;
+        private void EmulatorButton_Click(object sender, EventArgs e)
+        {
+            if (_emulator == null)
+            {
+                _emulator = new Emulator(File.ReadAllBytes(@"MTS2000-2020-04-17_19-15-43.hex"));
+                _emulator.StatusUpdate += _emulator_StatusUpdate;
+
+                _emulator.Start();
+                EmulatorButton.Text = "Stop";
+            }
+            else
+            {
+                _emulator.Stop();
+                _emulator = null;
+                EmulatorButton.Text = "Start";
+            }
+
+        }
+
+        private void _emulator_StatusUpdate(object sender, StatusUpdateEventArgs e)
+        {
+            EmulatorStatus.Invoke(new Action(() => EmulatorStatus.AppendText(e.Status + Environment.NewLine)));
         }
     }
 }

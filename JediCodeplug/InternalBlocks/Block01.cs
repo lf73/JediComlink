@@ -34,6 +34,7 @@ namespace JediCodeplug
 
         #region Propeties
         [DisplayName("External Codeplug Vector")]
+        [Description("Usaully 512 for 800mhz and 640 for others. Note that Internal EEPROM is 512 bytes. The Internal Codeplug starts in Internal EEPROM and can overflow into External EEPROM.")]
         public int ExternalCodeplugVector { get; set; }
 
         public string Serial { get; set; }

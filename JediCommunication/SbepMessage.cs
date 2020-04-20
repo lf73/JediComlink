@@ -16,6 +16,11 @@ namespace JediCommunication
 		public bool Incomplete { get; private set; }
 		public bool Invalid { get; private set; }
 
+		public override string ToString()
+		{
+			return $"Op: {OpCode:X2} Data: {String.Join(" ", Array.ConvertAll(Data, x => x.ToString("X2")))} ";
+		}
+
 		public SbepMessage(byte opCode, params byte[] data)
 		{
 			OpCode = opCode;
@@ -58,14 +63,14 @@ namespace JediCommunication
 					Length = lsn;
 					dataStart = 1;
 				}
-				else if (msn > 0xf && lsn < 0xf)
+				else if (msn == 0xf && lsn < 0xf)
 				{
 					OpCode = buffer[1];
 					Length = lsn;
 					dataStart = 2;
 
 				}
-				else if (msn < 0xf && lsn > 0xf)
+				else if (msn < 0xf && lsn == 0xf)
 				{
 					OpCode = (byte)msn;
 					Length = buffer[1];

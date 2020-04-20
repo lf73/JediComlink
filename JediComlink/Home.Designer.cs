@@ -39,10 +39,15 @@
             this.ComPortComboBox = new System.Windows.Forms.ComboBox();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
+            this.tabPage3 = new System.Windows.Forms.TabPage();
             this.tabPage2 = new System.Windows.Forms.TabPage();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.CodeplugView = new System.Windows.Forms.TreeView();
             this.propertyGrid1 = new System.Windows.Forms.PropertyGrid();
+            this.tabPage4 = new System.Windows.Forms.TabPage();
+            this.tabPage5 = new System.Windows.Forms.TabPage();
+            this.EmulatorStatus = new System.Windows.Forms.TextBox();
+            this.EmulatorButton = new System.Windows.Forms.Button();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.tabPage2.SuspendLayout();
@@ -50,14 +55,15 @@
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
+            this.tabPage5.SuspendLayout();
             this.SuspendLayout();
             // 
             // ReadButton
             // 
-            this.ReadButton.Location = new System.Drawing.Point(51, 65);
-            this.ReadButton.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.ReadButton.Location = new System.Drawing.Point(28, 35);
+            this.ReadButton.Margin = new System.Windows.Forms.Padding(2);
             this.ReadButton.Name = "ReadButton";
-            this.ReadButton.Size = new System.Drawing.Size(95, 48);
+            this.ReadButton.Size = new System.Drawing.Size(52, 26);
             this.ReadButton.TabIndex = 0;
             this.ReadButton.Text = "Read";
             this.ReadButton.UseVisualStyleBackColor = true;
@@ -65,10 +71,10 @@
             // 
             // WriteButton
             // 
-            this.WriteButton.Location = new System.Drawing.Point(194, 65);
-            this.WriteButton.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.WriteButton.Location = new System.Drawing.Point(106, 35);
+            this.WriteButton.Margin = new System.Windows.Forms.Padding(2);
             this.WriteButton.Name = "WriteButton";
-            this.WriteButton.Size = new System.Drawing.Size(95, 48);
+            this.WriteButton.Size = new System.Drawing.Size(52, 26);
             this.WriteButton.TabIndex = 1;
             this.WriteButton.Text = "Write";
             this.WriteButton.UseVisualStyleBackColor = true;
@@ -76,13 +82,13 @@
             // 
             // Status
             // 
-            this.Status.Location = new System.Drawing.Point(13, 120);
-            this.Status.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.Status.Location = new System.Drawing.Point(7, 65);
+            this.Status.Margin = new System.Windows.Forms.Padding(2);
             this.Status.Multiline = true;
             this.Status.Name = "Status";
             this.Status.ReadOnly = true;
             this.Status.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.Status.Size = new System.Drawing.Size(1476, 748);
+            this.Status.Size = new System.Drawing.Size(807, 407);
             this.Status.TabIndex = 2;
             // 
             // serialPort
@@ -98,10 +104,10 @@
             // 
             // ParseButton
             // 
-            this.ParseButton.Location = new System.Drawing.Point(345, 65);
-            this.ParseButton.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.ParseButton.Location = new System.Drawing.Point(188, 35);
+            this.ParseButton.Margin = new System.Windows.Forms.Padding(2);
             this.ParseButton.Name = "ParseButton";
-            this.ParseButton.Size = new System.Drawing.Size(95, 48);
+            this.ParseButton.Size = new System.Drawing.Size(52, 26);
             this.ParseButton.TabIndex = 3;
             this.ParseButton.Text = "Parse";
             this.ParseButton.UseVisualStyleBackColor = true;
@@ -120,10 +126,10 @@
             "COM7",
             "COM8",
             "COM9"});
-            this.ComPortComboBox.Location = new System.Drawing.Point(805, 65);
-            this.ComPortComboBox.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.ComPortComboBox.Location = new System.Drawing.Point(439, 35);
+            this.ComPortComboBox.Margin = new System.Windows.Forms.Padding(2);
             this.ComPortComboBox.Name = "ComPortComboBox";
-            this.ComPortComboBox.Size = new System.Drawing.Size(252, 32);
+            this.ComPortComboBox.Size = new System.Drawing.Size(139, 21);
             this.ComPortComboBox.TabIndex = 4;
             this.ComPortComboBox.Text = "COM1";
             this.ComPortComboBox.SelectedValueChanged += new System.EventHandler(this.ComPortComboBox_SelectedValueChanged);
@@ -131,13 +137,15 @@
             // tabControl1
             // 
             this.tabControl1.Controls.Add(this.tabPage1);
+            this.tabControl1.Controls.Add(this.tabPage3);
             this.tabControl1.Controls.Add(this.tabPage2);
+            this.tabControl1.Controls.Add(this.tabPage4);
+            this.tabControl1.Controls.Add(this.tabPage5);
             this.tabControl1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tabControl1.Location = new System.Drawing.Point(0, 0);
-            this.tabControl1.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
-            this.tabControl1.Size = new System.Drawing.Size(1511, 923);
+            this.tabControl1.Size = new System.Drawing.Size(824, 489);
             this.tabControl1.TabIndex = 5;
             // 
             // tabPage1
@@ -147,32 +155,38 @@
             this.tabPage1.Controls.Add(this.ReadButton);
             this.tabPage1.Controls.Add(this.ParseButton);
             this.tabPage1.Controls.Add(this.WriteButton);
-            this.tabPage1.Location = new System.Drawing.Point(4, 33);
-            this.tabPage1.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
+            this.tabPage1.Location = new System.Drawing.Point(4, 22);
             this.tabPage1.Name = "tabPage1";
-            this.tabPage1.Padding = new System.Windows.Forms.Padding(6, 6, 6, 6);
-            this.tabPage1.Size = new System.Drawing.Size(1503, 886);
+            this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage1.Size = new System.Drawing.Size(816, 463);
             this.tabPage1.TabIndex = 0;
-            this.tabPage1.Text = "tabPage1";
+            this.tabPage1.Text = "Normal Read/Wrtie";
             this.tabPage1.UseVisualStyleBackColor = true;
+            // 
+            // tabPage3
+            // 
+            this.tabPage3.Location = new System.Drawing.Point(4, 22);
+            this.tabPage3.Name = "tabPage3";
+            this.tabPage3.Size = new System.Drawing.Size(816, 463);
+            this.tabPage3.TabIndex = 2;
+            this.tabPage3.Text = "Analysis / Fixes";
+            this.tabPage3.UseVisualStyleBackColor = true;
             // 
             // tabPage2
             // 
             this.tabPage2.Controls.Add(this.splitContainer1);
-            this.tabPage2.Location = new System.Drawing.Point(4, 33);
-            this.tabPage2.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
+            this.tabPage2.Location = new System.Drawing.Point(4, 22);
             this.tabPage2.Name = "tabPage2";
-            this.tabPage2.Padding = new System.Windows.Forms.Padding(6, 6, 6, 6);
-            this.tabPage2.Size = new System.Drawing.Size(1503, 886);
+            this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage2.Size = new System.Drawing.Size(816, 463);
             this.tabPage2.TabIndex = 1;
-            this.tabPage2.Text = "tabPage2";
+            this.tabPage2.Text = "Codeplug Explorer";
             this.tabPage2.UseVisualStyleBackColor = true;
             // 
             // splitContainer1
             // 
             this.splitContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.splitContainer1.Location = new System.Drawing.Point(6, 6);
-            this.splitContainer1.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
+            this.splitContainer1.Location = new System.Drawing.Point(3, 3);
             this.splitContainer1.Name = "splitContainer1";
             // 
             // splitContainer1.Panel1
@@ -182,18 +196,16 @@
             // splitContainer1.Panel2
             // 
             this.splitContainer1.Panel2.Controls.Add(this.propertyGrid1);
-            this.splitContainer1.Size = new System.Drawing.Size(1491, 874);
-            this.splitContainer1.SplitterDistance = 430;
-            this.splitContainer1.SplitterWidth = 7;
+            this.splitContainer1.Size = new System.Drawing.Size(810, 457);
+            this.splitContainer1.SplitterDistance = 233;
             this.splitContainer1.TabIndex = 0;
             // 
             // CodeplugView
             // 
             this.CodeplugView.Dock = System.Windows.Forms.DockStyle.Fill;
             this.CodeplugView.Location = new System.Drawing.Point(0, 0);
-            this.CodeplugView.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
             this.CodeplugView.Name = "CodeplugView";
-            this.CodeplugView.Size = new System.Drawing.Size(430, 874);
+            this.CodeplugView.Size = new System.Drawing.Size(233, 457);
             this.CodeplugView.TabIndex = 0;
             this.CodeplugView.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.CodeplugView_AfterSelect);
             // 
@@ -201,21 +213,62 @@
             // 
             this.propertyGrid1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.propertyGrid1.Location = new System.Drawing.Point(0, 0);
-            this.propertyGrid1.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
             this.propertyGrid1.Name = "propertyGrid1";
             this.propertyGrid1.PropertySort = System.Windows.Forms.PropertySort.NoSort;
-            this.propertyGrid1.Size = new System.Drawing.Size(1054, 874);
+            this.propertyGrid1.Size = new System.Drawing.Size(573, 457);
             this.propertyGrid1.TabIndex = 0;
             this.propertyGrid1.ToolbarVisible = false;
             // 
+            // tabPage4
+            // 
+            this.tabPage4.Location = new System.Drawing.Point(4, 22);
+            this.tabPage4.Name = "tabPage4";
+            this.tabPage4.Size = new System.Drawing.Size(816, 463);
+            this.tabPage4.TabIndex = 3;
+            this.tabPage4.Text = "Flash Read/Write";
+            this.tabPage4.UseVisualStyleBackColor = true;
+            // 
+            // tabPage5
+            // 
+            this.tabPage5.Controls.Add(this.EmulatorButton);
+            this.tabPage5.Controls.Add(this.EmulatorStatus);
+            this.tabPage5.Location = new System.Drawing.Point(4, 22);
+            this.tabPage5.Name = "tabPage5";
+            this.tabPage5.Size = new System.Drawing.Size(816, 463);
+            this.tabPage5.TabIndex = 4;
+            this.tabPage5.Text = "Emulator";
+            this.tabPage5.UseVisualStyleBackColor = true;
+            // 
+            // EmulatorStatus
+            // 
+            this.EmulatorStatus.Location = new System.Drawing.Point(5, 28);
+            this.EmulatorStatus.Margin = new System.Windows.Forms.Padding(2);
+            this.EmulatorStatus.Multiline = true;
+            this.EmulatorStatus.Name = "EmulatorStatus";
+            this.EmulatorStatus.ReadOnly = true;
+            this.EmulatorStatus.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+            this.EmulatorStatus.Size = new System.Drawing.Size(807, 407);
+            this.EmulatorStatus.TabIndex = 3;
+            // 
+            // EmulatorButton
+            // 
+            this.EmulatorButton.Location = new System.Drawing.Point(38, 2);
+            this.EmulatorButton.Margin = new System.Windows.Forms.Padding(2);
+            this.EmulatorButton.Name = "EmulatorButton";
+            this.EmulatorButton.Size = new System.Drawing.Size(52, 26);
+            this.EmulatorButton.TabIndex = 4;
+            this.EmulatorButton.Text = "Start";
+            this.EmulatorButton.UseVisualStyleBackColor = true;
+            this.EmulatorButton.Click += new System.EventHandler(this.EmulatorButton_Click);
+            // 
             // Home
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(11F, 24F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1511, 923);
+            this.ClientSize = new System.Drawing.Size(824, 489);
             this.Controls.Add(this.tabControl1);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
-            this.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.Margin = new System.Windows.Forms.Padding(2);
             this.Name = "Home";
             this.Text = "Jedi Comlink";
             this.Load += new System.EventHandler(this.Home_Load);
@@ -227,6 +280,8 @@
             this.splitContainer1.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
             this.splitContainer1.ResumeLayout(false);
+            this.tabPage5.ResumeLayout(false);
+            this.tabPage5.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -246,6 +301,11 @@
         private System.Windows.Forms.SplitContainer splitContainer1;
         private System.Windows.Forms.TreeView CodeplugView;
         private System.Windows.Forms.PropertyGrid propertyGrid1;
+        private System.Windows.Forms.TabPage tabPage3;
+        private System.Windows.Forms.TabPage tabPage4;
+        private System.Windows.Forms.TabPage tabPage5;
+        private System.Windows.Forms.Button EmulatorButton;
+        private System.Windows.Forms.TextBox EmulatorStatus;
     }
 }
 
