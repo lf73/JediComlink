@@ -28,14 +28,10 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Home));
             this.ReadButton = new System.Windows.Forms.Button();
             this.WriteButton = new System.Windows.Forms.Button();
             this.Status = new System.Windows.Forms.TextBox();
-            this.serialPort = new System.IO.Ports.SerialPort(this.components);
-            this.backgroundWorker = new System.ComponentModel.BackgroundWorker();
-            this.ParseButton = new System.Windows.Forms.Button();
             this.ComPortComboBox = new System.Windows.Forms.ComboBox();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
@@ -46,8 +42,8 @@
             this.propertyGrid1 = new System.Windows.Forms.PropertyGrid();
             this.tabPage4 = new System.Windows.Forms.TabPage();
             this.tabPage5 = new System.Windows.Forms.TabPage();
-            this.EmulatorStatus = new System.Windows.Forms.TextBox();
             this.EmulatorButton = new System.Windows.Forms.Button();
+            this.EmulatorStatus = new System.Windows.Forms.TextBox();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.tabPage2.SuspendLayout();
@@ -78,7 +74,6 @@
             this.WriteButton.TabIndex = 1;
             this.WriteButton.Text = "Write";
             this.WriteButton.UseVisualStyleBackColor = true;
-            this.WriteButton.Click += new System.EventHandler(this.WriteButton_Click);
             // 
             // Status
             // 
@@ -90,28 +85,6 @@
             this.Status.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
             this.Status.Size = new System.Drawing.Size(807, 407);
             this.Status.TabIndex = 2;
-            // 
-            // serialPort
-            // 
-            this.serialPort.PortName = "COM4";
-            // 
-            // backgroundWorker
-            // 
-            this.backgroundWorker.WorkerReportsProgress = true;
-            this.backgroundWorker.WorkerSupportsCancellation = true;
-            this.backgroundWorker.DoWork += new System.ComponentModel.DoWorkEventHandler(this.backgroundWorker_DoWork);
-            this.backgroundWorker.ProgressChanged += new System.ComponentModel.ProgressChangedEventHandler(this.backgroundWorker_ProgressChanged);
-            // 
-            // ParseButton
-            // 
-            this.ParseButton.Location = new System.Drawing.Point(188, 35);
-            this.ParseButton.Margin = new System.Windows.Forms.Padding(2);
-            this.ParseButton.Name = "ParseButton";
-            this.ParseButton.Size = new System.Drawing.Size(52, 26);
-            this.ParseButton.TabIndex = 3;
-            this.ParseButton.Text = "Parse";
-            this.ParseButton.UseVisualStyleBackColor = true;
-            this.ParseButton.Click += new System.EventHandler(this.ParseButton_Click);
             // 
             // ComPortComboBox
             // 
@@ -153,7 +126,6 @@
             this.tabPage1.Controls.Add(this.Status);
             this.tabPage1.Controls.Add(this.ComPortComboBox);
             this.tabPage1.Controls.Add(this.ReadButton);
-            this.tabPage1.Controls.Add(this.ParseButton);
             this.tabPage1.Controls.Add(this.WriteButton);
             this.tabPage1.Location = new System.Drawing.Point(4, 22);
             this.tabPage1.Name = "tabPage1";
@@ -239,17 +211,6 @@
             this.tabPage5.Text = "Emulator";
             this.tabPage5.UseVisualStyleBackColor = true;
             // 
-            // EmulatorStatus
-            // 
-            this.EmulatorStatus.Location = new System.Drawing.Point(5, 28);
-            this.EmulatorStatus.Margin = new System.Windows.Forms.Padding(2);
-            this.EmulatorStatus.Multiline = true;
-            this.EmulatorStatus.Name = "EmulatorStatus";
-            this.EmulatorStatus.ReadOnly = true;
-            this.EmulatorStatus.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.EmulatorStatus.Size = new System.Drawing.Size(807, 407);
-            this.EmulatorStatus.TabIndex = 3;
-            // 
             // EmulatorButton
             // 
             this.EmulatorButton.Location = new System.Drawing.Point(38, 2);
@@ -260,6 +221,17 @@
             this.EmulatorButton.Text = "Start";
             this.EmulatorButton.UseVisualStyleBackColor = true;
             this.EmulatorButton.Click += new System.EventHandler(this.EmulatorButton_Click);
+            // 
+            // EmulatorStatus
+            // 
+            this.EmulatorStatus.Location = new System.Drawing.Point(5, 28);
+            this.EmulatorStatus.Margin = new System.Windows.Forms.Padding(2);
+            this.EmulatorStatus.Multiline = true;
+            this.EmulatorStatus.Name = "EmulatorStatus";
+            this.EmulatorStatus.ReadOnly = true;
+            this.EmulatorStatus.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+            this.EmulatorStatus.Size = new System.Drawing.Size(807, 407);
+            this.EmulatorStatus.TabIndex = 3;
             // 
             // Home
             // 
@@ -291,9 +263,6 @@
         private System.Windows.Forms.Button ReadButton;
         private System.Windows.Forms.Button WriteButton;
         private System.Windows.Forms.TextBox Status;
-        private System.IO.Ports.SerialPort serialPort;
-        private System.ComponentModel.BackgroundWorker backgroundWorker;
-        private System.Windows.Forms.Button ParseButton;
         private System.Windows.Forms.ComboBox ComPortComboBox;
         private System.Windows.Forms.TabControl tabControl1;
         private System.Windows.Forms.TabPage tabPage1;

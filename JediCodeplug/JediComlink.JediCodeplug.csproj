@@ -137,5 +137,11 @@
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\JediCommunication\JediComlink.JediCommunication.csproj">
+      <Project>{834aa461-0875-4a41-bf64-0902ff444152}</Project>
+      <Name>JediComlink.JediCommunication</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

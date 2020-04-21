@@ -14,7 +14,7 @@ namespace JediEmulator
     public class Emulator
     {
         public event EventHandler<StatusUpdateEventArgs> StatusUpdate;
-        private SerialPort Port;
+        private SerialPort _port;
 
         Memory<byte> _codeplugBytes;
         public Emulator(byte[] codeplugBytes)
@@ -24,17 +24,17 @@ namespace JediEmulator
 
         public void Start()
         {
-            Port = new SerialPort("COM4", 9600)
+            _port = new SerialPort("COM4", 9600)
             {
                 ReceivedBytesThreshold = 1024
             };
-            Port.Open();
+            _port.Open();
             ReadEvent();
         }
 
         public void Stop()
         {
-            Port.Close();
+            _port.Close();
         }
 
         private void ProcessSB9600(SB9600Message message)
@@ -55,7 +55,7 @@ namespace JediEmulator
                         sbepMode = true;
                         sribMode = false;
                         Thread.Sleep(600); //Delay while CPS reinitializes com port and sets DTR. Otherwise it will timeout after "missing" ack.
-                        Port.Write(new byte[] { 0x50 }, 0, 1); //ACK
+                        _port.Write(new byte[] { 0x50 }, 0, 1); //ACK
                     }
                     break;
                 case 0x01:
@@ -87,7 +87,7 @@ namespace JediEmulator
 
             if (response != null)
             {
-                Port.Write(response.Bytes, 0, response.Bytes.Length);
+                _port.Write(response.Bytes, 0, response.Bytes.Length);
             }
         }
 
@@ -132,7 +132,7 @@ namespace JediEmulator
             if (response != null)
             {
                 //UpdateStatus($"SENDING: {response.OpCode:X2} -- " + String.Join(" ", Array.ConvertAll(response.Bytes, _ => _.ToString("X2"))));
-                Port.Write(response.Bytes, 0, response.Bytes.Length);
+                _port.Write(response.Bytes, 0, response.Bytes.Length);
             }            
         }
 
@@ -198,7 +198,7 @@ namespace JediEmulator
 
             if (response != null)
             {
-                Port.Write(response.Bytes, 0, response.Bytes.Length);
+                _port.Write(response.Bytes, 0, response.Bytes.Length);
             }
             else
             {
@@ -270,7 +270,7 @@ namespace JediEmulator
         {
             //UpdateStatus("Raw: " + String.Join(" ", Array.ConvertAll(readBuffer, _ => _.ToString("X2"))));
 
-            if (echo) Port.Write(readBuffer, 0, readBuffer.Length);
+            if (echo) _port.Write(readBuffer, 0, readBuffer.Length);
             lock (portLock)
             {
                 if (sw.ElapsedMilliseconds > 50)
@@ -298,11 +298,11 @@ namespace JediEmulator
 
                     if (message.Invalid)
                     {
-                        Port.Write(new byte[] { 0x60 }, 0, 1); //Negative ACK
+                        _port.Write(new byte[] { 0x60 }, 0, 1); //Negative ACK
                         return;
                     }
 
-                    Port.Write(new byte[] { 0x50 }, 0, 1); //ACK
+                    _port.Write(new byte[] { 0x50 }, 0, 1); //ACK
 
                     if (sribMode)
                     {
@@ -326,7 +326,7 @@ namespace JediEmulator
                     packetBufferCount = 0;
                     if (message.Invalid)
                     {
-                        Port.Write(new byte[] { 0x60 }, 0, 1); //Negative ACK
+                        _port.Write(new byte[] { 0x60 }, 0, 1); //Negative ACK
                     }
                     else
                     {
@@ -341,11 +341,11 @@ namespace JediEmulator
         {
             byte[] buffer = new byte[2000];
             Action kickoffRead = null;
-            kickoffRead = () => Port.BaseStream.BeginRead(buffer, 0, buffer.Length, delegate (IAsyncResult ar)
+            kickoffRead = () => _port.BaseStream.BeginRead(buffer, 0, buffer.Length, delegate (IAsyncResult ar)
             {
                 try
                 {
-                    int count = Port.BaseStream.EndRead(ar);
+                    int count = _port.BaseStream.EndRead(ar);
                     byte[] dst = new byte[count];
                     Buffer.BlockCopy(buffer, 0, dst, 0, count);
                     RaiseAppSerialDataEvent(dst);
@@ -358,16 +358,13 @@ namespace JediEmulator
                 {
                     UpdateStatus(exception.ToString());
                 }
-                if (Port.IsOpen) kickoffRead();
+                if (_port.IsOpen) kickoffRead();
             }, null);
             kickoffRead();
         }
     }
 
 
-    public class StatusUpdateEventArgs : EventArgs
-    {
-        public string Status { get; set; }
-    }
+
 
 }
