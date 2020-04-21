@@ -16,7 +16,10 @@ namespace JediCodeplug
         public Block30 ExternalCodeplug { get; protected set; } = new Block30();
 
         public decimal FirmwareVersion { get; set; }
+        
         public byte[] FactoryCode { get; set; }
+        
+        public byte[] CalculatedAuthCode { get; set; }
 
         /// <summary>
         /// Original source bytes used to unpack codeplug.
@@ -77,7 +80,6 @@ namespace JediCodeplug
 
                 //Calculate total bytes to read from 0x0000 to end of External Codeplug
                 var length = extStart + (lengthBytes[0] * 0x100 + lengthBytes[1]);
-
                 var codeplugBytes = new byte[length];
 
                 for(int i = 0; i < length; i += 0x20)
@@ -91,7 +93,7 @@ namespace JediCodeplug
                 File.WriteAllBytes(fileName, codeplugBytes);
                 codeplug = new Codeplug(codeplugBytes);
                 codeplug.FactoryCode = com.Read(0x81F0, 0x10);
-
+                codeplug.CalculatedAuthCode = AuthCode.Calculate(codeplug);
             }).ConfigureAwait(false);
             return codeplug;
 
