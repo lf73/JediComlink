@@ -21,6 +21,8 @@ namespace JediCodeplug
         
         public byte[] CalculatedAuthCode { get; set; }
 
+        public string AuthCodeStatus { get; set; }
+
         /// <summary>
         /// Original source bytes used to unpack codeplug.
         /// </summary>
@@ -74,6 +76,8 @@ namespace JediCodeplug
             Codeplug codeplug = null;
             await Task.Run(() =>
             {
+                com.EnterProgrammingMode();
+                var firmwareVersion = com.GetFirmwareVersion();
                 var extStartBytes = com.Read(0x0002, 0x02);
                 var extStart = extStartBytes[0] * 0x100 + extStartBytes[1];
                 var lengthBytes = com.Read(extStart + 0x26, 0x02);
@@ -87,13 +91,13 @@ namespace JediCodeplug
                     var bytesToRead = Math.Min(0x20, length - i);
                     com.Read(i, bytesToRead, codeplugBytes);
                 }
-                //UpdateStatus($"Read 0x{length:X4} bytes.");
-
+                com.ExitSbepMode();
                 string fileName = "MTS2000-" + DateTime.Now.ToString("yyyy-MM-dd_HH-mm-ss") + ".hex";
                 File.WriteAllBytes(fileName, codeplugBytes);
                 codeplug = new Codeplug(codeplugBytes);
+                codeplug.FirmwareVersion = firmwareVersion;
                 codeplug.FactoryCode = com.Read(0x81F0, 0x10);
-                codeplug.CalculatedAuthCode = AuthCode.Calculate(codeplug);
+                AuthCode.Calculate(codeplug);
             }).ConfigureAwait(false);
             return codeplug;
 

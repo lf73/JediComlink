@@ -82,6 +82,7 @@ namespace JediComlink
             _com.StatusUpdate += _com_StatusUpdate;
 
             var codeplug = await Codeplug.ReadFromRadio(_com);
+            _com.Reset();
             _com.StatusUpdate -= _com_StatusUpdate;
             _com.Close();
             _com = null;

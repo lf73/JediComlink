@@ -26,7 +26,8 @@ namespace JediCommunication
                 _port = new SerialPort(comPort)
                 {
                     PortName = comPort,
-                    ReadTimeout = 2500
+                    ReadTimeout = 2500,
+                    BaudRate = 9600,
                 };
                 _port.Open();
                 UpdateStatus($"Port {comPort} Open");
@@ -99,11 +100,8 @@ namespace JediCommunication
         {
             if (_sbepMode) return; //Already in SBEP mode!
             SendSB9600(SB9600Messages.EnterSbep);
-            _port.Close();
-            Thread.Sleep(250);
-            _port.Open();
-
             _port.DtrEnable = true;
+            _port.RtsEnable = true;
             Thread.Sleep(250);
 
             var response = new byte[_port.BytesToRead];
@@ -116,16 +114,16 @@ namespace JediCommunication
         public void ExitSbepMode()
         {
             SendSbep(new SbepMessage(0x10, null));
-            Thread.Sleep(25);
             _port.DtrEnable = false;
+            _port.RtsEnable = false;
             Thread.Sleep(100);
             _port.DiscardInBuffer();
             _port.DiscardOutBuffer();
             UpdateStatus("Exited SBEP Mode");
-            _port.DtrEnable = true;
-            Thread.Sleep(25);
-            _port.DtrEnable = false;
-            Thread.Sleep(25);
+            //_port.DtrEnable = true;
+            //Thread.Sleep(25);
+            //_port.DtrEnable = false;
+            //Thread.Sleep(25);
             _sbepMode = false;
         }
 
@@ -133,36 +131,47 @@ namespace JediCommunication
         {
             //CSQ mode?
             SendSB9600(SB9600Messages.ProgrammingMode);
-            Thread.Sleep(500);
+            Thread.Sleep(1000);
+            //SendSB9600(new SB9600Message(0x00, 0x01, 0x01, 0x08));
+            //Thread.Sleep(500);
         }
+
+        public decimal GetFirmwareVersion()
+        {           
+            if (_sbepMode) ExitSbepMode();
+
+            var message = SendSB9600(SB9600Messages.RequestFirmwareVersion);
+            Thread.Sleep(400); //Command sends a few repeat replies. Wait them out.
+
+            return (((message.Data1 >> 4) * 10) + (message.Data1 & 0xF)) + ((((message.Data2 >> 4) * 10) + (message.Data2 & 0xF)) * 0.01M);
+        }
+
 
         public void Reset()
         {
             SendSB9600(SB9600Messages.Reset);
         }
 
-        public void SendSB9600(SB9600Message message)
+        public SB9600Message SendSB9600(SB9600Message message)
         {
-            _port.DiscardInBuffer();
-            _port.DiscardOutBuffer();
+            if (_sbepMode) ExitSbepMode();
             var packetSize = message.Bytes.Length;
             _port.DtrEnable = true;
+            _port.RtsEnable = true;
+            Thread.Sleep(30);
+            _port.DiscardInBuffer();
+            _port.DiscardOutBuffer();
+            UpdateStatus("Sending: " + String.Join(" ", Array.ConvertAll(message.Bytes, x => x.ToString("X2"))));           
             _port.Write(message.Bytes, 0, packetSize);
-            Thread.Sleep(150);
+            var echo = ReceiveSB9600();
+            var response = ReceiveSB9600();
             _port.DtrEnable = false;
+            _port.RtsEnable = false;
+            Thread.Sleep(30);
+            _port.DiscardInBuffer();
+            _port.DiscardOutBuffer();
 
-            //Whatever sent seems to be echoed back, at least with Jedi.
-            //For example a bad checksum is simplied echoed right back without any ack from radio.
-            byte[] bytes = new byte[packetSize];
-            _port.Read(bytes, 0, packetSize);
-            //UpdateStatus("Echoed: " + String.Join(" ", Array.ConvertAll(bytes, x => x.ToString("X2"))));
-
-            if (_port.BytesToRead > 0)
-            {
-                var response = new byte[_port.BytesToRead];
-                _port.Read(response, 0, packetSize);
-                UpdateStatus("Received: " + String.Join(" ", Array.ConvertAll(response, x => x.ToString("X2"))));
-            }
+            return response;
         }
 
         public bool SendSbep(SbepMessage message)
@@ -173,26 +182,67 @@ namespace JediCommunication
             UpdateStatus("Sending " + String.Join(" ", Array.ConvertAll(message.Bytes, x => x.ToString("X2"))));
 
             _port.Write(message.Bytes, 0, packetSize);
-            Thread.Sleep(30);
 
             //Whatever sent seems to be echoed back, at least with Jedi.
             //For example a bad checksum is simplied echoed right back without any ack from radio.
-            byte[] bytes = new byte[packetSize];
-            _port.Read(bytes, 0, packetSize);
-            //UpdateStatus("Echoed: " + String.Join(" ", Array.ConvertAll(bytes, x => x.ToString("X2"))));
 
-            int ack = _port.ReadByte();
-            UpdateStatus("Ack: " + ack.ToString("X2"));
+            var sw = Stopwatch.StartNew();
+            byte[] bytes = new byte[packetSize];
+            while (sw.ElapsedMilliseconds < 1000)
+            {
+                if (_port.BytesToRead < packetSize)
+                {
+                    Thread.Sleep(10);
+                    continue;
+                }
+                _port.Read(bytes, 0, packetSize);
+                //UpdateStatus("Buffer " + String.Join(" ", Array.ConvertAll(buffer, x => x.ToString("X2"))));
+                break;
+            }
+            
+            sw = Stopwatch.StartNew();
+            int ack = 0;
+            while (sw.ElapsedMilliseconds < 1000)
+            {
+                if (_port.BytesToRead < 1)
+                {
+                    Thread.Sleep(10);
+                    continue;
+                }
+                ack = _port.ReadByte(); break;
+            }
+            //TODO add auto retries.
             return ack == 0x50;
         }
 
-        private readonly byte[] _sbepReceiveBuffer = new byte[1024];
+        private readonly byte[] _receiveBuffer = new byte[1024];
+        public SB9600Message ReceiveSB9600()
+        {
+            SB9600Message message = null;
+            byte[] buffer = new byte[5];
+            var sw = Stopwatch.StartNew();
+            while (sw.ElapsedMilliseconds < 100)
+            {
+                if (_port.BytesToRead < 5)
+                {
+                    Thread.Sleep(10);
+                    continue; //Don't restart stopwatch.
+                }
+                _port.Read(buffer, 0, 5);
+                //UpdateStatus("Buffer " + String.Join(" ", Array.ConvertAll(buffer, x => x.ToString("X2"))));
+                message = new SB9600Message(buffer, 5);
+                break;
+            }
+
+            return message;
+        }
+
         public SbepMessage ReceiveSbep()
         {
             var i = 0;
             SbepMessage message = null;
             var sw = Stopwatch.StartNew();
-            while (sw.ElapsedMilliseconds < 5000 && i < _sbepReceiveBuffer.Length)
+            while (sw.ElapsedMilliseconds < 50 && i < _receiveBuffer.Length)
             {
                 var avail = _port.BytesToRead;
                 if (avail == 0)
@@ -200,9 +250,9 @@ namespace JediCommunication
                     Thread.Sleep(20);
                     continue; //Don't restart stopwatch.
                 }
-                _port.Read(_sbepReceiveBuffer, i, avail);
+                _port.Read(_receiveBuffer, i, avail);
                 i += avail;
-                message = new SbepMessage(_sbepReceiveBuffer, i);
+                message = new SbepMessage(_receiveBuffer, i);
                 if (!message.Incomplete) break;
                 sw.Restart(); //Give some more time for bytes
             }

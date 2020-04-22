@@ -1,4 +1,6 @@
-﻿using System.Text;
+﻿using System.Collections.Generic;
+using System.Linq;
+using System.Text;
 
 namespace JediCodeplug
 {
@@ -13,14 +15,29 @@ namespace JediCodeplug
             0x22, 0x26, 0x1F, 0x20, 0x19, 0x30, 0x49, 0x10, 0x18, 0x37, 0x3C, 0x23, 0x0B, 0x34, 0x4C, 0x00
         };
 
+        //TODO Consider moving to a config file, and auto adding entries read in flash mode.
+        private static readonly Dictionary<decimal, byte[]> FirmwareSignatures = new Dictionary<decimal, byte[]>() {
+            { 6.74M, new byte[] { 0xFF, 0xCC, 0x05, 0xCC, 0x01, 0xFF, 0xFF, 0x41 } },
+            { 8.73M, new byte[] { 0xFF, 0xBD, 0x43, 0xCE, 0x41, 0xFF, 0xFF, 0x06 } },
+            //{ ?.??M, new byte[] {  0xFF, 0xCC, 0x05, 0xCE, 0x51, 0xFF, 0xFF, 0x41 } },
+            //{ 9.99M, new byte[] { 0x03000, 0x0B000, 0x13000, 0x1B000, 0x23000, 0x2B000, 0x33000, 0x3B000 } },
+        };
+
+        //Offset locations in the 0x50 byte buffer considered in the Auth Code calculation.
         private const int MODEL = 0x00;
         private const int FACTORY_CODE = 0x10;
         private const int FLASH_SIGNATURE = 0x20;
         private const int FDB_PART_A = 0x2B;
         private const int FDB_PART_B = 0x44;
 
-        public static byte[] Calculate(Codeplug codeplug)
+        public static void Calculate(Codeplug codeplug)
         {
+            if (!FirmwareSignatures.ContainsKey(codeplug.FirmwareVersion))
+            {
+                codeplug.AuthCodeStatus = $"Unknown Firmware Version {codeplug.FirmwareVersion:0.00}. Firmware must be read in Flash Mode to get the bytes required for the calculation.";
+                return;
+            }
+
             byte[] buffer = new byte[0x50];
 
             Encoding.ASCII.GetBytes(codeplug.InternalCodeplug.Model).CopyTo(buffer, MODEL);
@@ -42,13 +59,8 @@ namespace JediCodeplug
             fc[0x7] = (byte)(check % 0x100);
 
             fc.CopyTo(buffer, FACTORY_CODE);
-
-            //0x03000, 0x0B000, 0x13000, 0x1B000, 0x23000, 0x2B000, 0x33000, 0x3B000
            
-            byte[] flashSignature = { 0xFF, 0xCC, 0x05, 0xCC, 0x01, 0xFF, 0xFF, 0x41 }; //6.73
-            //byte[] flashSignature = { 0xFF, 0xCC, 0x05, 0xCE, 0x51, 0xFF, 0xFF, 0x41 }; //8.73?
-            //byte[] flashSignature = { 0xFF, 0xBD, 0x43, 0xCE, 0x41, 0xFF, 0xFF, 0x06 };
-            flashSignature.CopyTo(buffer, FLASH_SIGNATURE);
+            FirmwareSignatures[codeplug.FirmwareVersion].CopyTo(buffer, FLASH_SIGNATURE);
 
             codeplug.InternalCodeplug.Block10.FeatureBlock.CopyTo(buffer, FDB_PART_A);
             codeplug.InternalCodeplug.Block10.Flashcode.CopyTo(buffer, FDB_PART_B);
@@ -105,7 +117,16 @@ namespace JediCodeplug
             {
                 authCode[x] = (byte)(authCode[x] ^ serial[x]);
             }
-            return authCode;
+
+            codeplug.CalculatedAuthCode = authCode;
+            if (authCode.SequenceEqual(codeplug.InternalCodeplug.AuthCode))
+            {
+                codeplug.AuthCodeStatus = "Successfully calculated matching auth code.";
+            }
+            else
+            {
+                codeplug.AuthCodeStatus = "Not able to calculate existing auth code. If radio is showing 01/93 error, the calculated code should be written to the radio to fix this error.";
+            }          
         }
     }
 }
