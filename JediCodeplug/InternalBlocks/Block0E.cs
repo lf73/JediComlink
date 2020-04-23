@@ -23,6 +23,7 @@ namespace JediCodeplug
 
         #region Propeties
         [DisplayName("Unknown Byte Value 1")]
+        [TypeConverter(typeof(HexByteArrayTypeConverter))]
         public byte[] Unknown1 { get; set; }
         #endregion
 

@@ -35,6 +35,7 @@ namespace JediCodeplug
         #region Propeties
         [DisplayName("External Codeplug Vector")]
         [Description("Usaully 512 for 800mhz and 640 for others. Note that Internal EEPROM is 512 bytes. The Internal Codeplug starts in Internal EEPROM and can overflow into External EEPROM.")]
+        [TypeConverter(typeof(HexIntValueTypeConverter))]
         public int ExternalCodeplugVector { get; set; }
 
         public string Serial { get; set; }
@@ -42,12 +43,15 @@ namespace JediCodeplug
         public string Model { get; set; }
 
         [DisplayName("Codeplug Version")]
+        [TypeConverter(typeof(HexIntValueTypeConverter))]
         public int CodeplugVersion { get; set; }
 
         [DisplayName("Internal Codeplug Size")]
+        [TypeConverter(typeof(HexIntValueTypeConverter))]
         public int InternalCodeplugSize { get; set; }
 
         [DisplayName("Unknown Byte Values 1")]
+        [TypeConverter(typeof(HexByteArrayTypeConverter))]
         public byte[] Unknown1 { get; set; }
 
         public Block02 Block02 { get; set; }
@@ -55,14 +59,17 @@ namespace JediCodeplug
         public Block56 Block56 { get; set; }
 
         [DisplayName("Unknown Byte Values 2")]
+        [TypeConverter(typeof(HexByteArrayTypeConverter))]
         public byte[] Unknown2 { get; set; }
 
         public Block10 Block10 { get; set; }
 
         [DisplayName("Unknown Byte Values 3")]
+        [TypeConverter(typeof(HexByteArrayTypeConverter))]
         public byte[] Unknown3 { get; set; }
 
         [DisplayName("Auth Code")]
+        [TypeConverter(typeof(HexByteArrayTypeConverter))]
         public byte[] AuthCode { get; set; }
         #endregion
 

@@ -39,7 +39,8 @@ namespace JediCodeplug
 
         public Block0C Block0C { get; set; }
 
-        [DisplayName("Unknown Byte Value 1")]
+        [DisplayName("Unknown Byte Values 1")]
+        [TypeConverter(typeof(HexByteArrayTypeConverter))]
         public byte[] Unknown1 { get; set; }
 
         [DisplayName("Internal Mic Pre-Amp Gain")]
@@ -55,6 +56,7 @@ namespace JediCodeplug
         public int UnknownMicBits { get; set; }
 
         [DisplayName("Unknown Byte Values 2")]
+        [TypeConverter(typeof(HexByteArrayTypeConverter))]
         public byte[] Unknown2 { get; set; }
 
         [DisplayName("RSSI Alignment")]
@@ -62,16 +64,19 @@ namespace JediCodeplug
         public int RssiAlignment { get; set; }
 
         [DisplayName("Unknown Byte Values 3")]
+        [TypeConverter(typeof(HexByteArrayTypeConverter))]
         public byte[] Unknown3 { get; set; }
 
         public Block0F Block0F { get; set; }
 
         [DisplayName("Unknown Byte Values 4")]
+        [TypeConverter(typeof(HexByteArrayTypeConverter))]
         public byte[] Unknown4 { get; set; }
 
         public Block11 Block11 { get; set; }
 
         [DisplayName("Unknown Byte Values 5")]
+        [TypeConverter(typeof(HexByteArrayTypeConverter))]
         public byte[] Unknown5 { get; set; }
         #endregion
 

@@ -29,9 +29,9 @@ namespace JediComlink
 
         private void Home_Load(object sender, EventArgs e)
         {
-            //_codeplug = new Codeplug(@"MTS2000-2020-04-17_19-15-43.hex");
-            //UpdateCodeplug();
-            //Status.Text = _codeplug.GetTextDump();
+            _codeplug = new Codeplug(@"MTS2000-2020-04-17_19-15-43.hex");
+            UpdateCodeplug();
+            Status.Text = _codeplug.GetTextDump();
 
         }
 

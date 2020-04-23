@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel;
 using System.Data;
 using System.Dynamic;
 using System.IO;
@@ -16,9 +17,11 @@ namespace JediCodeplug
         public Block30 ExternalCodeplug { get; protected set; } = new Block30();
 
         public decimal FirmwareVersion { get; set; }
-        
+
+        [TypeConverter(typeof(HexByteArrayTypeConverter))]
         public byte[] FactoryCode { get; set; }
-        
+
+        [TypeConverter(typeof(HexByteArrayTypeConverter))]
         public byte[] CalculatedAuthCode { get; set; }
 
         public string AuthCodeStatus { get; set; }

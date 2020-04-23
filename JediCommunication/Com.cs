@@ -58,7 +58,7 @@ namespace JediCommunication
             var lsb = (byte)(location % 0x100);
 
             if (!_sbepMode) EnterSbepMode();
-
+             
             SendSbep(new SbepMessage(0x11, (byte)length, 0x00, msb, lsb));
             var response = ReceiveSbep();
             if (response.Data[0] != 0x00 && response.Data[1] != msb && response.Data[2] != lsb)
@@ -242,7 +242,7 @@ namespace JediCommunication
             var i = 0;
             SbepMessage message = null;
             var sw = Stopwatch.StartNew();
-            while (sw.ElapsedMilliseconds < 50 && i < _receiveBuffer.Length)
+            while (sw.ElapsedMilliseconds < 500 && i < _receiveBuffer.Length)
             {
                 var avail = _port.BytesToRead;
                 if (avail == 0)

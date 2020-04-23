@@ -28,13 +28,15 @@ namespace JediCodeplug
         public byte FeatureBlockLength { get; } = 0x19;
 
         [DisplayName("Feature Block")]
+        [TypeConverter(typeof(HexByteArrayTypeConverter))]
         public byte[] FeatureBlock { get; } = new byte[0x19];
 
         [DisplayName("Flashcode Length")]
         [Description("Seems to always be 6")]
         public byte FlashcodeLength { get; } = 0x06;
 
-        [DisplayName("Flashcode")] 
+        [DisplayName("Flashcode")]
+        [TypeConverter(typeof(HexByteArrayTypeConverter))]
         public byte[] Flashcode { get; } = new byte[0x06];
         #endregion
 

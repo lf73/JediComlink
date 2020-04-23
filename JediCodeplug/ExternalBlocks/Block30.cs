@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel;
 using System.Text;
 
 namespace JediCodeplug
@@ -73,11 +74,14 @@ namespace JediCodeplug
             //set => XYZ = value; //TODO
         }
 
+        [TypeConverter(typeof(HexByteArrayTypeConverter))]
         public byte[] Unknown2
         {
             get => Contents.Slice(UNKNOWN2, 3).ToArray();
             //set => XYZ = value; //TODO
         }
+        
+        [TypeConverter(typeof(HexIntValueTypeConverter))]
         public int ExternalCodeplugSize
         {
             get => Contents[EXTERNAL_CODEPLUG_SIZE] * 0x100 + Contents[EXTERNAL_CODEPLUG_SIZE + 1];
@@ -96,6 +100,7 @@ namespace JediCodeplug
         public Block54 Block54 { get; set; }
         public Block51 Block51 { get; set; }
 
+        [TypeConverter(typeof(HexByteArrayTypeConverter))]
         public byte[] Unknown3
         {
             get => Contents.Slice(UNKNOWN3, 3).ToArray();
@@ -109,11 +114,14 @@ namespace JediCodeplug
         public Block3C Block3C { get; set; }
         public Block73 Block73 { get; set; }
 
+        [TypeConverter(typeof(HexByteArrayTypeConverter))]
         public byte[] Unknown4
         {
             get => Contents.Slice(UNKNOWN4, 12).ToArray();
             //set => XYZ = value; //TODO
         }
+
+        [TypeConverter(typeof(HexByteArrayTypeConverter))]
         public byte[] Unknown5
         {
             get => Contents.Slice(UNKNOWN5, 2).ToArray();
