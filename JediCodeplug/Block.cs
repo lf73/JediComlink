@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
 using System.Text;
@@ -11,7 +12,9 @@ namespace JediCodeplug
     public abstract class Block
     {
 
-        public abstract int Id { get; }
+        [DisplayName("Block Id")]
+        [TypeConverter(typeof(HexByteValueTypeConverter))]
+        public abstract byte Id { get; }
 
         public abstract string Description { get; }
 
@@ -37,12 +40,16 @@ namespace JediCodeplug
         public virtual Span<byte> Deserializer(byte[] codeplugContents, int address)
         {
             var length = codeplugContents[address];
-            return codeplugContents.AsSpan().Slice(address + 2, length - 1).ToArray();
+            var contents = codeplugContents.AsSpan().Slice(address + 2, length - 1).ToArray(); //The ToArray is to force a copy
             //TODO Set a new property such as HasValidChecksum  
+
+            Debug.WriteLine($"Deserialize {address:X4}  {Id:X2} {Description}  {String.Join(" ", Array.ConvertAll(contents, x => x.ToString("X2")))}");           
+            return contents;
         }
 
         protected virtual int Serializer(byte[] codeplugContents, int address, Span<byte> contents)
         {
+            Debug.WriteLine($"Serialize {address:X4}  {Id:X2} {Description}  {String.Join(" ", Array.ConvertAll(contents.ToArray(), x => x.ToString("X2")))}");
             codeplugContents[address] = (byte)(contents.Length + 1);
             codeplugContents[address + 1] = (byte)Id;
             contents.CopyTo(codeplugContents.AsSpan(address + 2));
@@ -66,6 +73,8 @@ namespace JediCodeplug
             }
             else
             {
+                contents[vector] = 0;
+                contents[vector + 1] = 0;
                 return address;
             }
         }
@@ -105,6 +114,12 @@ namespace JediCodeplug
         {
             return (nibbles >> 4) * 10 + (nibbles & 0x0f);
         }
+        protected byte SetDigits(int number)
+        {
+            if (number < 0 || number > 99) throw new ArgumentOutOfRangeException("Expected range is 0 to 99", nameof(number));
+            return (byte)(((number / 10) << 4) + (number % 10));
+        }
+
         #endregion
 
         public string GetTextDump()

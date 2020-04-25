@@ -5,7 +5,7 @@ namespace JediCodeplug
 {
     public class Block0B : Block
     {
-        public override int Id { get => 0x0B; }
+        public override byte Id { get => 0x0B; }
         public override string Description { get => "Softpot B/W"; }
 
         #region Definition

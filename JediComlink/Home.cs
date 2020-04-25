@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
 using System.Linq;
+using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -29,7 +30,7 @@ namespace JediComlink
 
         private void Home_Load(object sender, EventArgs e)
         {
-            _codeplug = new Codeplug(@"MTS2000-2020-04-17_19-15-43.hex");
+            _codeplug = new Codeplug(@"MTS2000-2020-04-24_17-43-27.hex");
             UpdateCodeplug();
             Status.Text = _codeplug.GetTextDump();
 
@@ -56,6 +57,7 @@ namespace JediComlink
             }
 
             CodeplugView.BeginUpdate();
+            CodeplugView.Nodes.Clear();
             var root = CodeplugView.Nodes.Add("Codeplug");
             root.Tag = _codeplug;
             PopulateNode(root, _codeplug);
@@ -106,17 +108,22 @@ namespace JediComlink
         {
             if (_emulator == null)
             {
-                _emulator = new Emulator(File.ReadAllBytes(@"MTS2000-2020-04-17_19-15-43.hex"));
+                _emulator = new Emulator(_codeplug.Serialize());
                 _emulator.StatusUpdate += _emulator_StatusUpdate;
-
                 _emulator.Start();
+
+                File.WriteAllBytes("Start-Emulator.hex", _emulator.CodePlugBytes);
+
                 EmulatorButton.Text = "Stop";
             }
             else
             {
                 _emulator.Stop();
+                File.WriteAllBytes("Stop-Emulator.hex", _emulator.CodePlugBytes);
+                _codeplug = new Codeplug(_emulator.CodePlugBytes);
                 _emulator = null;
                 EmulatorButton.Text = "Start";
+                UpdateCodeplug();
             }
 
         }
@@ -124,6 +131,76 @@ namespace JediComlink
         private void _emulator_StatusUpdate(object sender, StatusUpdateEventArgs e)
         {
             EmulatorStatus.BeginInvoke(new Action(() => EmulatorStatus.AppendText(e.Status + Environment.NewLine)));
+        }
+
+        private void pictureBox1_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void WriteButton_Click(object sender, EventArgs e)
+        {
+            var sb = new StringBuilder();
+            var x = _codeplug.Serialize();
+            sb.AppendLine($"Original Size: {_codeplug.OriginalBytes.Length:X4} New Size: {x.Length:X4}");
+
+            for (var i = 0; i < Math.Min(x.Length, _codeplug.OriginalBytes.Length); i++)
+            {
+                if (_codeplug.OriginalBytes[i] != x[i])
+                {
+                    sb.AppendLine ($"Mismatch {i:X4} Was {_codeplug.OriginalBytes[i]:X2} now {x[i]:X2}");
+                }
+            }
+
+            Status.Text = sb.ToString();
+
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            _codeplug.ExternalCodeplug.Block55 = null;//Block56or62List.Clear();
+            _codeplug.ExternalCodeplug.Block3D = null;// .Block3E = null;
+            _codeplug.ExternalCodeplug.Block73 = null;
+            _codeplug.ExternalCodeplug.Block3B = null;
+            _codeplug.ExternalCodeplug.Block34 = null;
+            _codeplug.ExternalCodeplug.Block35 = null;
+            _codeplug.ExternalCodeplug.Block3C = null;
+            _codeplug.ExternalCodeplug.Block39 = null;
+            _codeplug.ExternalCodeplug.Block51 = null;
+            _codeplug.ExternalCodeplug.Block36 = null;
+            _codeplug.ExternalCodeplug.Block54 = null;
+
+
+            //_codeplug.ExternalCodeplug.Block3D.BlockA0.BlockA1 =
+            //    new BlockA1()
+            //    {
+            //        BlockA2List = new List<BlockA2>()
+            //        {
+            //            new BlockA2()
+            //            {
+            //                Contents = new byte[] {0x0A, 0x28, 0x03}
+            //                //Contents = new byte[] {0x00, 0x00, 0x00}
+            //            }
+            //        }
+            //    };
+
+            //_codeplug.ExternalCodeplug.Block3D.BlockA0.BlockA3 =
+            //    new BlockA3()
+            //    {
+            //        Contents = new byte[] { 0x01, 0x27, 0x10 }
+            //        //Contents = new byte[] { 0x00, 0x00, 0x00 }
+            //    };
+
+
+            string fileName = "MTS2000-WhoreTest-" + DateTime.Now.ToString("yyyy-MM-dd_HH-mm-ss") + ".hex";
+
+            var bytes = _codeplug.Serialize();
+            File.WriteAllBytes(fileName, bytes);
+            _codeplug = new Codeplug(_codeplug.Serialize());
+
+            UpdateCodeplug();
+
+
         }
     }
 }

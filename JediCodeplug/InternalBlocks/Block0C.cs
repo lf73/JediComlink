@@ -5,7 +5,7 @@ namespace JediCodeplug
 {
     public class Block0C : Block
     {
-        public override int Id { get => 0x0C; }
+        public override byte Id { get => 0x0C; }
         public override string Description { get => "Unknown"; }
 
         #region Definition
@@ -29,7 +29,7 @@ namespace JediCodeplug
         public override void Deserialize(byte[] codeplugContents, int address)
         {
             var contents = Deserializer(codeplugContents, address);
-            Unknown1 = contents.Slice(UNKNOWN1, 0x1E).ToArray();
+            Unknown1 = contents.Slice(UNKNOWN1, CONTENTS_LENGTH).ToArray();
         }
 
         public override int Serialize(byte[] codeplugContents, int address)

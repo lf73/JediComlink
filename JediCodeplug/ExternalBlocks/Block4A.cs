@@ -12,7 +12,7 @@ namespace JediCodeplug
         private byte[] _contents;
         public Span<byte> Contents { get => _contents; set => _contents = value.ToArray(); }
 
-        public override int Id { get => 0x4A; }
+        public override byte Id { get => 0x4A; }
         public override string Description { get => "Trunk Configuration"; }
 
         #region Propeties

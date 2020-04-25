@@ -3,6 +3,7 @@ using System.ComponentModel;
 using System.Data;
 using System.Dynamic;
 using System.IO;
+using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
 using System.Threading;
 using System.Threading.Tasks;
@@ -53,25 +54,10 @@ namespace JediCodeplug
 
         public byte[] Serialize()
         {
-            byte[] bytes = new byte[InternalCodeplug.ExternalCodeplugVector + ExternalCodeplug.ExternalCodeplugSize];
+            byte[] bytes = new byte[0x8200]; //Total Size of Internal and External EEPROMS.
             InternalCodeplug.Serialize(bytes, 0);
             ExternalCodeplug.Serialize(bytes, InternalCodeplug.ExternalCodeplugVector);
-
-            byte[] rawData = {
-                0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x38, 0xB5, 0x00, 0x00,
-                0x01, 0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-                0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-                0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-                0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-                0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x62, 0x00, 0x00, 0x00,
-                0x00, 0x00, 0x00, 0x00, 0x00, 0x00
-            };
-
-            rawData.CopyTo(bytes.AsSpan(bytes.Length - rawData.Length));
-
-
-
-            return bytes;
+            return bytes.Take(InternalCodeplug.ExternalCodeplugVector + ExternalCodeplug.ExternalCodeplugSize).ToArray();
         }
 
         public static async Task<Codeplug> ReadFromRadio(Com com)

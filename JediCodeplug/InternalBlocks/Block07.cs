@@ -5,16 +5,16 @@ namespace JediCodeplug
 {
     public class Block07 : Block
     {
-        public override int Id { get => 0x07; }
+        public override byte Id { get => 0x07; }
         public override string Description { get => "Softpot Radio"; }
 
         #region Definition
         /*  0  1  2  3   4  5  6  7    8  9  A  B   C  D  E  F
         0: 59 12 11 18  15 00 70 00   48 4D 4D 4D  03 86 06 8C
-        1: CB 00 6E 51
+        1: CB 00 6E 51  XX
         */
 
-        private const int CONTENTS_LENGTH = 0x14;
+        private const int CONTENTS_LENGTH = 0x14;  //SOMETIMES 0x15
         private const int REF_OSC = 0x00;
         private const int DTMF = 0x01;
         private const int HIGH_SPEED = 0x02;
@@ -27,6 +27,7 @@ namespace JediCodeplug
         private const int UNKNOWN3 = 0x11;
         private const int TX_SECURE_DEV = 0x12;
         private const int RX_SECURE_DISC = 0x13;
+        private const int UNKNOWNEXTRABYTE = 0x14;
         #endregion
 
         #region Propeties
@@ -72,6 +73,14 @@ namespace JediCodeplug
         [DisplayName("RX Secure Discriminator")]
         [Description("Range 0 to 127")]
         public byte RxSecureDiscriminator { get; set; }
+
+        [DisplayName("Unknown Extra Byte Value")]
+        [TypeConverter(typeof(HexByteValueTypeConverter))]
+        public byte UnknownExtraByte { get; set; }
+
+        [DisplayName("Has Extra Unknown Byte")]
+        [Description("VHF Version returns an addition byte for some reason. To do: Undserstand why")]
+        public bool HasExtraByte { get; set; }
         #endregion
 
         public Block07() { }
@@ -91,11 +100,18 @@ namespace JediCodeplug
             Unknown3 = contents[UNKNOWN3];
             TxSecureDeviation = contents[TX_SECURE_DEV];
             RxSecureDiscriminator = contents[RX_SECURE_DISC];
+
+            if (contents.Length > UNKNOWNEXTRABYTE)
+            {
+                HasExtraByte = true;
+                UnknownExtraByte = contents[UNKNOWNEXTRABYTE];
+            }
+
         }
 
         public override int Serialize(byte[] codeplugContents, int address)
         {
-            var contents = new byte[CONTENTS_LENGTH].AsSpan();
+            var contents = new byte[CONTENTS_LENGTH + (HasExtraByte ? 1 : 0)].AsSpan();
             contents[REF_OSC] = (byte)(~TxReferenceOscillator);
             contents[DTMF] = SignalingDtmf;
             contents[HIGH_SPEED] = SignalingHighSpeed;
@@ -108,6 +124,7 @@ namespace JediCodeplug
             contents[UNKNOWN3] = Unknown3;
             contents[TX_SECURE_DEV] = TxSecureDeviation;
             contents[RX_SECURE_DISC] = RxSecureDiscriminator;
+            if (HasExtraByte) contents[UNKNOWNEXTRABYTE] = UnknownExtraByte;
 
             return Serializer(codeplugContents, address, contents) + address;
         }

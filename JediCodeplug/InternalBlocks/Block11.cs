@@ -5,7 +5,7 @@ namespace JediCodeplug
 {
     public class Block11 : Block
     {
-        public override int Id { get => 0x11; }
+        public override byte Id { get => 0x11; }
         public override string Description { get => "AD Button Level"; }
 
         #region Definition

@@ -156,6 +156,7 @@ namespace JediCommunication
         {
             if (_sbepMode) ExitSbepMode();
             var packetSize = message.Bytes.Length;
+             
             _port.DtrEnable = true;
             _port.RtsEnable = true;
             Thread.Sleep(30);
@@ -164,6 +165,8 @@ namespace JediCommunication
             UpdateStatus("Sending: " + String.Join(" ", Array.ConvertAll(message.Bytes, x => x.ToString("X2"))));           
             _port.Write(message.Bytes, 0, packetSize);
             var echo = ReceiveSB9600();
+
+
             var response = ReceiveSB9600();
             _port.DtrEnable = false;
             _port.RtsEnable = false;
@@ -242,7 +245,7 @@ namespace JediCommunication
             var i = 0;
             SbepMessage message = null;
             var sw = Stopwatch.StartNew();
-            while (sw.ElapsedMilliseconds < 500 && i < _receiveBuffer.Length)
+            while (sw.ElapsedMilliseconds < 1000 && i < _receiveBuffer.Length)
             {
                 var avail = _port.BytesToRead;
                 if (avail == 0)

@@ -5,7 +5,7 @@ namespace JediCodeplug
 {
     public class Block02 : Block
     {
-        public override int Id { get => 0x02; }
+        public override byte Id { get => 0x02; }
         public override string Description { get => "Hardware Config Radio"; }
 
         #region Definition
@@ -13,10 +13,10 @@ namespace JediCodeplug
         0: 00 71 01 28  01 5E 10 00   00 07 21 3F  8A 60 FF 00
         1: 28 28 00 8E  4B 00 03 07   0F AB BC 02  18 64 28 01
         2: 01 7F 00 93  00 07 FF 02   28 28 02 01  8E 49 67 50
-        3: 65
+        3: 65 XX
         */
         
-        private const int CONTENTS_LENGTH = 0x31;
+        private const int CONTENTS_LENGTH = 0x31; //Or sometimes 0x32 for VHF
         private const int BLOCK_06_VECTOR = 0x00; //01
         private const int BLOCK_03_VECTOR = 0x02; //03
         private const int BLOCK_0C_VECTOR = 0x04; //05
@@ -29,6 +29,7 @@ namespace JediCodeplug
         private const int UNKNOWN4 = 0x22; //23 24 25 26 27 28 29 2A
         private const int BLOCK_11_VECTOR = 0x2B; //2C
         private const int UNKNOWN5 = 0x2D; //2E 2F 30
+        private const int UNKNOWNEXTRABYTE = 0x31; //2E 2F 30
         #endregion
 
         #region Propeties
@@ -78,6 +79,14 @@ namespace JediCodeplug
         [DisplayName("Unknown Byte Values 5")]
         [TypeConverter(typeof(HexByteArrayTypeConverter))]
         public byte[] Unknown5 { get; set; }
+
+        [DisplayName("Unknown Extra Byte Value")]
+        [TypeConverter(typeof(HexByteValueTypeConverter))]
+        public byte UnknownExtraByte { get; set; }
+
+        [DisplayName("Has Extra Unknown Byte")]
+        [Description("VHF Version returns an addition byte for some reason. To do: Undserstand why")]
+        public bool HasExtraByte { get; set; }
         #endregion
 
         public Block02() { }
@@ -96,6 +105,12 @@ namespace JediCodeplug
             Unknown4 = contents.Slice(UNKNOWN4, 9).ToArray(); 
             Unknown5 = contents.Slice(UNKNOWN5, 4).ToArray();
 
+            if(contents.Length > UNKNOWNEXTRABYTE)
+            {
+                HasExtraByte = true;
+                UnknownExtraByte = contents[UNKNOWNEXTRABYTE];
+            }
+
             Block06 = Deserialize<Block06>(contents, BLOCK_06_VECTOR, codeplugContents);
             Block03 = Deserialize<Block03>(contents, BLOCK_03_VECTOR, codeplugContents);
             Block0C = Deserialize<Block0C>(contents, BLOCK_0C_VECTOR, codeplugContents);
@@ -105,7 +120,7 @@ namespace JediCodeplug
 
         public override int Serialize(byte[] codeplugContents, int address)
         {
-            var contents = new byte[CONTENTS_LENGTH].AsSpan();
+            var contents = new byte[CONTENTS_LENGTH + (HasExtraByte ? 1 : 0)].AsSpan();
             Unknown1.CopyTo(contents.Slice(UNKNOWN1, 13));
             Unknown2.CopyTo(contents.Slice(UNKNOWN2, 9));
             contents[RSSI] = (byte)(RssiAlignment & 0b01111111);
@@ -115,8 +130,9 @@ namespace JediCodeplug
             contents[MIC_GAIN] |= (byte)(UnknownMicBits & 0b11);
             Unknown4.CopyTo(contents.Slice(UNKNOWN4, 9));
             Unknown5.CopyTo(contents.Slice(UNKNOWN5, 4));
+            if (HasExtraByte) contents[UNKNOWNEXTRABYTE] = UnknownExtraByte;
 
-            var nextAddress = address + CONTENTS_LENGTH + BlockSizeAdjustment;
+            var nextAddress = address + contents.Length + BlockSizeAdjustment;
             nextAddress = SerializeChild(Block06, BLOCK_06_VECTOR, codeplugContents, nextAddress, contents);
             nextAddress = SerializeChild(Block03, BLOCK_03_VECTOR, codeplugContents, nextAddress, contents);
             nextAddress = SerializeChild(Block0C, BLOCK_0C_VECTOR, codeplugContents, nextAddress, contents);

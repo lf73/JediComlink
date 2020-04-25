@@ -6,7 +6,7 @@ namespace JediCodeplug
 {
     public class Block08 : Block //Block Vector Array
     {
-        public override int Id { get => 0x08; }
+        public override byte Id { get => 0x08; }
         public override string Description { get => "Softpot Interpol Vector"; }
 
         #region Definition
@@ -18,7 +18,6 @@ namespace JediCodeplug
         #endregion
 
         #region Propeties
-        [BrowsableAttribute(false)]
         public List<Block09> Block09List { get; set; } = new List<Block09>();
         #endregion
 
@@ -27,7 +26,6 @@ namespace JediCodeplug
         public override void Deserialize(byte[] codeplugContents, int address)
         {
             var contents = Deserializer(codeplugContents, address);
-
             for (int i = 0; i < contents[COUNT]; i++)
             {
                 Block09List.Add(Deserialize<Block09>(contents, i * 2 + 1, codeplugContents));
@@ -40,9 +38,14 @@ namespace JediCodeplug
             var contents = new byte[contentsLength].AsSpan();
             var nextAddress = address + contentsLength + BlockSizeAdjustment;
 
+            contents[COUNT] = (byte)Block09List.Count;
+
             int i = 0;
             foreach (var block in Block09List)
             {
+                contents[i * 2 + 1] = (byte)(nextAddress / 0x100);
+                contents[i * 2 + 2] = (byte)(nextAddress % 0x100);
+
                 nextAddress = SerializeChild(block, i * 2 + 1, codeplugContents, nextAddress, contents);
                 i++;
             }

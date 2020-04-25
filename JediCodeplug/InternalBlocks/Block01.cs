@@ -6,7 +6,7 @@ namespace JediCodeplug
 {
     public class Block01 : Block
     {
-        public override int Id { get => 0x01; }
+        public override byte Id { get => 0x01; }
         public override string Description { get => "Internal Radio"; }
 
         #region Definition

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
@@ -9,10 +10,7 @@ namespace JediCodeplug
 {
     public class Block52 : Block //Block Vector Array
     {
-        private byte[] _contents;
-        public Span<byte> Contents { get => _contents; set => _contents = value.ToArray(); }
-
-        public override int Id { get => 0x52; }
+        public override byte Id { get => 0x52; }
         public override string Description { get => "Scan List Vector"; }
 
         #region Definition
@@ -20,6 +18,7 @@ namespace JediCodeplug
         0: 01 08 2F
         */
 
+        private const int COUNT = 0x00;
         private const int BLOCK_53_VECTOR = 0x01;
         #endregion
 
@@ -31,37 +30,30 @@ namespace JediCodeplug
 
         public override void Deserialize(byte[] codeplugContents, int address)
         {
-            Contents = Deserializer(codeplugContents, address);
-            for (int i = 0; i < Contents[0]; i++)
+            var contents = Deserializer(codeplugContents, address);
+            for (int i = 0; i < contents[0]; i++)
             {
-                Block53List.Add(Deserialize<Block53>(Contents, i * 2 + 1, codeplugContents));
+                Block53List.Add(Deserialize<Block53>(contents, i * 2 + 1, codeplugContents));
             }
         }
 
         public override int Serialize(byte[] codeplugContents, int address)
         {
-            var contents = Contents.ToArray().AsSpan(); //TODO
-            var nextAddress = address + Contents.Length + BlockSizeAdjustment;
+            var contentsLength = 1 + (2 * Block53List.Count);
+            var contents = new byte[contentsLength].AsSpan();
+            var nextAddress = address + contentsLength + BlockSizeAdjustment;
+
+            contents[COUNT] = (byte)Block53List.Count;
 
             int i = 0;
             foreach (var block in Block53List)
             {
+                contents[i * 2 + 1] = (byte)(nextAddress / 0x100);
+                contents[i * 2 + 2] = (byte)(nextAddress % 0x100);
+
                 nextAddress = SerializeChild(block, i * 2 + 1, codeplugContents, nextAddress, contents);
                 i++;
             }
-
-            //TODO Not sure why this appears in at least two files.
-            //Might be for User Configured Custom Scan Lists.
-            byte[] rawData = {
-                0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x25, 0x33, 0x00, 0x00,
-                0x01, 0x01, 0x40, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x37,
-                0x0A, 0x0D, 0x90, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-                0x05, 0x00, 0x00, 0x20, 0xD0, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-                0x00, 0xF3, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00
-            };
-
-            rawData.CopyTo(codeplugContents.AsSpan(nextAddress));
-            nextAddress += rawData.Length;
 
             Serializer(codeplugContents, address, contents);
             return nextAddress;

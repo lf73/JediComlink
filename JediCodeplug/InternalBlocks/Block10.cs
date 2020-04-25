@@ -5,7 +5,7 @@ namespace JediCodeplug
 {
     public class Block10 : Block
     {
-        public override int Id { get => 0x10; }
+        public override byte Id { get => 0x10; }
         public override string Description { get => "Feature Descriptor Block"; }
 
         #region Definition

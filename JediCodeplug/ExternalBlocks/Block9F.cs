@@ -12,7 +12,7 @@ namespace JediCodeplug
         private byte[] _contents;
         public Span<byte> Contents { get => _contents; set => _contents = value.ToArray(); }
 
-        public override int Id { get => 0x9F; }
+        public override byte Id { get => 0x9F; }
         public override string Description { get => "MDC Repeater ID Table"; }
 
         #region Propeties

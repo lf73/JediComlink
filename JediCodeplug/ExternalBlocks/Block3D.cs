@@ -12,7 +12,7 @@ namespace JediCodeplug
         private byte[] _contents;
         public Span<byte> Contents { get => _contents; set => _contents = value.ToArray(); }
 
-        public override int Id { get => 0x3D; }
+        public override byte Id { get => 0x3D; }
         public override string Description { get => "Signaling Vector"; }
 
         #region Definition
@@ -27,13 +27,13 @@ namespace JediCodeplug
         #endregion
 
         #region Propeties
-        public Block Block3E { get; set; }
+        public Block3E Block3E { get; set; }
         public Block44 Block44 { get; set; }
-        public Block Block4A { get; set; }
+        public Block4A Block4A { get; set; }
         public byte[] UnknownPointer2 { get; set; }
         public byte[] UnknownPointer3 { get; set; }
         public byte[] UnknownPointer4 { get; set; }
-        public Block BlockA0 { get; set; }
+        public BlockA0 BlockA0 { get; set; }
         #endregion
 
         public Block3D() { }

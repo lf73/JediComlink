@@ -5,7 +5,7 @@ namespace JediCodeplug
 {
     public class Block0F : Block
     {
-        public override int Id { get => 0x0F; }
+        public override byte Id { get => 0x0F; }
         public override string Description { get => "AD Switch Level"; }
 
         #region Definition

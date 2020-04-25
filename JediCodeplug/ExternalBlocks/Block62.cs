@@ -12,7 +12,7 @@ namespace JediCodeplug
         private byte[] _contents;
         public Span<byte> Contents { get => _contents; set => _contents = value.ToArray(); }
 
-        public override int Id { get => 0x62; }
+        public override byte Id { get => 0x62; }
         public override string Description { get => "Unknown"; }
         //TODO this might have an outside reference... to Block 58 at vector 08/09
         #region Definition

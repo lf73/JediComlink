@@ -2,9 +2,12 @@
 using JediCommunication;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Diagnostics;
 using System.IO.Ports;
 using System.Linq;
+using System.Runtime.Remoting.Messaging;
+using System.Security.Permissions;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -17,9 +20,16 @@ namespace JediEmulator
         private SerialPort _port;
 
         Memory<byte> _codeplugBytes;
+
+        public byte[] CodePlugBytes
+        {
+            get => _codeplugBytes.ToArray();
+        }
+
         public Emulator(byte[] codeplugBytes)
         {
-            _codeplugBytes = codeplugBytes;
+            _codeplugBytes = new byte[0x8200];
+            codeplugBytes.CopyTo(_codeplugBytes);           
         }
 
         public void Start()

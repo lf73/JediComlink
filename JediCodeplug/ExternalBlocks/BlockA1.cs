@@ -9,10 +9,7 @@ namespace JediCodeplug
 {
     public class BlockA1 : Block //Block Vector Array
     {
-        private byte[] _contents;
-        public Span<byte> Contents { get => _contents; set => _contents = value.ToArray(); }
-
-        public override int Id { get => 0xA1; }
+        public override byte Id { get => 0xA1; }
         public override string Description { get => "Singletone System Vector"; }
 
         #region Definition
@@ -20,6 +17,7 @@ namespace JediCodeplug
         0: 01 04 9E
         */
 
+        private const int COUNT = 0x00;
         private const int BLOCK_A2_VECTOR = 0x01;
         #endregion
 
@@ -31,21 +29,27 @@ namespace JediCodeplug
 
         public override void Deserialize(byte[] codeplugContents, int address)
         {
-            Contents = Deserializer(codeplugContents, address);
-            for (int i = 0; i < Contents[0]; i++)
+            var contents = Deserializer(codeplugContents, address);
+            for (int i = 0; i < contents[0]; i++)
             {
-                BlockA2List.Add(Deserialize<BlockA2>(Contents, i * 2 + 1, codeplugContents));
+                BlockA2List.Add(Deserialize<BlockA2>(contents, i * 2 + 1, codeplugContents));
             }
         }
 
         public override int Serialize(byte[] codeplugContents, int address)
         {
-            var contents = Contents.ToArray().AsSpan(); //TODO
-            var nextAddress = address + Contents.Length + BlockSizeAdjustment;
+            var contentsLength = 1 + (2 * BlockA2List.Count);
+            var contents = new byte[contentsLength].AsSpan();
+            var nextAddress = address + contentsLength + BlockSizeAdjustment;
+
+            contents[COUNT] = (byte)BlockA2List.Count;
 
             int i = 0;
             foreach (var block in BlockA2List)
             {
+                contents[i * 2 + 1] = (byte)(nextAddress / 0x100);
+                contents[i * 2 + 2] = (byte)(nextAddress % 0x100);
+
                 nextAddress = SerializeChild(block, i * 2 + 1, codeplugContents, nextAddress, contents);
                 i++;
             }

@@ -5,7 +5,7 @@ namespace JediCodeplug
 {
     public class Block05 : Block
     {
-        public override int Id { get => 0x05; }
+        public override byte Id { get => 0x05; }
         public override string Description { get => "Hardware Config Secure"; }
 
         #region Definition
