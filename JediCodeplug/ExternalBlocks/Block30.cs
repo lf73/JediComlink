@@ -62,8 +62,7 @@ namespace JediCodeplug
         public DateTime TimeStamp { get; set; }
 
         [DisplayName("Programming Source")]
-        [TypeConverter(typeof(HexByteValueTypeConverter))]
-        public byte ProgrammingSource { get; set; }
+        public ProgrammingSources ProgrammingSource { get; set; }
 
         [DisplayName("External Codeplug Version")]
         [Description("CPS Version. 0x001D for R02.03.00. If value is higher, CPS will error that Codeplug is too new.")]
@@ -129,7 +128,15 @@ namespace JediCodeplug
                         GetDigits(contents[TIMESTAMP + 3]),
                         GetDigits(contents[TIMESTAMP + 4]),
                         0);
-            ProgrammingSource = contents[PROGRAMMING_SOURCE];
+            if (typeof(ProgrammingSources).IsEnumDefined(contents[PROGRAMMING_SOURCE]))
+            {
+                ProgrammingSource = (ProgrammingSources)contents[PROGRAMMING_SOURCE];
+            }
+            else
+            {
+                ProgrammingSource = ProgrammingSources.CPS;
+            }
+
             ExternalCodeplugVersion = contents[CODEPLUG_VERSION] * 0x100 + contents[CODEPLUG_VERSION + 1];
             ExternalCodeplugSize = contents[EXTERNAL_CODEPLUG_SIZE] * 0x100 + contents[EXTERNAL_CODEPLUG_SIZE + 1];
             Block31 = Deserialize<Block31>(contents, BLOCK_31_VECTOR, codeplugContents);
@@ -172,7 +179,7 @@ namespace JediCodeplug
             contents[TIMESTAMP + 2] = SetDigits(TimeStamp.Day);
             contents[TIMESTAMP + 3] = SetDigits(TimeStamp.Hour);
             contents[TIMESTAMP + 4] = SetDigits(TimeStamp.Minute);
-            contents[PROGRAMMING_SOURCE] = ProgrammingSource;
+            contents[PROGRAMMING_SOURCE] = (byte)ProgrammingSource;
             contents[CODEPLUG_VERSION] = (byte)(ExternalCodeplugVersion / 0x100);
             contents[CODEPLUG_VERSION + 1] = (byte)(ExternalCodeplugVersion % 0x100);
             //External Code Block Size set at end, since size is not yet known.
