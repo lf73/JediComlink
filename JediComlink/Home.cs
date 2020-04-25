@@ -124,6 +124,7 @@ namespace JediComlink
                 _emulator = null;
                 EmulatorButton.Text = "Start";
                 UpdateCodeplug();
+                propertyGrid1.SelectedObject = _codeplug.ExternalCodeplug;
             }
 
         }

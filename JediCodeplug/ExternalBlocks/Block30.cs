@@ -25,7 +25,8 @@ namespace JediCodeplug
         private const int SERIAL = 0x02; //03 04 05 06 07 08 09 0A 0B
         private const int MODEL = 0x0C; //0D 0E 0F 10 11 12 13 14 15 16 17 18 19 1A 1B
         private const int TIMESTAMP = 0x1c; //1D 1E 1F 20
-        private const int UNKNOWN2 = 0x21; //22 23
+        private const int PROGRAMMING_SOURCE = 0x21;
+        private const int CODEPLUG_VERSION = 0x22; // 0x23
         private const int EXTERNAL_CODEPLUG_SIZE = 0x24; //25
         private const int BLOCK_31_VECTOR = 0x26; //27
         private const int BLOCK_3D_VECTOR = 0x28; //29
@@ -40,9 +41,9 @@ namespace JediCodeplug
         private const int BLOCK_35_VECTOR = 0x3A; //3B
         private const int BLOCK_3C_VECTOR = 0x3C; //3D
         private const int BLOCK_73_VECTOR = 0x3E; //3F
-        private const int UNKNOWN3 = 0x40; //41 42 43 44 45 46 47 48 49
+        private const int UNKNOWN2 = 0x40; //41 42 43 44 45 46 47 48 49
         private const int DYNAMIC_MODE_SELECT_VECTOR = 0x4A;// 4B
-        private const int UNKNOWN4 = 0x4C; //4D
+        private const int UNKNOWN3 = 0x4C; //4D
 
         private const int DYNAMIC_RADIO_SIZE = 0x3A;
         private const int DYNAMIC_MODE_SELECT_SIZE = 0x4E;
@@ -50,6 +51,7 @@ namespace JediCodeplug
 
         #region Propeties
         [DisplayName("Unknown Byte Values 1")]
+        [Description("Values do not affect CPS but values are preserved by CPS. Maybe used by radio firmware?")]
         [TypeConverter(typeof(HexByteArrayTypeConverter))]
         public byte[] Unknown1 { get; set; }
 
@@ -59,9 +61,14 @@ namespace JediCodeplug
 
         public DateTime TimeStamp { get; set; }
 
-        [DisplayName("Unknown Byte Values 2")]
-        [TypeConverter(typeof(HexByteArrayTypeConverter))]
-        public byte[] Unknown2 { get; set; }
+        [DisplayName("Programming Source")]
+        [TypeConverter(typeof(HexByteValueTypeConverter))]
+        public byte ProgrammingSource { get; set; }
+
+        [DisplayName("External Codeplug Version")]
+        [Description("CPS Version. 0x001D for R02.03.00. If value is higher, CPS will error that Codeplug is too new.")]
+        [TypeConverter(typeof(HexIntValueTypeConverter))]
+        public int ExternalCodeplugVersion { get; set; }
 
         [TypeConverter(typeof(HexIntValueTypeConverter))]
         public int ExternalCodeplugSize { get; set; }
@@ -83,16 +90,18 @@ namespace JediCodeplug
         public Block3C Block3C { get; set; }
         public Block73 Block73 { get; set; }
 
-        [DisplayName("Unknown Byte Values 3")]
+        [DisplayName("Unknown Byte Values 2")]
+        [Description("Most likely not used. Values do not seem to affect CPS and are not preserved by CPS. CPS will reset to all to 0x00")]
         [TypeConverter(typeof(HexByteArrayTypeConverter))]
-        public byte[] Unknown3 { get; set; }
+        public byte[] Unknown2 { get; set; }
 
         [TypeConverter(typeof(HexIntValueTypeConverter))]
         public int DynamicModeSelectVector { get; set; }
 
-        [DisplayName("Unknown Byte Values 4")]
+        [DisplayName("Unknown Byte Values 3")]
+        [Description("Most likely not used. Values do not seem to affect CPS and are not preserved by CPS. CPS will reset to all to 0x00")]
         [TypeConverter(typeof(HexByteArrayTypeConverter))]
-        public byte[] Unknown4 { get; set; }
+        public byte[] Unknown3 { get; set; }
 
         [DisplayName("Dynamic Radio")]
         [Description("This data is stored outside of a normal block definition. Perhaps this is reserved space for the radio to store user settings?")]
@@ -120,7 +129,8 @@ namespace JediCodeplug
                         GetDigits(contents[TIMESTAMP + 3]),
                         GetDigits(contents[TIMESTAMP + 4]),
                         0);
-            Unknown2 = contents.Slice(UNKNOWN2, 3).ToArray();
+            ProgrammingSource = contents[PROGRAMMING_SOURCE];
+            ExternalCodeplugVersion = contents[CODEPLUG_VERSION] * 0x100 + contents[CODEPLUG_VERSION + 1];
             ExternalCodeplugSize = contents[EXTERNAL_CODEPLUG_SIZE] * 0x100 + contents[EXTERNAL_CODEPLUG_SIZE + 1];
             Block31 = Deserialize<Block31>(contents, BLOCK_31_VECTOR, codeplugContents);
             Block3D = Deserialize<Block3D>(contents, BLOCK_3D_VECTOR, codeplugContents);
@@ -140,14 +150,14 @@ namespace JediCodeplug
             Block35 = Deserialize<Block35>(contents, BLOCK_35_VECTOR, codeplugContents);
             Block3C = Deserialize<Block3C>(contents, BLOCK_3C_VECTOR, codeplugContents);
             Block73 = Deserialize<Block73>(contents, BLOCK_73_VECTOR, codeplugContents);
-            Unknown3 = contents.Slice(UNKNOWN3, 10).ToArray();
+            Unknown2 = contents.Slice(UNKNOWN2, 10).ToArray();
             DynamicModeSelectVector = contents[DYNAMIC_MODE_SELECT_VECTOR] * 0x100 + contents[DYNAMIC_MODE_SELECT_VECTOR + 1];
             if (DynamicModeSelectVector != 0)
             {
                 DynamicModeSelect = codeplugContents.AsSpan().Slice(DynamicModeSelectVector - 8, DYNAMIC_MODE_SELECT_SIZE).ToArray();
                 Debug.WriteLine($"Deserialize {DYNAMIC_MODE_SELECT_VECTOR - 8:X4} Dynamic Mode Select Block  {String.Join(" ", Array.ConvertAll(DynamicModeSelect, x => x.ToString("X2")))}");
             }
-            Unknown4 = contents.Slice(UNKNOWN4, 2).ToArray();
+            Unknown3 = contents.Slice(UNKNOWN3, 2).ToArray();
         }
 
         public override int Serialize(byte[] codeplugContents, int address)
@@ -162,7 +172,9 @@ namespace JediCodeplug
             contents[TIMESTAMP + 2] = SetDigits(TimeStamp.Day);
             contents[TIMESTAMP + 3] = SetDigits(TimeStamp.Hour);
             contents[TIMESTAMP + 4] = SetDigits(TimeStamp.Minute);
-            Unknown2.AsSpan().CopyTo(contents.Slice(UNKNOWN2));
+            contents[PROGRAMMING_SOURCE] = ProgrammingSource;
+            contents[CODEPLUG_VERSION] = (byte)(ExternalCodeplugVersion / 0x100);
+            contents[CODEPLUG_VERSION + 1] = (byte)(ExternalCodeplugVersion % 0x100);
             //External Code Block Size set at end, since size is not yet known.
             nextAddress = SerializeChild(Block31, BLOCK_31_VECTOR, codeplugContents, nextAddress, contents);
             nextAddress = SerializeChild(Block3D, BLOCK_3D_VECTOR, codeplugContents, nextAddress, contents);
@@ -189,7 +201,7 @@ namespace JediCodeplug
             nextAddress = SerializeChild(Block35, BLOCK_35_VECTOR, codeplugContents, nextAddress, contents);
             nextAddress = SerializeChild(Block3C, BLOCK_3C_VECTOR, codeplugContents, nextAddress, contents);
             nextAddress = SerializeChild(Block73, BLOCK_73_VECTOR, codeplugContents, nextAddress, contents);
-            Unknown3.AsSpan().CopyTo(contents.Slice(UNKNOWN3));
+            Unknown2.AsSpan().CopyTo(contents.Slice(UNKNOWN2));
             if (DynamicModeSelect != null)
             {
                 Debug.WriteLine($"Serialize {nextAddress:X4} Dynamic Mode Select Block  {String.Join(" ", Array.ConvertAll(DynamicModeSelect, x => x.ToString("X2")))}");
@@ -203,7 +215,7 @@ namespace JediCodeplug
             }
             contents[DYNAMIC_MODE_SELECT_VECTOR] = (byte)(DynamicModeSelectVector / 0x100);
             contents[DYNAMIC_MODE_SELECT_VECTOR + 1] = (byte)(DynamicModeSelectVector % 0x100);
-            Unknown4.AsSpan().CopyTo(contents.Slice(UNKNOWN4));
+            Unknown3.AsSpan().CopyTo(contents.Slice(UNKNOWN3));
 
             ExternalCodeplugSize = nextAddress - address;
             contents[EXTERNAL_CODEPLUG_SIZE] = (byte)(ExternalCodeplugSize / 0x100);

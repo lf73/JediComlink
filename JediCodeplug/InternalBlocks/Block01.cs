@@ -42,9 +42,9 @@ namespace JediCodeplug
 
         public string Model { get; set; }
 
-        [DisplayName("Codeplug Version")]
+        [DisplayName("Internal Codeplug Version")]
         [TypeConverter(typeof(HexIntValueTypeConverter))]
-        public int CodeplugVersion { get; set; }
+        public int InternalCodeplugVersion { get; set; }
 
         [DisplayName("Internal Codeplug Size")]
         [TypeConverter(typeof(HexIntValueTypeConverter))]
@@ -82,7 +82,7 @@ namespace JediCodeplug
             ExternalCodeplugVector = contents[EXTERNAL_CODEPLUG_VECTOR] * 0x100 + contents[EXTERNAL_CODEPLUG_VECTOR + 1];
             Serial = GetStringContents(contents, SERIAL, 10);
             Model = GetStringContents(contents, MODEL, 16);
-            CodeplugVersion = contents[CODEPLUG_VERSION] * 0x100 + contents[CODEPLUG_VERSION + 1];
+            InternalCodeplugVersion = contents[CODEPLUG_VERSION] * 0x100 + contents[CODEPLUG_VERSION + 1];
             InternalCodeplugSize = contents[INTERNAL_CODEPLUG_SIZE] * 0x100 + contents[INTERNAL_CODEPLUG_SIZE + 1];
             Unknown1 = contents.Slice(UNKNOWN1, 4).ToArray();
             Block02 = Deserialize<Block02>(contents, BLOCK_02_VECTOR, codeplugContents);
@@ -101,8 +101,8 @@ namespace JediCodeplug
             contents[EXTERNAL_CODEPLUG_VECTOR + 1] = (byte)(ExternalCodeplugVector % 0x100);
             Encoding.ASCII.GetBytes(Serial).AsSpan().CopyTo(contents.Slice(SERIAL, 10));
             Encoding.ASCII.GetBytes(Model).AsSpan().CopyTo(contents.Slice(MODEL, 16));
-            contents[CODEPLUG_VERSION] = (byte)(CodeplugVersion / 0x100);
-            contents[CODEPLUG_VERSION + 1] = (byte)(CodeplugVersion % 0x100);
+            contents[CODEPLUG_VERSION] = (byte)(InternalCodeplugVersion / 0x100);
+            contents[CODEPLUG_VERSION + 1] = (byte)(InternalCodeplugVersion % 0x100);
             contents[INTERNAL_CODEPLUG_SIZE] = (byte)(InternalCodeplugSize / 0x100);
             contents[INTERNAL_CODEPLUG_SIZE + 1] = (byte)(InternalCodeplugSize % 0x100);
             Unknown1.AsSpan().CopyTo(contents.Slice(UNKNOWN1));
