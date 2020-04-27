@@ -30,7 +30,7 @@ namespace JediComlink
 
         private void Home_Load(object sender, EventArgs e)
         {
-            _codeplug = new Codeplug(@"MTS2000-2020-04-24_17-43-27.hex");
+            _codeplug = new Codeplug(@"MTS2000-2020-04-26_16-04-01.hex");
             UpdateCodeplug();
             Status.Text = _codeplug.GetTextDump();
 
@@ -64,7 +64,8 @@ namespace JediComlink
             CodeplugView.ExpandAll();
             CodeplugView.EndUpdate();
             Status.Text = _codeplug.InternalCodeplug.ToString() + "\n\n" + _codeplug.ExternalCodeplug.ToString();
-            propertyGrid1.SelectedObject = _codeplug;
+            propertyGrid1.SelectedObject = _codeplug.ExternalCodeplug;
+            CodeplugView.Nodes[0].Nodes[0].Collapse();
         }
 
         private Codeplug _codeplug;
@@ -124,7 +125,7 @@ namespace JediComlink
                 _emulator = null;
                 EmulatorButton.Text = "Start";
                 UpdateCodeplug();
-                propertyGrid1.SelectedObject = _codeplug.ExternalCodeplug.Block31;
+                propertyGrid1.SelectedObject = _codeplug.InternalCodeplug.Block10;
             }
 
         }
@@ -139,21 +140,35 @@ namespace JediComlink
 
         }
 
-        private void WriteButton_Click(object sender, EventArgs e)
+        private async void WriteButton_Click(object sender, EventArgs e)
         {
-            var sb = new StringBuilder();
-            var x = _codeplug.Serialize();
-            sb.AppendLine($"Original Size: {_codeplug.OriginalBytes.Length:X4} New Size: {x.Length:X4}");
+            _codeplug.RecalculateAuthCode();
+            if (_com != null) return;
+            Status.Clear();
 
-            for (var i = 0; i < Math.Min(x.Length, _codeplug.OriginalBytes.Length); i++)
-            {
-                if (_codeplug.OriginalBytes[i] != x[i])
-                {
-                    sb.AppendLine ($"Mismatch {i:X4} Was {_codeplug.OriginalBytes[i]:X2} now {x[i]:X2}");
-                }
-            }
+            _com = new Com("COM1");
+            _com.StatusUpdate += _com_StatusUpdate;
 
-            Status.Text = sb.ToString();
+            var codeplug = await _codeplug.WriteToRadio(_com);
+            _com.StatusUpdate -= _com_StatusUpdate;
+            _com.Close();
+            _com = null;
+            Status.AppendText("Done!");
+
+            ////Round Trip Test
+            //var sb = new StringBuilder();
+            //var x = _codeplug.Serialize();
+            //sb.AppendLine($"Original Size: {_codeplug.OriginalBytes.Length:X4} New Size: {x.Length:X4}");
+
+            //for (var i = 0; i < Math.Min(x.Length, _codeplug.OriginalBytes.Length); i++)
+            //{
+            //    if (_codeplug.OriginalBytes[i] != x[i])
+            //    {
+            //        sb.AppendLine($"Mismatch {i:X4} Was {_codeplug.OriginalBytes[i]:X2} now {x[i]:X2}");
+            //    }
+            //}
+
+            //Status.Text = sb.ToString();
 
         }
 
@@ -170,6 +185,8 @@ namespace JediComlink
             _codeplug.ExternalCodeplug.Block51 = null;
             _codeplug.ExternalCodeplug.Block36 = null;
             _codeplug.ExternalCodeplug.Block54 = null;
+            //_codeplug.ExternalCodeplug.DynamicModeSelect = null;
+            _codeplug.ExternalCodeplug.DynamicRadio = null; 
 
 
             //_codeplug.ExternalCodeplug.Block3D.BlockA0.BlockA1 =

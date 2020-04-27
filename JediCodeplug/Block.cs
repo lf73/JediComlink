@@ -43,13 +43,13 @@ namespace JediCodeplug
             var contents = codeplugContents.AsSpan().Slice(address + 2, length - 1).ToArray(); //The ToArray is to force a copy
             //TODO Set a new property such as HasValidChecksum  
 
-            Debug.WriteLine($"Deserialize {address:X4}  {Id:X2} {Description}  {String.Join(" ", Array.ConvertAll(contents, x => x.ToString("X2")))}");           
+            Debug.WriteLine($"Deserialize {address:X4} {Id:X2} {Description} - {String.Join(" ", Array.ConvertAll(contents, x => x.ToString("X2")))}");           
             return contents;
         }
 
         protected virtual int Serializer(byte[] codeplugContents, int address, Span<byte> contents)
         {
-            Debug.WriteLine($"Serialize {address:X4}  {Id:X2} {Description}  {String.Join(" ", Array.ConvertAll(contents.ToArray(), x => x.ToString("X2")))}");
+            Debug.WriteLine($"Serialize {address:X4} {Id:X2} {Description} -{String.Join(" ", Array.ConvertAll(contents.ToArray(), x => x.ToString("X2")))}");
             codeplugContents[address] = (byte)(contents.Length + 1);
             codeplugContents[address + 1] = (byte)Id;
             contents.CopyTo(codeplugContents.AsSpan(address + 2));

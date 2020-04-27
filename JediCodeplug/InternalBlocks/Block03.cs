@@ -32,7 +32,6 @@ namespace JediCodeplug
         public override void Deserialize(byte[] codeplugContents, int address)
         {
             var contents = Deserializer(codeplugContents, address);
-            contents = Deserializer(codeplugContents, address);
             Block04 = Deserialize<Block04>(contents, BLOCK_04_VECTOR, codeplugContents);
             Block05 = Deserialize<Block05>(contents, BLOCK_05_VECTOR, codeplugContents);
             Block0D = Deserialize<Block0D>(contents, BLOCK_0D_VECTOR, codeplugContents);

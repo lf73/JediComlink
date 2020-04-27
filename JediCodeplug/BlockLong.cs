@@ -1,9 +1,5 @@
 ﻿using System;
-using System.Collections;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Net.Mime;
-using System.Text;
 
 namespace JediCodeplug
 {
@@ -17,13 +13,13 @@ namespace JediCodeplug
             var contents = codeplugContents.AsSpan().Slice(address + 3, length - 1);
             //todo Checksum validation.
 
-            Debug.WriteLine($"Deserialize {address:X4}  {Id:X2} {Description}  {String.Join(" ", Array.ConvertAll(contents.ToArray(), x => x.ToString("X2")))}");
+            Debug.WriteLine($"Deserialize {address:X4} {Id:X2} {Description} - {String.Join(" ", Array.ConvertAll(contents.ToArray(), x => x.ToString("X2")))}");
             return contents;
         }
 
         protected override int Serializer(byte[] codeplugContents, int address, Span<byte> contents)
         {
-            Debug.WriteLine($"Serialize {address:X4}  {Id:X2} {Description}  {String.Join(" ", Array.ConvertAll(contents.ToArray(), x => x.ToString("X2")))}");
+            Debug.WriteLine($"Serialize {address:X4} {Id:X2} {Description} - {String.Join(" ", Array.ConvertAll(contents.ToArray(), x => x.ToString("X2")))}");
             var length = contents.Length + 1;
             codeplugContents[address] = (byte)(length / 0x100);
             codeplugContents[address + 1] = (byte)(length % 0x100);

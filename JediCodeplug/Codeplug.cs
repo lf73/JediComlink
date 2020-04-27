@@ -96,5 +96,30 @@ namespace JediCodeplug
             //SendSbep(new byte[] { 0xF5, 0x17, 0x00, 0x02, 0x89, 0x94 });
             //var xxdd = ReceiveSbep();
         }
+
+        public void RecalculateAuthCode()
+        {
+            if (FirmwareVersion == 0.00m) return;
+            AuthCode.Calculate(this);
+            AuthCodeStatus = "Recalculated";
+            CalculatedAuthCode.CopyTo(InternalCodeplug.AuthCode, 0);
+        }
+
+        public async Task<bool> WriteToRadio(Com com)
+        {
+            var codeplugBytes = Serialize();            
+            await Task.Run(() =>
+            {
+                com.EnterProgrammingMode();
+                for (int i = 0x00; i < codeplugBytes.Length; i += 0x20)
+                {
+                    var bytesToWrite = Math.Min(0x20, codeplugBytes.Length - i);
+                    com.Write(i, bytesToWrite, codeplugBytes);
+                }
+                com.ExitSbepMode();
+                com.Reset();
+            }).ConfigureAwait(false);
+            return true;
+        }
     }
 }

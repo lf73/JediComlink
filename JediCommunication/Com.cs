@@ -46,12 +46,12 @@ namespace JediCommunication
             _port.Dispose();
             _port = null;
         }
-
+             
         private bool Read(int location, int length, byte[] buffer, int offset)
         {
             if (location < 0 || location > 0xFFFF) throw new ArgumentException("Range must be 0x0000 to 0xFFFF", nameof(location));
-            if (length < 1 || length > 0xFF) throw new ArgumentException("Length must be 0x00 to 0xFF", nameof(location));
-            if (buffer == null || buffer.Length < offset + length) throw new ArgumentException("Buffer overrun", nameof(location));
+            if (length < 1 || length > 0xFF) throw new ArgumentException("Length must be 0x00 to 0xFF", nameof(length));
+            if (buffer == null || buffer.Length < offset + length) throw new ArgumentException("Buffer overrun", nameof(buffer));
 
             //There is a third byte, but in regular (non-flash), mode it is always 0.
             var msb = (byte)(location / 0x100);
@@ -83,7 +83,7 @@ namespace JediCommunication
 
         public byte[] Read(int location, int length)
         {
-            if (length < 1 || length > 0xFF) throw new ArgumentException("Length must be 0x00 to 0xFF", nameof(location));
+            if (length < 1 || length > 0xFF) throw new ArgumentException("Length must be 0x00 to 0xFF", nameof(length));
             var buffer = new byte[length];
             var goodRead = Read(location, length, buffer, 0);
             if (goodRead)
@@ -94,6 +94,44 @@ namespace JediCommunication
             {
                 return null; //Maybe throw error instead.
             }
+        }
+
+        private bool Write(int location, int length, byte[] buffer, int offset)
+        {
+            if (location < 0 || location > 0xFFFF) throw new ArgumentException("Range must be 0x0000 to 0xFFFF", nameof(location));
+            if (length < 1 || length > 0xFF) throw new ArgumentException("Length must be 0x00 to 0xFF", nameof(length));
+            if (buffer == null || buffer.Length < offset + length) throw new ArgumentException("Buffer overrun", nameof(buffer));
+
+            var payload = new byte[length + 3];
+            payload[0] = 0x00; //Most significant memory byte, in regular (non-flash), mode it is always 0.
+            payload[1] = (byte)(location / 0x100);
+            payload[2] = (byte)(location % 0x100);
+            Array.Copy(buffer, offset, payload, 3, length);
+
+            if (!_sbepMode) EnterSbepMode();
+
+            SendSbep(new SbepMessage(0x17, payload));
+            var response = ReceiveSbep();
+            if (response.Data[0] != 0x00 && response.Data[1] != payload[1] && response.Data[2] != payload[2])
+            {
+                UpdateStatus("Invalid Write Response. Address requested not returned.");
+                return false;
+            }
+
+            response.Data.AsSpan(3).CopyTo(buffer.AsSpan(offset));
+            return true;
+        }
+
+        public bool Write(int location, int length, byte[] buffer)
+        {
+            return Write(location, length, buffer, location);
+        }
+
+        public bool Write(int location, params byte[] data)
+        {
+            var length = data.Length;
+            if (length < 1 || length > 0xFF) throw new ArgumentException("Length must be 0x00 to 0xFF", nameof(location));
+            return Write(location, length, data, 0);
         }
 
         public void EnterSbepMode()

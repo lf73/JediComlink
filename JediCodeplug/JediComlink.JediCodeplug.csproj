@@ -60,6 +60,8 @@
     <Compile Include="AuthCode.cs" />
     <Compile Include="Block.cs" />
     <Compile Include="Enums.cs" />
+    <Compile Include="ExternalBlocks\BlockDE.cs" />
+    <Compile Include="ExternalBlocks\Block65.cs" />
     <Compile Include="InternalBlocks\Block01.cs" />
     <Compile Include="InternalBlocks\Block02.cs" />
     <Compile Include="InternalBlocks\Block03.cs" />

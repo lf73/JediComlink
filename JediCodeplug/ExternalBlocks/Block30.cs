@@ -79,8 +79,13 @@ namespace JediCodeplug
         public Block54 Block54 { get; set; }
         public Block51 Block51 { get; set; }
 
-        [TypeConverter(typeof(HexIntValueTypeConverter))]
+        [Browsable(false)]
         public int DynamicRadioVector { get; set; }
+
+        [DisplayName("Dynamic Radio")]
+        [Description("This data is stored outside of a normal block definition. Perhaps this is reserved space for the radio to store user settings?")]
+        [TypeConverter(typeof(HexByteArrayTypeConverter))]
+        public byte[] DynamicRadio { get; set; }
 
         public Block39 Block39 { get; set; }
         public Block3B Block3B { get; set; }
@@ -94,23 +99,18 @@ namespace JediCodeplug
         [TypeConverter(typeof(HexByteArrayTypeConverter))]
         public byte[] Unknown2 { get; set; }
 
-        [TypeConverter(typeof(HexIntValueTypeConverter))]
+        [Browsable(false)]
         public int DynamicModeSelectVector { get; set; }
-
-        [DisplayName("Unknown Byte Values 3")]
-        [Description("Most likely not used. Values do not seem to affect CPS and are not preserved by CPS. CPS will reset to all to 0x00")]
-        [TypeConverter(typeof(HexByteArrayTypeConverter))]
-        public byte[] Unknown3 { get; set; }
-
-        [DisplayName("Dynamic Radio")]
-        [Description("This data is stored outside of a normal block definition. Perhaps this is reserved space for the radio to store user settings?")]
-        [TypeConverter(typeof(HexByteArrayTypeConverter))]
-        public byte[] DynamicRadio { get; set; }
 
         [DisplayName("Dynamic Mode Select")]
         [Description("This data is stored outside of a normal block definition. Perhaps this is reserved space for the radio to store user settings?")]
         [TypeConverter(typeof(HexByteArrayTypeConverter))]
         public byte[] DynamicModeSelect { get; set; }
+
+        [DisplayName("Unknown Byte Values 3")]
+        [Description("Most likely not used. Values do not seem to affect CPS and are not preserved by CPS. CPS will reset to all to 0x00")]
+        [TypeConverter(typeof(HexByteArrayTypeConverter))]
+        public byte[] Unknown3 { get; set; }
         #endregion
 
         public Block30() { }
@@ -149,7 +149,7 @@ namespace JediCodeplug
             if (DynamicRadioVector != 0)
             {
                 DynamicRadio = codeplugContents.AsSpan().Slice(DynamicRadioVector - 8, DYNAMIC_RADIO_SIZE).ToArray();
-                Debug.WriteLine($"Deserialize {DynamicRadioVector - 8:X4} Dynamic Mode Select Block  {String.Join(" ", Array.ConvertAll(DynamicRadio, x => x.ToString("X2")))}");
+                Debug.WriteLine($"Deserialize {DynamicRadioVector - 8:X4} XX Dynamic Mode Select Block - {String.Join(" ", Array.ConvertAll(DynamicRadio, x => x.ToString("X2")))}");
             }
             Block39 = Deserialize<Block39>(contents, BLOCK_39_VECTOR, codeplugContents);
             Block3B = Deserialize<Block3B>(contents, BLOCK_3B_VECTOR, codeplugContents);
@@ -162,7 +162,7 @@ namespace JediCodeplug
             if (DynamicModeSelectVector != 0)
             {
                 DynamicModeSelect = codeplugContents.AsSpan().Slice(DynamicModeSelectVector - 8, DYNAMIC_MODE_SELECT_SIZE).ToArray();
-                Debug.WriteLine($"Deserialize {DYNAMIC_MODE_SELECT_VECTOR - 8:X4} Dynamic Mode Select Block  {String.Join(" ", Array.ConvertAll(DynamicModeSelect, x => x.ToString("X2")))}");
+                Debug.WriteLine($"Deserialize {DynamicModeSelectVector - 8:X4} XX Dynamic Mode Select Block - {String.Join(" ", Array.ConvertAll(DynamicModeSelect, x => x.ToString("X2")))}");
             }
             Unknown3 = contents.Slice(UNKNOWN3, 2).ToArray();
         }
@@ -191,7 +191,7 @@ namespace JediCodeplug
             nextAddress = SerializeChild(Block51, BLOCK_51_VECTOR, codeplugContents, nextAddress, contents);
             if (DynamicRadio != null)
             {
-                Debug.WriteLine($"Serialize {nextAddress:X4} Dynamic Radio Block  {String.Join(" ", Array.ConvertAll(DynamicRadio, x => x.ToString("X2")))}");
+                Debug.WriteLine($"Serialize {nextAddress:X4} XX Dynamic Radio Block - {String.Join(" ", Array.ConvertAll(DynamicRadio, x => x.ToString("X2")))}");
                 DynamicRadioVector = nextAddress + 8;
                 DynamicRadio.CopyTo(codeplugContents.AsSpan(nextAddress));
                 nextAddress += DynamicRadio.Length;
@@ -211,7 +211,7 @@ namespace JediCodeplug
             Unknown2.AsSpan().CopyTo(contents.Slice(UNKNOWN2));
             if (DynamicModeSelect != null)
             {
-                Debug.WriteLine($"Serialize {nextAddress:X4} Dynamic Mode Select Block  {String.Join(" ", Array.ConvertAll(DynamicModeSelect, x => x.ToString("X2")))}");
+                Debug.WriteLine($"Serialize {nextAddress:X4} XX Dynamic Mode Select Block - {String.Join(" ", Array.ConvertAll(DynamicModeSelect, x => x.ToString("X2")))}");
                 DynamicModeSelectVector = nextAddress + 8;
                 DynamicModeSelect.CopyTo(codeplugContents.AsSpan(nextAddress));
                 nextAddress += DynamicModeSelect.Length;

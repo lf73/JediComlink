@@ -28,6 +28,7 @@ namespace JediCodeplug
         #region Propeties
         public Block67 Block67 { get; set; }
         public Block63 Block63 { get; set; }
+        public BlockDE BlockDE { get; set; }
         #endregion
 
         public Block62() { }
@@ -37,6 +38,12 @@ namespace JediCodeplug
             Contents = Deserializer(codeplugContents, address);
             Block67 = Deserialize<Block67>(Contents, BLOCK_67_VECTOR, codeplugContents);
             Block63 = Deserialize<Block63>(Contents, BLOCK_63_VECTOR, codeplugContents);
+
+            if (Contents.Length == 29 && Contents[26] == 0x80) //Total Guess
+            {
+                BlockDE = Deserialize<BlockDE>(Contents, 27, codeplugContents);
+            }
+
         }
 
         public override int Serialize(byte[] codeplugContents, int address)
@@ -45,6 +52,12 @@ namespace JediCodeplug
             var nextAddress = address + Contents.Length + BlockSizeAdjustment;
             nextAddress = SerializeChild(Block67, BLOCK_67_VECTOR, codeplugContents, nextAddress, contents);
             nextAddress = SerializeChild(Block63, BLOCK_63_VECTOR, codeplugContents, nextAddress, contents);
+
+            if (Contents.Length == 29 && Contents[26] == 0x80) //Total Guess
+            {
+                nextAddress = SerializeChild(BlockDE, 27, codeplugContents, nextAddress, contents);
+            }
+
             Serializer(codeplugContents, address, contents);
             return nextAddress;
         }
