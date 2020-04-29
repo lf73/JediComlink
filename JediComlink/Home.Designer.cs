@@ -33,7 +33,7 @@
             this.ReadButton = new System.Windows.Forms.Button();
             this.WriteButton = new System.Windows.Forms.Button();
             this.Status = new System.Windows.Forms.TextBox();
-            this.ComPortComboBox = new System.Windows.Forms.ComboBox();
+            this.NormalComPortComboBox = new System.Windows.Forms.ComboBox();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
             this.tabPage2 = new System.Windows.Forms.TabPage();
@@ -115,26 +115,16 @@
             this.Status.Size = new System.Drawing.Size(807, 407);
             this.Status.TabIndex = 2;
             // 
-            // ComPortComboBox
+            // NormalComPortComboBox
             // 
-            this.ComPortComboBox.FormattingEnabled = true;
-            this.ComPortComboBox.Items.AddRange(new object[] {
-            "COM1",
-            "COM2",
-            "COM3",
-            "COM4",
-            "COM5",
-            "COM6",
-            "COM7",
-            "COM8",
-            "COM9"});
-            this.ComPortComboBox.Location = new System.Drawing.Point(439, 35);
-            this.ComPortComboBox.Margin = new System.Windows.Forms.Padding(2);
-            this.ComPortComboBox.Name = "ComPortComboBox";
-            this.ComPortComboBox.Size = new System.Drawing.Size(139, 21);
-            this.ComPortComboBox.TabIndex = 4;
-            this.ComPortComboBox.Text = "COM1";
-            this.ComPortComboBox.SelectedValueChanged += new System.EventHandler(this.ComPortComboBox_SelectedValueChanged);
+            this.NormalComPortComboBox.FormattingEnabled = true;
+            this.NormalComPortComboBox.Location = new System.Drawing.Point(439, 35);
+            this.NormalComPortComboBox.Margin = new System.Windows.Forms.Padding(2);
+            this.NormalComPortComboBox.Name = "NormalComPortComboBox";
+            this.NormalComPortComboBox.Size = new System.Drawing.Size(139, 21);
+            this.NormalComPortComboBox.TabIndex = 4;
+            this.NormalComPortComboBox.DropDown += new System.EventHandler(this.NormalComPortComboBox_DropDown);
+            this.NormalComPortComboBox.SelectedValueChanged += new System.EventHandler(this.ComPortComboBox_SelectedValueChanged);
             // 
             // tabControl1
             // 
@@ -153,7 +143,7 @@
             // tabPage1
             // 
             this.tabPage1.Controls.Add(this.Status);
-            this.tabPage1.Controls.Add(this.ComPortComboBox);
+            this.tabPage1.Controls.Add(this.NormalComPortComboBox);
             this.tabPage1.Controls.Add(this.ReadButton);
             this.tabPage1.Controls.Add(this.WriteButton);
             this.tabPage1.Location = new System.Drawing.Point(4, 22);
@@ -391,7 +381,7 @@
         private System.Windows.Forms.Button ReadButton;
         private System.Windows.Forms.Button WriteButton;
         private System.Windows.Forms.TextBox Status;
-        private System.Windows.Forms.ComboBox ComPortComboBox;
+        private System.Windows.Forms.ComboBox NormalComPortComboBox;
         private System.Windows.Forms.TabControl tabControl1;
         private System.Windows.Forms.TabPage tabPage1;
         private System.Windows.Forms.TabPage tabPage2;

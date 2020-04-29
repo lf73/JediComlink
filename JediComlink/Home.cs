@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
+using System.IO.Ports;
 using System.Linq;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
@@ -24,7 +25,7 @@ namespace JediComlink
 
         private void ComPortComboBox_SelectedValueChanged(object sender, EventArgs e)
         {
-            ComPort = this.ComPortComboBox.Text;
+            ComPort = this.NormalComPortComboBox.Text;
         }
 
 
@@ -33,7 +34,7 @@ namespace JediComlink
             _codeplug = new Codeplug(@"MTS2000-2020-04-26_16-04-01.hex");
             UpdateCodeplug();
             Status.Text = _codeplug.GetTextDump();
-
+            NormalComPortComboBox.DataSource = SerialPort.GetPortNames();
         }
 
         private void UpdateCodeplug()
@@ -219,6 +220,11 @@ namespace JediComlink
             UpdateCodeplug();
 
 
+        }
+
+        private void NormalComPortComboBox_DropDown(object sender, EventArgs e)
+        {
+            NormalComPortComboBox.DataSource = SerialPort.GetPortNames();
         }
     }
 }

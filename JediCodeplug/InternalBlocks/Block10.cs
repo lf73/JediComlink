@@ -45,13 +45,15 @@ namespace JediCodeplug
 
 
         #region FDB BYTE 0x00
-        [DisplayName("Radio Type")]
+        [DisplayName("Radio Type Part 1")]
+        [Description("1/2  Invalid=T/T Conv Only=F/T  Trunk & Conv = F/F  ???=T/F (Disables Menu Option Selection for Conv)")]
         public bool RadioType1 {
             get => (FeatureBlock[0x00] & (1 << 7)) > 0;
             set => FeatureBlock[0x00] = value ? (byte)(FeatureBlock[0x00] | (1 << 7)) : (byte)(FeatureBlock[0x00] & ~(1 << 7));
         }
 
-        [DisplayName("Radio Type (related to above bit)")]
+        [DisplayName("Radio Type Part 2")]
+        [Description("1/2  Invalid=T/T Conv Only=F/T  Trunk & Conv = F/F  ???=T/F (Disables Menu Option Selection for Conv)")]
         public bool RadioType2
         {
             get => (FeatureBlock[0x00] & (1 << 6)) > 0;
@@ -59,6 +61,7 @@ namespace JediCodeplug
         }
 
         [DisplayName("Radio Lock")]
+        [Description("Safe to Enable. Toogles ability to set in CPS, Display & Menu --> Radio Lock")]
         public bool RadioLock
         {
             get => (FeatureBlock[0x00] & (1 << 5)) > 0;
@@ -66,6 +69,7 @@ namespace JediCodeplug
         }
 
         [DisplayName("Selectable Keypad Mute")]
+        [Description("Safe to Enable. Toogles ability to set in CPS, Radio Wide --> General --> Selectable Keypad Mute")]
         public bool SelectableKeypadMute
         {
             get => (FeatureBlock[0x00] & (1 << 4)) > 0;
@@ -73,6 +77,7 @@ namespace JediCodeplug
         }
 
         [DisplayName("Battery Saver")]
+        [Description("No references in CPS.")]
         public bool BatterySaver
         {
             get => (FeatureBlock[0x00] & (1 << 3)) > 0;
@@ -80,6 +85,7 @@ namespace JediCodeplug
         }
 
         [DisplayName("Out of Range Indicator")]
+        [Description("Safe to Enable. Applies to Trunking Only. Toogles ability to set in CPS, Radio Wide --> General --> Out of Range Indicator")]
         public bool OutOfRangeIndicator
         {
             get => (FeatureBlock[0x00] & (1 << 2)) > 0;
@@ -87,6 +93,7 @@ namespace JediCodeplug
         }
 
         [DisplayName("Talk-around")]
+        [Description("Safe to Enable. Applies to Trunking Only. Toogles ability to set in CPS, Conventional Personality --> Direct/Talkaround.  Does not seem to change the ability to add to button or switch, its option is always present there.")]
         public bool TalkAround
         {
             get => (FeatureBlock[0x00] & (1 << 1)) > 0;
@@ -94,6 +101,7 @@ namespace JediCodeplug
         }
 
         [DisplayName("Transmit Inhibit Switch")]
+        [Description("Safe to Enable. Toogles ability to set in CPS, Controls --> Switches --> Concentric --> Tx Inhbit")]
         public bool TransmitInhibitSwitch
         {
             get => (FeatureBlock[0x00] & (1 << 0)) > 0;
@@ -103,6 +111,7 @@ namespace JediCodeplug
 
         #region FDB BYTE 0x01
         [DisplayName("Adaptive Splatter")]
+        [Description("Unknown Feature. No references in CPS.")]
         public bool AdaptiveSplatter
         {
             get => (FeatureBlock[0x01] & (1 << 7)) > 0;
@@ -110,6 +119,7 @@ namespace JediCodeplug
         }
 
         [DisplayName("Audio Comparator")]
+        [Description("Unknown Feature. No references in CPS.")]
         public bool AudioComparator
         {
             get => (FeatureBlock[0x01] & (1 << 6)) > 0;
@@ -117,6 +127,7 @@ namespace JediCodeplug
         }
 
         [DisplayName("Variable Power")]
+        [Description("Unknown Feature. No references in CPS. Could be related to trunking and sets power based on control channel strength?")]
         public bool VariablePower
         {
             get => (FeatureBlock[0x01] & (1 << 5)) > 0;
@@ -124,6 +135,7 @@ namespace JediCodeplug
         }
 
         [DisplayName("Uppercase-only Display")]
+        [Description("Only seen set to True. Unknown Feature. Seems to have no affect in CPS. Zone text still converted to uppercase.")]
         public bool UpperCaseOnlyDisplay
         {
             get => (FeatureBlock[0x01] & (1 << 4)) > 0;
@@ -131,6 +143,7 @@ namespace JediCodeplug
         }
 
         [DisplayName("Radio-to-radio Cloning")]
+        [Description("Likely Safe to Enable. Probably a waste of time without proper cable. Toogles ability to set in CPS, Radio Wide --> General --> Radio Cloning.")]
         public bool RadioToRadioCloning
         {
             get => (FeatureBlock[0x01] & (1 << 3)) > 0;
@@ -138,6 +151,7 @@ namespace JediCodeplug
         }
 
         [DisplayName("Whisper Mode")]
+        [Description("Unknown Feature. No references in CPS. To do: determine if any change in mic / speaker")]
         public bool WhisperMode
         {
             get => (FeatureBlock[0x01] & (1 << 2)) > 0;
@@ -145,6 +159,7 @@ namespace JediCodeplug
         }
 
         [DisplayName("Fdb in External")]
+        [Description("Leave Alone! 800mhz, False. VHF, True. At least with VHF, allows internal codeplug to span past 0x0200 to 0x0280, since it has extra test frequencies.")]
         public bool FdbInExternal
         {
             get => (FeatureBlock[0x01] & (1 << 1)) > 0;
@@ -152,6 +167,7 @@ namespace JediCodeplug
         }
 
         [DisplayName("Continuous Rotary")]
+        [Description("Set based on hardware. Likely allows channel selection beyond 16. Toogles ability to set in CPS, Radio Wide --> Alert Tones --> Rotary Alert")]
         public bool ContinuousRotary
         {
             get => (FeatureBlock[0x01] & (1 << 0)) > 0;
@@ -161,6 +177,7 @@ namespace JediCodeplug
 
         #region FDB BYTE 0x02
         [DisplayName("Vox")]
+        [Description("Unknown Feature. No references in CPS.")]
         public bool Vox
         {
             get => (FeatureBlock[0x02] & (1 << 7)) > 0;
@@ -168,6 +185,7 @@ namespace JediCodeplug
         }
 
         [DisplayName("Keypad Lock")]
+        [Description("Safe to Enable. Toogles ability to set in CPS, Controls --> Switches --> Either Concentric or Three Position --> Keypad Lock")]
         public bool KeypadLock
         {
             get => (FeatureBlock[0x02] & (1 << 6)) > 0;
@@ -175,6 +193,7 @@ namespace JediCodeplug
         }
 
         [DisplayName("Closed featureset Only")]
+        [Description("Unknown Feature. No references in CPS. Maybe used in flash feature upgrade process?")]
         public bool ClosedFeaturesetOnly
         {
             get => (FeatureBlock[0x02] & (1 << 5)) > 0;
@@ -182,6 +201,7 @@ namespace JediCodeplug
         }
 
         [DisplayName("Emergency RX")]
+        [Description("Safe to Enable. Toogles ability to set in CPS, Display & Menu --> Advanced --> Emergency Receive")]
         public bool EmergencyRx
         {
             get => (FeatureBlock[0x02] & (1 << 4)) > 0;
@@ -189,6 +209,7 @@ namespace JediCodeplug
         }
 
         [DisplayName("VOC (Voice-on-control)")]
+        [Description("Safe to Enable. Toogles ability to set in CPS, Trunking Configuration --> VOC.  (Voice on Control Channel allows)")]
         public bool VVoiceOnControl
         {
             get => (FeatureBlock[0x02] & (1 << 3)) > 0;
@@ -196,6 +217,7 @@ namespace JediCodeplug
         }
 
         [DisplayName("821-824 MHz Disable")]
+        [Description("Safe to Enable/Disable. Toogles ability to set transmit frequncy in NPSPAC range. The NPSPAC receive and TA (Direct) transmit frequncies in 866 to 869 are unaffected.")]
         public bool Freq821To824Disable
         {
             get => (FeatureBlock[0x02] & (1 << 2)) > 0;
@@ -203,6 +225,7 @@ namespace JediCodeplug
         }
 
         [DisplayName("ASTRO-ready")]
+        [Description("Unknown Feature. No references in CPS. Likely XTS3000 feature?")]
         public bool ASTROready
         {
             get => (FeatureBlock[0x02] & (1 << 1)) > 0;
@@ -210,6 +233,7 @@ namespace JediCodeplug
         }
 
         [DisplayName("Hot Mic Emergency")]
+        [Description("Safe to Enable. Toogles ability to see tab page in CPS, Trunking Personality --> Hot Mic.")]
         public bool HotMicEmergency
         {
             get => (FeatureBlock[0x02] & (1 << 0)) > 0;
@@ -219,6 +243,7 @@ namespace JediCodeplug
 
         #region FDB BYTE 0x03
         [DisplayName("Privacy Plus Trunking")]
+        [Description("Safe to Enable. Should allow older Type I System use. No change detected in CPS.")]
         public bool PrivacyPlusTrunking
         {
             get => (FeatureBlock[0x03] & (1 << 7)) > 0;
@@ -226,6 +251,7 @@ namespace JediCodeplug
         }
 
         [DisplayName("SmartNet Trunking")]
+        [Description("Safe to Enable. Should allow APCO16 features on Type II Systems. No change detected in CPS.")]
         public bool SmartNetTrunking
         {
             get => (FeatureBlock[0x03] & (1 << 6)) > 0;
@@ -233,6 +259,7 @@ namespace JediCodeplug
         }
 
         [DisplayName("Failsoft per-mode")]
+        [Description("Safe to Enable. Toogles ability to see tab page in CPS, Trunking Personality --> Failsoft.")]
         public bool FailsoftPeMode
         {
             get => (FeatureBlock[0x03] & (1 << 5)) > 0;
@@ -240,6 +267,7 @@ namespace JediCodeplug
         }
 
         [DisplayName("Auto Affiliation")]
+        [Description("Probably good to set to false for trunk recieve only. Although, no effect in CPS as you can still select affiliation option on Trunking System --> Type II/IIi --> Affilialtion Type")]
         public bool AutoAffiliation
         {
             get => (FeatureBlock[0x03] & (1 << 4)) > 0;
@@ -247,6 +275,7 @@ namespace JediCodeplug
         }
 
         [DisplayName("AMSS")]
+        [Description("Safe to Enable. Toogles ability to see tab page in CPS, Trunking System --> General --> Coverage Type and Trunking Personality --> WAC_AMSS.  (Wide Area Coverage Automatic Multiple Site Select)")]
         public bool AMSS
         {
             get => (FeatureBlock[0x03] & (1 << 3)) > 0;
@@ -254,6 +283,7 @@ namespace JediCodeplug
         }
 
         [DisplayName("Trunked Status")]
+        [Description("Safe to Enable. Toogles ability to set Radio Confiuration --> Display & Menu --> Trunk --> Status. Also toggles Alias Check Box in Trunking System -- > Aliasing ")]
         public bool TrunkedStatus
         {
             get => (FeatureBlock[0x03] & (1 << 2)) > 0;
@@ -261,6 +291,7 @@ namespace JediCodeplug
         }
 
         [DisplayName("Trunked Message")]
+        [Description("Safe to Enable. Toogles ability to set Radio Confiuration --> Display & Menu --> Trunk --> Message. Also toggles Alias Check Box in Trunking System -- > Aliasing ")]
         public bool TrunkedMessage
         {
             get => (FeatureBlock[0x03] & (1 << 1)) > 0;
@@ -268,6 +299,7 @@ namespace JediCodeplug
         }
 
         [DisplayName("OBT (Other Band Trunking)")]
+        [Description("Unknown Feature. No references in CPS.")]
         public bool OBT
         {
             get => (FeatureBlock[0x03] & (1 << 0)) > 0;
@@ -277,6 +309,7 @@ namespace JediCodeplug
 
         #region FDB BYTE 0x04
         [DisplayName("Dynamic Regrouping")]
+        [Description("Safe to Enable. Toogles ability to set CPS, Trunking System --> Dynamic Regrouping --> Enable Dynamic Regrouping")]
         public bool DynamicRegrouping
         {
             get => (FeatureBlock[0x04] & (1 << 7)) > 0;
@@ -284,6 +317,7 @@ namespace JediCodeplug
         }
 
         [DisplayName("Reprogram Request")]
+        [Description("Safe to Enable, seems to be default. No detectable change in CPS")]
         public bool ReprogramRequest
         {
             get => (FeatureBlock[0x04] & (1 << 6)) > 0;
@@ -696,8 +730,8 @@ namespace JediCodeplug
             set => FeatureBlock[0x0B] = value ? (byte)(FeatureBlock[0x0B] | (1 << 6)) : (byte)(FeatureBlock[0x0B] & ~(1 << 6));
         }
 
-        [DisplayName("Unknown")]
-        public bool _0BBit5
+        [DisplayName("Quik - Call II System")]
+        public bool QuikCallIISystem
         {
             get => (FeatureBlock[0x0B] & (1 << 5)) > 0;
             set => FeatureBlock[0x0B] = value ? (byte)(FeatureBlock[0x0B] | (1 << 5)) : (byte)(FeatureBlock[0x0B] & ~(1 << 5));
@@ -1328,6 +1362,7 @@ namespace JediCodeplug
         }
 
         [DisplayName("Reserved for REDI Smart Messaging")]
+        [Description("Leave to False. CPS will refuse to open if set.")]
         public bool ReservedForREDISmartMessaging
         {
             get => (FeatureBlock[0x16] & (1 << 6)) > 0;
