@@ -11,6 +11,6 @@ namespace JediCommunication
         public static readonly SB9600Message EnterSbep = new SB9600Message(0x00, 0x12, 0x01, 0x06);
         public static readonly SB9600Message ProgrammingMode = new SB9600Message(0x01, 0x02, 0x00, 0x40);
         public static readonly SB9600Message Reset = new SB9600Message(0x00, 0x00, 0x01, 0x08);
-        public static readonly SB9600Message RequestFirmwareVersion = new SB9600Message(0x08, 0x00, 0x00, 0xC0);
+        public static readonly SB9600Message RequestFirmwareVersion = new SB9600Message(0x08, 0x00, 0x00, 0xC0, true);
     }
 }

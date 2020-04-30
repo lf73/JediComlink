@@ -15,6 +15,7 @@ namespace JediCommunication
 		public byte Checksum { get; private set; }
 		public bool Incomplete { get; private set; }
 		public bool Invalid { get; private set; }
+		public bool ResponseExpected { get; private set; }
 		public byte[] Bytes
 		{
 			get
@@ -23,12 +24,13 @@ namespace JediCommunication
 			}
 		}
 
-		public SB9600Message(byte deviceType, byte data1, byte data2, byte opCode)
+		public SB9600Message(byte deviceType, byte data1, byte data2, byte opCode, bool responseExpected = false)
 		{
 			DeviceType = deviceType;
 			Data1 = data1;
 			Data2 = data2;
 			OpCode = opCode;
+			ResponseExpected = responseExpected;
 			CalculateChecksum();
 		}
 

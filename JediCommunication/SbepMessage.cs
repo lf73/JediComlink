@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Dynamic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -15,6 +16,7 @@ namespace JediCommunication
 		public byte[] Bytes { get; private set; }
 		public bool Incomplete { get; private set; }
 		public bool Invalid { get; private set; }
+		public bool ExpectAck { get; private set; }
 
 		public override string ToString()
 		{
@@ -23,8 +25,19 @@ namespace JediCommunication
 
 		public SbepMessage(byte opCode, params byte[] data)
 		{
+			Setup(opCode, true, data);
+		}
+
+		public SbepMessage(byte opCode, bool expectAck, params byte[] data)
+		{
+			Setup(opCode, expectAck, data);
+		}
+
+		private void Setup(byte opCode, bool expectAck, params byte[] data)
+		{
 			OpCode = opCode;
 			Data = data;
+			ExpectAck = expectAck;
 
 			if (data != null)
 			{
@@ -48,6 +61,7 @@ namespace JediCommunication
 
 			Bytes = bytes.ToArray();
 		}
+
 
 		public SbepMessage(byte[] buffer, int bufferLength)
 		{

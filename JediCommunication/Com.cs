@@ -1,18 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Data.SqlTypes;
 using System.Diagnostics;
 using System.IO.Ports;
 using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Runtime.Remoting;
-using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
 
 namespace JediCommunication
 {
-    public class Com
+    public class Com : IDisposable
     {
         private bool _sbepMode = false;
 
@@ -21,22 +15,14 @@ namespace JediCommunication
 
         public Com(string comPort)
         {
-            try
+            _port = new SerialPort(comPort)
             {
-                _port = new SerialPort(comPort)
-                {
-                    PortName = comPort,
-                    ReadTimeout = 2500,
-                    BaudRate = 9600,
-                };
-                _port.Open();
-                UpdateStatus($"Port {comPort} Open");
-            }
-            catch (Exception ex)
-            {
-                UpdateStatus(ex.Message);
-                return;
-            }
+                PortName = comPort,
+                ReadTimeout = 2500,
+                BaudRate = 9600,
+            };
+            _port.Open();
+            UpdateStatus($"Port {comPort} Open");
         }
 
         public void Close()
@@ -151,27 +137,20 @@ namespace JediCommunication
 
         public void ExitSbepMode()
         {
-            SendSbep(new SbepMessage(0x10, null));
+            SendSbep(new SbepMessage(0x10, false, null));
             _port.DtrEnable = false;
             _port.RtsEnable = false;
-            Thread.Sleep(100);
+            Thread.Sleep(1500);
             _port.DiscardInBuffer();
             _port.DiscardOutBuffer();
             UpdateStatus("Exited SBEP Mode");
-            //_port.DtrEnable = true;
-            //Thread.Sleep(25);
-            //_port.DtrEnable = false;
-            //Thread.Sleep(25);
             _sbepMode = false;
         }
 
         public void EnterProgrammingMode()
         {
-            //CSQ mode?
             SendSB9600(SB9600Messages.ProgrammingMode);
             Thread.Sleep(1000);
-            //SendSB9600(new SB9600Message(0x00, 0x01, 0x01, 0x08));
-            //Thread.Sleep(500);
         }
 
         public decimal GetFirmwareVersion()
@@ -192,68 +171,111 @@ namespace JediCommunication
 
         public SB9600Message SendSB9600(SB9600Message message)
         {
-            if (_sbepMode) ExitSbepMode();
-            var packetSize = message.Bytes.Length;
-             
-            _port.DtrEnable = true;
-            _port.RtsEnable = true;
-            Thread.Sleep(30);
-            _port.DiscardInBuffer();
-            _port.DiscardOutBuffer();
-            UpdateStatus("Sending: " + String.Join(" ", Array.ConvertAll(message.Bytes, x => x.ToString("X2"))));           
-            _port.Write(message.Bytes, 0, packetSize);
-            var echo = ReceiveSB9600();
+            int attempts = 0;
+            while (true)
+            {
+                if (_sbepMode) ExitSbepMode();
+                var packetSize = message.Bytes.Length;
 
+                _port.DtrEnable = true;
+                _port.RtsEnable = true;
+                Thread.Sleep(30);
+                _port.DiscardInBuffer();
+                _port.DiscardOutBuffer();
+                UpdateStatus("Sending: " + String.Join(" ", Array.ConvertAll(message.Bytes, x => x.ToString("X2"))));
+                _port.Write(message.Bytes, 0, packetSize);
+                var echo = ReceiveSB9600();
+                if (echo == null || echo.Bytes.Max() == 0x00)
+                {
+                    if (attempts == 4) throw new Exception("RIB or interface cable does not appear to be connected to the computer. Is the cable connected, and if using a RIB, is it powered on? Is the correct COM port selected?");
+                    Thread.Sleep(500);
+                    attempts++;
+                    continue;
+                }
 
-            var response = ReceiveSB9600();
-            _port.DtrEnable = false;
-            _port.RtsEnable = false;
-            Thread.Sleep(30);
-            _port.DiscardInBuffer();
-            _port.DiscardOutBuffer();
+                if (!message.ResponseExpected)
+                {
+                    _port.DtrEnable = false;
+                    _port.RtsEnable = false;
+                    return null;
+                }
 
-            return response;
+                var response = ReceiveSB9600();
+                _port.DtrEnable = false;
+                _port.RtsEnable = false;
+                Thread.Sleep(30);
+                _port.DiscardInBuffer();
+                _port.DiscardOutBuffer();
+
+                if (response == null || response.Bytes.Max() == 0x00)
+                {
+                    if (attempts == 4) throw new Exception("No response from radio. The RIB and/or cable appears to be connected to computer. Is the cable connected to the radio and is the radio powered on?");
+                    Thread.Sleep(500);
+                    attempts++;
+                    continue;
+                }
+                return response;
+            }
         }
 
-        public bool SendSbep(SbepMessage message)
+        public void SendSbep(SbepMessage message)
         {
-            _port.DiscardInBuffer();
-            _port.DiscardOutBuffer();
-            var packetSize = message.Bytes.Length;
-            UpdateStatus("Sending " + String.Join(" ", Array.ConvertAll(message.Bytes, x => x.ToString("X2"))));
-
-            _port.Write(message.Bytes, 0, packetSize);
-
-            //Whatever sent seems to be echoed back, at least with Jedi.
-            //For example a bad checksum is simplied echoed right back without any ack from radio.
-
-            var sw = Stopwatch.StartNew();
-            byte[] bytes = new byte[packetSize];
-            while (sw.ElapsedMilliseconds < 1000)
+            int attempts = 0;
+            while (true)
             {
-                if (_port.BytesToRead < packetSize)
+                _port.DiscardInBuffer();
+                _port.DiscardOutBuffer();
+                var packetSize = message.Bytes.Length;
+                UpdateStatus("Sending " + String.Join(" ", Array.ConvertAll(message.Bytes, x => x.ToString("X2"))));
+
+                _port.Write(message.Bytes, 0, packetSize);
+
+                //Every byte sent is echoed back since TX/RX lines are connected.
+                //They have to be read back from the serial port before getting to a response packet.
+
+                var sw = Stopwatch.StartNew();
+                byte[] echo = new byte[packetSize];
+                while (sw.ElapsedMilliseconds < 1000)
                 {
-                    Thread.Sleep(10);
+                    if (_port.BytesToRead < packetSize)
+                    {
+                        Thread.Sleep(10);
+                        continue;
+                    }
+                    _port.Read(echo, 0, packetSize);
+                    break;
+                }
+                //A check could be made to see if bytes matched what was sent. But it's kind of pointless
+                //as it is not the radio echoing the bytes, it's just the computer hearing itself.
+                if (echo.Max() == 0x00)
+                {
+                    if (attempts == 4) throw new Exception("RIB or interface cable does not appear to be connected to the computer. Did the cable to the computer come loose?");
+                    Thread.Sleep(500);
+                    attempts++;
                     continue;
                 }
-                _port.Read(bytes, 0, packetSize);
-                //UpdateStatus("Buffer " + String.Join(" ", Array.ConvertAll(buffer, x => x.ToString("X2"))));
-                break;
-            }
-            
-            sw = Stopwatch.StartNew();
-            int ack = 0;
-            while (sw.ElapsedMilliseconds < 1000)
-            {
-                if (_port.BytesToRead < 1)
+
+                if (!message.ExpectAck) return;
+
+                //Now look for actual response from the radio.
+                sw = Stopwatch.StartNew();
+                int ack = 0;
+                while (sw.ElapsedMilliseconds < 1000)
                 {
-                    Thread.Sleep(10);
-                    continue;
+                    if (_port.BytesToRead < 1)
+                    {
+                        Thread.Sleep(10);
+                        continue;
+                    }
+                    ack = _port.ReadByte(); break;
                 }
-                ack = _port.ReadByte(); break;
+
+                if (ack == 0x50) return;
+
+                if (attempts == 4) throw new Exception("The radio failed to ackowledge command. Try power cycling the radio and running the operation again.");
+                Thread.Sleep(500);
+                attempts++;
             }
-            //TODO add auto retries.
-            return ack == 0x50;
         }
 
         private readonly byte[] _receiveBuffer = new byte[1024];
@@ -267,10 +289,9 @@ namespace JediCommunication
                 if (_port.BytesToRead < 5)
                 {
                     Thread.Sleep(10);
-                    continue; //Don't restart stopwatch.
+                    continue;
                 }
                 _port.Read(buffer, 0, 5);
-                //UpdateStatus("Buffer " + String.Join(" ", Array.ConvertAll(buffer, x => x.ToString("X2"))));
                 message = new SB9600Message(buffer, 5);
                 break;
             }
@@ -320,6 +341,10 @@ namespace JediCommunication
             OnStatusUpdate(new StatusUpdateEventArgs() { Status = status });
         }
 
-
+        public void Dispose()
+        {
+            _port.Close();
+            _port.Dispose();
+        }
     }
 }

@@ -10,7 +10,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using JediCodeplug;
-using JediCommunication;
 using JediEmulator;
 
 namespace JediComlink
@@ -76,33 +75,60 @@ namespace JediComlink
             propertyGrid1.SelectedObject = e.Node.Tag;
         }
 
-        Com _com = null;
+        bool isBusy = false;
         private async void ReadButton_Click(object sender, EventArgs e)
         {
-            if (_com != null) return;
-            Status.Clear();
+            if (isBusy) return;
+            try
+            {              
+                isBusy = true;
+                Status.Clear();
+                _codeplug = null;
 
-            _com = new Com("COM1");
-            _com.StatusUpdate += _com_StatusUpdate;
+                var codeplug = await Codeplug.ReadFromRadio((String)NormalComPortComboBox.SelectedValue, new Progress<string>(s => Status.AppendText(s + Environment.NewLine)));
 
-            var codeplug = await Codeplug.ReadFromRadio(_com);
-            _com.Reset();
-            _com.StatusUpdate -= _com_StatusUpdate;
-            _com.Close();
-            _com = null;
-
-            if (codeplug != null)
+                if (codeplug != null)
+                {
+                    _codeplug = codeplug;
+                    UpdateCodeplug();
+                    Status.Text = _codeplug.GetTextDump();
+                }
+            }
+            finally
             {
-                _codeplug = codeplug;
-                UpdateCodeplug();
-                Status.Text = _codeplug.GetTextDump();
+                isBusy = false;
             }
         }
 
-
-        private void _com_StatusUpdate(object sender, StatusUpdateEventArgs e)
+        private async void WriteButton_Click(object sender, EventArgs e)
         {
-            Status.BeginInvoke(new Action(() => Status.AppendText(e.Status + Environment.NewLine)));
+            if (isBusy || _codeplug == null) return;
+            try
+            {
+                isBusy = true;
+                Status.Clear();
+                var codeplug = await _codeplug.WriteToRadio((String)NormalComPortComboBox.SelectedValue, new Progress<string>(s => Status.AppendText(s + Environment.NewLine)));
+                Status.AppendText("Done!");
+            }
+            finally
+            {
+                isBusy = false;
+            }
+  
+            ////Round Trip Test
+            //var sb = new StringBuilder();
+            //var x = _codeplug.Serialize();
+            //sb.AppendLine($"Original Size: {_codeplug.OriginalBytes.Length:X4} New Size: {x.Length:X4}");
+
+            //for (var i = 0; i < Math.Min(x.Length, _codeplug.OriginalBytes.Length); i++)
+            //{
+            //    if (_codeplug.OriginalBytes[i] != x[i])
+            //    {
+            //        sb.AppendLine($"Mismatch {i:X4} Was {_codeplug.OriginalBytes[i]:X2} now {x[i]:X2}");
+            //    }
+            //}
+
+            //Status.Text = sb.ToString();
         }
 
         Emulator _emulator = null;
@@ -110,6 +136,7 @@ namespace JediComlink
         {
             if (_emulator == null)
             {
+                isBusy = true;
                 _emulator = new Emulator(_codeplug.Serialize());
                 _emulator.StatusUpdate += _emulator_StatusUpdate;
                 _emulator.Start();
@@ -127,54 +154,26 @@ namespace JediComlink
                 EmulatorButton.Text = "Start";
                 UpdateCodeplug();
                 propertyGrid1.SelectedObject = _codeplug.InternalCodeplug.Block10;
+                isBusy = false;
             }
-
         }
 
-        private void _emulator_StatusUpdate(object sender, StatusUpdateEventArgs e)
+        private void _emulator_StatusUpdate(object sender, EmulatorStatusUpdateEventArgs e)
         {
             EmulatorStatus.BeginInvoke(new Action(() => EmulatorStatus.AppendText(e.Status + Environment.NewLine)));
         }
 
-        private void pictureBox1_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private async void WriteButton_Click(object sender, EventArgs e)
-        {
-            _codeplug.RecalculateAuthCode();
-            if (_com != null) return;
-            Status.Clear();
-
-            _com = new Com("COM1");
-            _com.StatusUpdate += _com_StatusUpdate;
-
-            var codeplug = await _codeplug.WriteToRadio(_com);
-            _com.StatusUpdate -= _com_StatusUpdate;
-            _com.Close();
-            _com = null;
-            Status.AppendText("Done!");
-
-            ////Round Trip Test
-            //var sb = new StringBuilder();
-            //var x = _codeplug.Serialize();
-            //sb.AppendLine($"Original Size: {_codeplug.OriginalBytes.Length:X4} New Size: {x.Length:X4}");
-
-            //for (var i = 0; i < Math.Min(x.Length, _codeplug.OriginalBytes.Length); i++)
-            //{
-            //    if (_codeplug.OriginalBytes[i] != x[i])
-            //    {
-            //        sb.AppendLine($"Mismatch {i:X4} Was {_codeplug.OriginalBytes[i]:X2} now {x[i]:X2}");
-            //    }
-            //}
-
-            //Status.Text = sb.ToString();
-
-        }
-
         private void button2_Click(object sender, EventArgs e)
         {
+
+            //Fix ASK
+            //SendSbep(new byte[] { 0xF5, 0x17, 0x00, 0x02, 0x82, 0x00 });
+            //var xxx = ReceiveSbep();
+            //SendSbep(new byte[] { 0xF5, 0x17, 0x00, 0x02, 0x89, 0x94 });
+            //var xxdd = ReceiveSbep();
+
+
+
             _codeplug.ExternalCodeplug.Block55 = null;//Block56or62List.Clear();
             _codeplug.ExternalCodeplug.Block3D = null;// .Block3E = null;
             _codeplug.ExternalCodeplug.Block73 = null;

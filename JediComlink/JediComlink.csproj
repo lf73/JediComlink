@@ -108,10 +108,6 @@
       <Project>{d679836f-c1f3-4620-9a44-174813dddfbd}</Project>
       <Name>JediComlink.JediCodeplug</Name>
     </ProjectReference>
-    <ProjectReference Include="..\JediCommunication\JediComlink.JediCommunication.csproj">
-      <Project>{834AA461-0875-4A41-BF64-0902FF444152}</Project>
-      <Name>JediComlink.JediCommunication</Name>
-    </ProjectReference>
     <ProjectReference Include="..\JediEmulator\JediComlink.JediEmulator.csproj">
       <Project>{b9925cb3-342c-4681-8677-333dfb01f957}</Project>
       <Name>JediComlink.JediEmulator</Name>

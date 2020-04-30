@@ -16,7 +16,7 @@ namespace JediEmulator
 {
     public class Emulator
     {
-        public event EventHandler<StatusUpdateEventArgs> StatusUpdate;
+        public event EventHandler<EmulatorStatusUpdateEventArgs> StatusUpdate;
         private SerialPort _port;
 
         Memory<byte> _codeplugBytes;
@@ -258,13 +258,13 @@ namespace JediEmulator
             //}
         }
 
-        protected virtual void OnStatusUpdate(StatusUpdateEventArgs e)
+        protected virtual void OnStatusUpdate(EmulatorStatusUpdateEventArgs e)
         {
             StatusUpdate?.Invoke(this, e);
         }
         private void UpdateStatus(string status)
         {
-            OnStatusUpdate(new StatusUpdateEventArgs() { Status = status });
+            OnStatusUpdate(new EmulatorStatusUpdateEventArgs() { Status = status });
         }
 
 
@@ -374,7 +374,10 @@ namespace JediEmulator
         }
     }
 
-
+    public class EmulatorStatusUpdateEventArgs : EventArgs
+    {
+        public string Status { get; set; }
+    }
 
 
 }
