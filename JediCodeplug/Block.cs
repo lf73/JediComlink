@@ -95,7 +95,7 @@ namespace JediCodeplug
         protected string FormatHex(byte[] data)
         {
             var sb = new StringBuilder();
-            var l = 1;
+            //var l = 1;
             foreach (var b in data)
             {
                 sb.Append(b.ToString("X2"));

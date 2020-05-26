@@ -36,7 +36,7 @@ namespace JediCommunication
         private bool Read(int location, int length, byte[] buffer, int offset)
         {
             if (location < 0 || location > 0xFFFF) throw new ArgumentException("Range must be 0x0000 to 0xFFFF", nameof(location));
-            if (length < 1 || length > 0xFF) throw new ArgumentException("Length must be 0x00 to 0xFF", nameof(length));
+            if (length < 1 || length > 0xFF) throw new ArgumentException("Length must be 0x01 to 0xFF", nameof(length));
             if (buffer == null || buffer.Length < offset + length) throw new ArgumentException("Buffer overrun", nameof(buffer));
 
             //There is a third byte, but in regular (non-flash), mode it is always 0.
@@ -47,7 +47,7 @@ namespace JediCommunication
              
             SendSbep(new SbepMessage(0x11, (byte)length, 0x00, msb, lsb));
             var response = ReceiveSbep();
-            if (response.Data[0] != 0x00 && response.Data[1] != msb && response.Data[2] != lsb)
+            if (response.Data[0] != 0x00 || response.Data[1] != msb || response.Data[2] != lsb)
             {
                 UpdateStatus("Invalid Read Response. Address requested not returned.");
                 return false;
@@ -98,13 +98,12 @@ namespace JediCommunication
 
             SendSbep(new SbepMessage(0x17, payload));
             var response = ReceiveSbep();
-            if (response.Data[0] != 0x00 && response.Data[1] != payload[1] && response.Data[2] != payload[2])
+            if (response.Data[0] != 0x00 || response.Data[1] != payload[1] || response.Data[2] != payload[2])
             {
                 UpdateStatus("Invalid Write Response. Address requested not returned.");
                 return false;
             }
 
-            response.Data.AsSpan(3).CopyTo(buffer.AsSpan(offset));
             return true;
         }
 

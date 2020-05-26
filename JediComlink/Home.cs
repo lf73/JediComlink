@@ -1,41 +1,91 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.IO;
 using System.IO.Ports;
 using System.Linq;
-using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using JediCodeplug;
 using JediEmulator;
+using JediFlash;
 
 namespace JediComlink
 {
     public partial class Home : Form
     {
-        private static string ComPort = "COM1";
+        private Codeplug _codeplug;
+        private bool _isBusy = false;
+        private Emulator _emulator = null;
+
         public Home()
         {
             InitializeComponent();
+            var portNames = SerialPort.GetPortNames();
+            NormalComPortComboBox.DataSource = portNames;
+            FlashComPortComboBox.DataSource = portNames;
+            EmulatorComPortComboBox.DataSource = portNames;
         }
 
-        private void ComPortComboBox_SelectedValueChanged(object sender, EventArgs e)
+        #region Normal Read / Write
+        private async void NormalReadButton_Click(object sender, EventArgs e)
         {
-            ComPort = this.NormalComPortComboBox.Text;
+            if (_isBusy) return;
+            try
+            {
+                _isBusy = true;
+                NormalStatus.Clear();
+                _codeplug = null;
+
+                var codeplug = await Codeplug.ReadFromRadio((String)NormalComPortComboBox.SelectedValue, new Progress<string>(s => NormalStatus.AppendText(s + Environment.NewLine)));
+
+                if (codeplug != null)
+                {
+                    _codeplug = codeplug;
+                    UpdateCodeplug();
+                    NormalStatus.Text = _codeplug.GetTextDump();
+                }
+            }
+            finally
+            {
+                _isBusy = false;
+            }
         }
 
-
-        private void Home_Load(object sender, EventArgs e)
+        private async void NormalWriteButton_Click(object sender, EventArgs e)
         {
-            _codeplug = new Codeplug(@"MTS2000-2020-04-26_16-04-01.hex");
-            UpdateCodeplug();
-            Status.Text = _codeplug.GetTextDump();
-            NormalComPortComboBox.DataSource = SerialPort.GetPortNames();
-        }
+            if (_isBusy || _codeplug == null) return;
+            try
+            {
+                _isBusy = true;
+                NormalStatus.Clear();
+                var codeplug = await _codeplug.WriteToRadio((String)NormalComPortComboBox.SelectedValue, new Progress<string>(s => NormalStatus.AppendText(s + Environment.NewLine)));
+                NormalStatus.AppendText("Done!");
+            }
+            finally
+            {
+                _isBusy = false;
+            }
 
+            ////Round Trip Test
+            //var sb = new StringBuilder();
+            //var x = _codeplug.Serialize();
+            //sb.AppendLine($"Original Size: {_codeplug.OriginalBytes.Length:X4} New Size: {x.Length:X4}");
+
+            //for (var i = 0; i < Math.Min(x.Length, _codeplug.OriginalBytes.Length); i++)
+            //{
+            //    if (_codeplug.OriginalBytes[i] != x[i])
+            //    {
+            //        sb.AppendLine($"Mismatch {i:X4} Was {_codeplug.OriginalBytes[i]:X2} now {x[i]:X2}");
+            //    }
+            //}
+
+            //Status.Text = sb.ToString();
+        }
+        #endregion
+
+        #region Codeplug Explorer
         private void UpdateCodeplug()
         {
             //Declare local funtion for recursion and list extraction
@@ -63,106 +113,18 @@ namespace JediComlink
             PopulateNode(root, _codeplug);
             CodeplugView.ExpandAll();
             CodeplugView.EndUpdate();
-            Status.Text = _codeplug.InternalCodeplug.ToString() + "\n\n" + _codeplug.ExternalCodeplug.ToString();
+            NormalStatus.Text = _codeplug.InternalCodeplug.ToString() + "\n\n" + _codeplug.ExternalCodeplug.ToString();
             propertyGrid1.SelectedObject = _codeplug.ExternalCodeplug;
             CodeplugView.Nodes[0].Nodes[0].Collapse();
         }
-
-        private Codeplug _codeplug;
 
         private void CodeplugView_AfterSelect(object sender, TreeViewEventArgs e)
         {
             propertyGrid1.SelectedObject = e.Node.Tag;
         }
+        #endregion
 
-        bool isBusy = false;
-        private async void ReadButton_Click(object sender, EventArgs e)
-        {
-            if (isBusy) return;
-            try
-            {              
-                isBusy = true;
-                Status.Clear();
-                _codeplug = null;
-
-                var codeplug = await Codeplug.ReadFromRadio((String)NormalComPortComboBox.SelectedValue, new Progress<string>(s => Status.AppendText(s + Environment.NewLine)));
-
-                if (codeplug != null)
-                {
-                    _codeplug = codeplug;
-                    UpdateCodeplug();
-                    Status.Text = _codeplug.GetTextDump();
-                }
-            }
-            finally
-            {
-                isBusy = false;
-            }
-        }
-
-        private async void WriteButton_Click(object sender, EventArgs e)
-        {
-            if (isBusy || _codeplug == null) return;
-            try
-            {
-                isBusy = true;
-                Status.Clear();
-                var codeplug = await _codeplug.WriteToRadio((String)NormalComPortComboBox.SelectedValue, new Progress<string>(s => Status.AppendText(s + Environment.NewLine)));
-                Status.AppendText("Done!");
-            }
-            finally
-            {
-                isBusy = false;
-            }
-  
-            ////Round Trip Test
-            //var sb = new StringBuilder();
-            //var x = _codeplug.Serialize();
-            //sb.AppendLine($"Original Size: {_codeplug.OriginalBytes.Length:X4} New Size: {x.Length:X4}");
-
-            //for (var i = 0; i < Math.Min(x.Length, _codeplug.OriginalBytes.Length); i++)
-            //{
-            //    if (_codeplug.OriginalBytes[i] != x[i])
-            //    {
-            //        sb.AppendLine($"Mismatch {i:X4} Was {_codeplug.OriginalBytes[i]:X2} now {x[i]:X2}");
-            //    }
-            //}
-
-            //Status.Text = sb.ToString();
-        }
-
-        Emulator _emulator = null;
-        private void EmulatorButton_Click(object sender, EventArgs e)
-        {
-            if (_emulator == null)
-            {
-                isBusy = true;
-                _emulator = new Emulator(_codeplug.Serialize());
-                _emulator.StatusUpdate += _emulator_StatusUpdate;
-                _emulator.Start();
-
-                File.WriteAllBytes("Start-Emulator.hex", _emulator.CodePlugBytes);
-
-                EmulatorButton.Text = "Stop";
-            }
-            else
-            {
-                _emulator.Stop();
-                File.WriteAllBytes("Stop-Emulator.hex", _emulator.CodePlugBytes);
-                _codeplug = new Codeplug(_emulator.CodePlugBytes);
-                _emulator = null;
-                EmulatorButton.Text = "Start";
-                UpdateCodeplug();
-                propertyGrid1.SelectedObject = _codeplug.InternalCodeplug.Block10;
-                isBusy = false;
-            }
-        }
-
-        private void _emulator_StatusUpdate(object sender, EmulatorStatusUpdateEventArgs e)
-        {
-            EmulatorStatus.BeginInvoke(new Action(() => EmulatorStatus.AppendText(e.Status + Environment.NewLine)));
-        }
-
+        #region Analysis / Fixes
         private void button2_Click(object sender, EventArgs e)
         {
 
@@ -186,7 +148,7 @@ namespace JediComlink
             _codeplug.ExternalCodeplug.Block36 = null;
             _codeplug.ExternalCodeplug.Block54 = null;
             //_codeplug.ExternalCodeplug.DynamicModeSelect = null;
-            _codeplug.ExternalCodeplug.DynamicRadio = null; 
+            _codeplug.ExternalCodeplug.DynamicRadio = null;
 
 
             //_codeplug.ExternalCodeplug.Block3D.BlockA0.BlockA1 =
@@ -220,10 +182,73 @@ namespace JediComlink
 
 
         }
+        #endregion
 
-        private void NormalComPortComboBox_DropDown(object sender, EventArgs e)
+        #region Flash Read / Write
+        private async void FlashReadButton_Click(object sender, EventArgs e)
+        {
+            if (_isBusy) return;
+            try
+            {
+                _isBusy = true;
+                FlashStatus.Clear();
+                _codeplug = null;
+
+                var flash = new Flash();
+
+                await flash.ReadFromRadio((String)FlashComPortComboBox.SelectedValue, new Progress<string>(s => FlashStatus.AppendText(s + Environment.NewLine)));
+
+                //if (codeplug != null)
+                //{
+                //    _codeplug = codeplug;
+                //    UpdateCodeplug();
+                //    NormalStatus.Text = _codeplug.GetTextDump();
+                //}
+            }
+            finally
+            {
+                _isBusy = false;
+            }
+        }
+        #endregion
+
+        #region Emulator
+        private void EmulatorButton_Click(object sender, EventArgs e)
+        {
+            if (_emulator == null)
+            {
+                _isBusy = true;
+                _emulator = new Emulator(_codeplug.Serialize());
+                _emulator.StatusUpdate += _emulator_StatusUpdate;
+                _emulator.Start();
+
+                File.WriteAllBytes("Start-Emulator.hex", _emulator.CodePlugBytes);
+
+                EmulatorButton.Text = "Stop";
+            }
+            else
+            {
+                _emulator.Stop();
+                File.WriteAllBytes("Stop-Emulator.hex", _emulator.CodePlugBytes);
+                _codeplug = new Codeplug(_emulator.CodePlugBytes);
+                _emulator = null;
+                EmulatorButton.Text = "Start";
+                UpdateCodeplug();
+                propertyGrid1.SelectedObject = _codeplug.InternalCodeplug.Block10;
+                _isBusy = false;
+            }
+        }
+
+        private void _emulator_StatusUpdate(object sender, EmulatorStatusUpdateEventArgs e)
+        {
+            EmulatorStatus.BeginInvoke(new Action(() => EmulatorStatus.AppendText(e.Status + Environment.NewLine)));
+        }
+        #endregion
+
+        private void ComPortComboBox_DropDown(object sender, EventArgs e)
         {
             NormalComPortComboBox.DataSource = SerialPort.GetPortNames();
         }
+
     }
 }
