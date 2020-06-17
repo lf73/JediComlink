@@ -1,0 +1,410 @@
+{
+  "Firmwares": [
+    {
+      "Version": 5.44,
+      "Signature": "ff4f26c4c6bd30bd",
+      "MD5Hash": "c1310616c6abb744701a8280a09ecf45",
+      "Year": "1995",
+      "ActualSize": "321KB"
+    },
+    {
+      "Version": 5.53,
+      "Signature": "ff2fc2ffffffffff",
+      "MD5Hash": "5e211936fe815c417fba559d4892f340",
+      "Year": "1995",
+      "ActualSize": "358KB"
+    },
+    {
+      "Version": 5.63,
+      "Signature": "fff65fffffffffff",
+      "MD5Hash": "ea7e8dc72cbb641f9929a11020362db8",
+      "Year": "1997",
+      "ActualSize": "369KB"
+    },
+    {
+      "Version": 5.65,
+      "Signature": "ff7f5fffffffffff",
+      "MD5Hash": "92a7c38b5e7cdb8a5d9d2195fcece5b1",
+      "Year": "1997",
+      "ActualSize": "369KB"
+    },
+    {
+      "Version": 6.1,
+      "Signature": "ff09ccffffffff10",
+      "MD5Hash": "ccda8eec60a475525c0787a3b6015053",
+      "Year": "1998",
+      "ActualSize": "382KB"
+    },
+    {
+      "Version": 6.41,
+      "Signature": "ff23300201ffff4f",
+      "MD5Hash": "a581f3cb0cf94516eb78eefbfb429bb7",
+      "Year": "2000",
+      "ActualSize": "390KB"
+    },
+    {
+      "Version": 6.6,
+      "Signature": "ffcc30cc01ffffcc",
+      "MD5Hash": "a5d638eaf467cdfeabd885b54b9c2857",
+      "Year": "2001",
+      "ActualSize": "389KB"
+    },
+    {
+      "Version": 6.7,
+      "Signature": "ffcc30cc01ffffcc",
+      "MD5Hash": "a03bda655852b8d5f2b833e6ad3cce99",
+      "Year": "2002",
+      "ActualSize": "389KB"
+    },
+    {
+      "Version": 6.74,
+      "Signature": "ffcc05cc01ffff41",
+      "MD5Hash": "746d0831fc06da40ad6ca1617005e9e5",
+      "Year": "2002",
+      "ActualSize": "390KB"
+    },
+    {
+      "Version": 6.81,
+      "Signature": "ffcc05ce51ffff41",
+      "MD5Hash": "d270e7f6741a6196c3357a0016b3f386",
+      "Year": "2004",
+      "ActualSize": "391KB"
+    },
+    {
+      "Version": 6.82,
+      "Signature": "ffcc05ce51ffff41",
+      "MD5Hash": "fa0bfcc6bc112f08ca101f92fdd60933",
+      "Year": "2004",
+      "ActualSize": "391KB"
+    },
+    {
+      "Version": 6.85,
+      "Signature": "ffcc05ce51ffff41",
+      "MD5Hash": "c7371354c42898512d4bacb9a8dade7c",
+      "Year": "2005",
+      "ActualSize": "393KB"
+    },
+    {
+      "Version": 8.73,
+      "Signature": "ffbd43ce41ffff06",
+      "MD5Hash": "89562a052f8f76e71d90f7544cebed9c",
+      "Year": "2008",
+      "ActualSize": "399KB",
+      "Comments": "Final Version"
+    }
+  ],
+  "Models": [
+    {
+      "ModelNumber": "H01KDD9PW1BN",
+      "ModelName": "MTS 2000",
+      "Band": "VHF",
+      "Description": "16-Mode, Top Display, 5- to 1-Watt"
+    },
+    {
+      "ModelNumber": "H01KDF9PW1BN",
+      "ModelName": "MTS 2000",
+      "Band": "VHF",
+      "Description": "160-Mode, Front Display, Limited Keypad, 5- to 1-Watt"
+    },
+    {
+      "ModelNumber": "H01KDH9PW1BN",
+      "ModelName": "MTS 2000",
+      "Band": "VHF",
+      "Description": "160-Mode, Front Display, Full Keypad, 5- to 1-Watt"
+    },
+    {
+      "ModelNumber": "H01RDD9PW1BN",
+      "ModelName": "MTS 2000",
+      "Band": "UHF B1",
+      "Description": "16-Mode, Top Display, 4- to 1-Watt"
+    },
+    {
+      "ModelNumber": "H01RDF9PW1BN",
+      "ModelName": "MTS 2000",
+      "Band": "UHF B1",
+      "Description": "160-Mode, Front Display, Limited Keypad, 4- to 1-Watt"
+    },
+    {
+      "ModelNumber": "H01RDH9PW1BN",
+      "ModelName": "MTS 2000",
+      "Band": "UHF B1",
+      "Description": "160-Mode, Front Display, Full Keypad, 4- to 1-Watt"
+    },
+    {
+      "ModelNumber": "H01SDD9PW1BN",
+      "ModelName": "MTS 2000",
+      "Band": "UHF B2",
+      "Description": "16-Mode, Top Display, 4- to 1-Watt"
+    },
+    {
+      "ModelNumber": "H01SDF9PW1BN",
+      "ModelName": "MTS 2000",
+      "Band": "UHF B2",
+      "Description": "160-Mode, Front Display, Limited Keypad, 4- to 1-Watt"
+    },
+    {
+      "ModelNumber": "H01SDH9PW1BN",
+      "ModelName": "MTS 2000",
+      "Band": "UHF B2",
+      "Description": "160-Mode, Front Display, Full Keypad, 4- to 1-Watt"
+    },
+    {
+      "ModelNumber": "H01UCD6PW1BN",
+      "ModelName": "MTS 2000",
+      "Band": "800MHz",
+      "Description": "16-Mode, Top Display, 3-Watt"
+    },
+    {
+      "ModelNumber": "H01UCF6PW1BN",
+      "ModelName": "MTS 2000",
+      "Band": "800MHz",
+      "Description": "160-Mode, Front Display, Limited Keypad, 3-Watt"
+    },
+    {
+      "ModelNumber": "H01UCH6PW1BN",
+      "ModelName": "MTS 2000",
+      "Band": "800MHz",
+      "Description": "160-Mode, Front Display, Full Keypad, 3-Watt"
+    },
+    {
+      "ModelNumber": "H01WCD4PW1CN",
+      "ModelName": "MTS 2000",
+      "Band": "900MHz",
+      "Description": "16-Mode, Top Display, 2.4W (Typ), 2.9W (Max)"
+    },
+    {
+      "ModelNumber": "H01WCF4PW1CN",
+      "ModelName": "MTS 2000",
+      "Band": "900MHz",
+      "Description": "160-Mode, Front Display, Limited Keypad"
+    },
+    {
+      "ModelNumber": "H01WCH4PW1CN",
+      "ModelName": "MTS 2000",
+      "Band": "900MHz",
+      "Description": "160-Mode, Front Display, Full Keypad"
+    },
+    {
+      "ModelNumber": "H01KDC9AA1DN",
+      "ModelName": "HT 1000",
+      "Band": "VHF",
+      "Description": "2F, 5- to 1-Watt"
+    },
+    {
+      "ModelNumber": "H01KDC9AA3DN",
+      "ModelName": "HT 1000",
+      "Band": "VHF",
+      "Description": "16F, 5- to 1-Watt"
+    },
+    {
+      "ModelNumber": "H01RDC9AA1DN",
+      "ModelName": "HT 1000",
+      "Band": "UHF B1",
+      "Description": "2F, 4- to 1-Watt"
+    },
+    {
+      "ModelNumber": "H01RDC9AA3DN",
+      "ModelName": "HT 1000",
+      "Band": "UHF B1",
+      "Description": "16F, 4- to 1-Watt"
+    },
+    {
+      "ModelNumber": "H01SDC9AA1DN",
+      "ModelName": "HT 1000",
+      "Band": "UHF B2",
+      "Description": "2F, 4- to 1-Watt"
+    },
+    {
+      "ModelNumber": "H01SDC9AA3DN",
+      "ModelName": "HT 1000",
+      "Band": "UHF B2",
+      "Description": "16F, 4- to 1-Watt"
+    },
+    {
+      "ModelNumber": "H01UCC6AA3DN",
+      "ModelName": "HT 1000",
+      "Band": "800MHz",
+      "Description": "16F, 3-Watt"
+    },
+    {
+      "ModelNumber": "H01KDH9PA3AN",
+      "ModelName": "JT 1000",
+      "Band": "VHF",
+      "Description": "16CH, Front Display"
+    },
+    {
+      "ModelNumber": "H01RDH9PA3AN",
+      "ModelName": "JT 1000",
+      "Band": "UHF B1",
+      "Description": "16CH, Front Display"
+    },
+    {
+      "ModelNumber": "H01SDH9PA3AN",
+      "ModelName": "JT 1000",
+      "Band": "UHF B2",
+      "Description": "16CH, Front Display"
+    },
+    {
+      "ModelNumber": "H01KDD9AA4AN",
+      "ModelName": "MT 2000",
+      "Band": "VHF",
+      "Description": "16F, 5- to 1-Watt, Top Display"
+    },
+    {
+      "ModelNumber": "H01KDH9AA7AN",
+      "ModelName": "MT 2000",
+      "Band": "VHF",
+      "Description": "16CH, 5- to 1-Watt, Front Display"
+    },
+    {
+      "ModelNumber": "H01RDD9AA4AN",
+      "ModelName": "MT 2000",
+      "Band": "UHF B1",
+      "Description": "16F, 4- to 1-Watt, Top Display"
+    },
+    {
+      "ModelNumber": "H01RDH9AA7AN",
+      "ModelName": "MT 2000",
+      "Band": "UHF B1",
+      "Description": "16CH, 4- to 1-Watt, Front Display"
+    },
+    {
+      "ModelNumber": "H01SDD9AA4AN",
+      "ModelName": "MT 2000",
+      "Band": "UHF B2",
+      "Description": "16F, 4- to 1-Watt, Top Display"
+    },
+    {
+      "ModelNumber": "H01SDH9AA7AN",
+      "ModelName": "MT 2000",
+      "Band": "UHF B2",
+      "Description": "16CH, 4- to 1-Watt, Front Display"
+    },
+    {
+      "ModelNumber": "H01UCD6AA4AN",
+      "ModelName": "MT 2000",
+      "Band": "800MHz",
+      "Description": "16F, 4- to 1-Watt, Top Display"
+    },
+    {
+      "ModelNumber": "H01UCH6AA7AN",
+      "ModelName": "MT 2000",
+      "Band": "800MHz",
+      "Description": "16CH, 4- to 1-Watt, Front Display"
+    },
+    {
+      "ModelNumber": "H01KDC9DB3AN",
+      "ModelName": "MT 838",
+      "Band": "VHF",
+      "Description": "16-Mode, 5- to 1-Watt"
+    },
+    {
+      "ModelNumber": "H01KDD9DB4AN",
+      "ModelName": "MT 838",
+      "Band": "VHF",
+      "Description": "99-Mode, Top Display, 5- to 1-Watt"
+    },
+    {
+      "ModelNumber": "H01KDF9DB5AN",
+      "ModelName": "MT 838",
+      "Band": "VHF",
+      "Description": "160-Mode, Front Display, Limited Keypad, 5- to 1-Watt"
+    },
+    {
+      "ModelNumber": "H01KDH9DB7AN",
+      "ModelName": "MT 838",
+      "Band": "VHF",
+      "Description": "160-Mode, Front Display, Full Keypad, 5- to 1-Watt"
+    },
+    {
+      "ModelNumber": "H01RDC9DB3AN",
+      "ModelName": "MT 838",
+      "Band": "UHF B1",
+      "Description": "16-Mode, 4- to 1-Watt"
+    },
+    {
+      "ModelNumber": "H01RDD9DB4AN",
+      "ModelName": "MT 838",
+      "Band": "UHF B1",
+      "Description": "99-Mode, Top Display, 4- to 1-Watt"
+    },
+    {
+      "ModelNumber": "H01RDF9DB5AN",
+      "ModelName": "MT 838",
+      "Band": "UHF B1",
+      "Description": "160-Mode, Front Display, Limited Keypad, 4- to 1-Watt"
+    },
+    {
+      "ModelNumber": "H01RDH9DB7AN",
+      "ModelName": "MT 838",
+      "Band": "UHF B1",
+      "Description": "160-Mode, Front Display, Full Keypad, 4- to 1-Watt"
+    },
+    {
+      "ModelNumber": "H01SDC9DB3AN",
+      "ModelName": "MT 838",
+      "Band": "UHF B2",
+      "Description": "16-Mode, 4- to 1-Watt"
+    },
+    {
+      "ModelNumber": "H01SDD9DB4AN",
+      "ModelName": "MT 838",
+      "Band": "UHF B2",
+      "Description": "99-Mode, Top Display, 4- to 1-Watt"
+    },
+    {
+      "ModelNumber": "H01SDH9DB7AN",
+      "ModelName": "MT 838",
+      "Band": "UHF B2",
+      "Description": "160-Mode, Front Display, Full Keypad, 4- to 1-Watt"
+    },
+    {
+      "ModelNumber": "H01UCC6DF3AN",
+      "ModelName": "MT 838",
+      "Band": "800MHz",
+      "Description": "16-Mode, Type II"
+    },
+    {
+      "ModelNumber": "H01UCC6DB3AN",
+      "ModelName": "MTX 8000",
+      "Band": "800MHz",
+      "Description": "16-Mode, Type I"
+    },
+    {
+      "ModelNumber": "H01UCF6DB5AN",
+      "ModelName": "MTX 8000",
+      "Band": "800MHz",
+      "Description": "160-Mode, Front Display, Limited Keypad, 3-Watt"
+    },
+    {
+      "ModelNumber": "H01UCH6DB7AN",
+      "ModelName": "MTX 8000",
+      "Band": "800MHz",
+      "Description": "160-Mode, Front Display, Full Keypad, 3-Watt"
+    },
+    {
+      "ModelNumber": "H01UCC6DU3AN",
+      "ModelName": "MTX-LS",
+      "Band": "800MHz",
+      "Description": "16F, LTR"
+    },
+    {
+      "ModelNumber": "H01WCC4DB3AN",
+      "ModelName": "MTX 9000",
+      "Band": "900MHz",
+      "Description": "16-Mode, 2.4W (Typ), 2.9W (Max)"
+    },
+    {
+      "ModelNumber": "H01WCF4DB5AN",
+      "ModelName": "MTX 9000",
+      "Band": "900MHz",
+      "Description": "160-Mode, Front Display, Limited Keypad"
+    },
+    {
+      "ModelNumber": "H01WCH4DB7AN",
+      "ModelName": "MTX 9000",
+      "Band": "900MHz",
+      "Description": "160-Mode, Front Display, Full Keypad"
+    }
+  ]
+}

@@ -13,6 +13,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JediComlink.JediEmulator", 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JediComlink.JediFlash", "JediFlash\JediComlink.JediFlash.csproj", "{59DC6B05-B64B-42AC-972C-1778B1E4FADD}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JediComlink.JediCommon", "JediCommon\JediComlink.JediCommon.csproj", "{595A7F22-CA6F-404F-9BD6-4ECA01AB9067}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,6 +41,10 @@ Global
 		{59DC6B05-B64B-42AC-972C-1778B1E4FADD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{59DC6B05-B64B-42AC-972C-1778B1E4FADD}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{59DC6B05-B64B-42AC-972C-1778B1E4FADD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{595A7F22-CA6F-404F-9BD6-4ECA01AB9067}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{595A7F22-CA6F-404F-9BD6-4ECA01AB9067}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{595A7F22-CA6F-404F-9BD6-4ECA01AB9067}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{595A7F22-CA6F-404F-9BD6-4ECA01AB9067}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

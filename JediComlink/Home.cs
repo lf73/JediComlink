@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.IO.Ports;
 using System.Linq;
+using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -82,6 +83,66 @@ namespace JediComlink
             //}
 
             //Status.Text = sb.ToString();
+        }
+
+        private void NormalOpenButton_Click(object sender, EventArgs e)
+        {
+            if (_isBusy) return;
+
+            using OpenFileDialog fileDialog = new OpenFileDialog
+            {
+                Filter = "bin files (*.bin)|*.bin|All files (*.*)|*.*",
+                InitialDirectory = Application.StartupPath,
+                Title = "Open Codeplug File"
+            };
+
+            if (fileDialog.ShowDialog() == DialogResult.OK)
+            {
+                try
+                {
+                    NormalStatus.Clear();
+                    var codeplug = new Codeplug(fileDialog.FileName);
+
+                    if (codeplug != null)
+                    {
+                        _codeplug = codeplug;
+                        UpdateCodeplug();
+                        NormalStatus.Text = _codeplug.GetTextDump();
+                    }
+                }
+                catch (Exception ex)
+                {
+                    NormalStatus.Text = $"Error opening file {fileDialog.FileName}\r\n{ex}";
+                }
+            }
+        }
+
+        private void NormalSaveButton_Click(object sender, EventArgs e)
+        {
+            if (_isBusy || _codeplug == null) return;
+
+            using var fileDialog = new SaveFileDialog
+            {
+                Filter = "bin files (*.bin)|*.bin|All files (*.*)|*.*",
+                InitialDirectory = Application.StartupPath,
+                Title = "Save Codeplug File",
+                CheckFileExists = true,
+                DefaultExt = "bin",
+                AddExtension = false,
+                FileName = _codeplug.GetProposedFileName(),
+            };
+
+            if (fileDialog.ShowDialog() == DialogResult.OK)
+            {
+                try
+                {
+                    File.WriteAllBytes(fileDialog.FileName, _codeplug.Serialize());
+                }
+                catch (Exception ex)
+                {
+                    NormalStatus.Text = $"Error saving file {fileDialog.FileName}\r\n{ex}";
+                }
+            }
         }
         #endregion
 

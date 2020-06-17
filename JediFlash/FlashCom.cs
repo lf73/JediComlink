@@ -114,7 +114,7 @@ namespace JediFlash
 
 				if (ack == 0x50) return;
 
-				if (attempts == 4) throw new Exception("The radio failed to ackowledge command. Try power cycling the radio and running the operation again.");
+				if (attempts == 4) throw new Exception("The radio failed to acknowledge command. Try power cycling the radio and running the operation again.");
 				Thread.Sleep(500);
 				attempts++;
 			}

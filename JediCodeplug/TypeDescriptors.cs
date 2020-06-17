@@ -1,10 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using JediCommon;
+using System;
 using System.ComponentModel;
 using System.Globalization;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace JediCodeplug
 {
@@ -14,7 +11,7 @@ namespace JediCodeplug
         {
             if (destinationType == typeof(string) && value is byte[] a)
             {
-                return String.Join(" ", Array.ConvertAll(a, x => x.ToString("X2")));
+                return Common.ConvertToHexString(a);
             }
             return base.ConvertTo(context, culture, value, destinationType);
         }
@@ -29,20 +26,7 @@ namespace JediCodeplug
         {
             if (value is string s)
             {
-                s = s.Replace(" ", "").Replace("-", "");
-                if (s.Length % 2 != 0)
-                {
-                    throw new Exception("Hex string must be an even number of digits");
-                }
-
-                byte[] data = new byte[s.Length / 2];
-                for (int index = 0; index < data.Length; index++)
-                {
-                    string byteValue = s.Substring(index * 2, 2);
-                    data[index] = byte.Parse(byteValue, NumberStyles.HexNumber, CultureInfo.InvariantCulture);
-                }
-
-                return data;
+                return Common.ConvertFromHexString(s);
             }
 
             return base.ConvertFrom(context, culture, value);
@@ -77,7 +61,6 @@ namespace JediCodeplug
             return base.ConvertFrom(context, culture, value);
         }
     }
-
 
     public class HexIntValueTypeConverter : TypeConverter
     {

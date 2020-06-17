@@ -6,6 +6,7 @@ using System.Data;
 using System.Diagnostics;
 using System.IO.Ports;
 using System.Linq;
+using System.Net;
 using System.Runtime.Remoting.Messaging;
 using System.Security.Permissions;
 using System.Text;
@@ -20,6 +21,7 @@ namespace JediEmulator
         private SerialPort _port;
 
         Memory<byte> _codeplugBytes;
+        byte[] _codeplugBytesToCompare = null;
 
         public byte[] CodePlugBytes
         {
@@ -66,6 +68,7 @@ namespace JediEmulator
                         sribMode = false;
                         Thread.Sleep(600); //Delay while CPS reinitializes com port and sets DTR. Otherwise it will timeout after "missing" ack.
                         _port.Write(new byte[] { 0x50 }, 0, 1); //ACK
+                        _codeplugBytesToCompare = _codeplugBytes.ToArray();
                     }
                     break;
                 case 0x01:
@@ -113,6 +116,7 @@ namespace JediEmulator
                     echo = true;
                     sbepMode = false;
                     sribMode = false;
+                    if (_codeplugBytesToCompare != null) Compare();
                     break;
                 case 0x11:
                     len = message.Data[0];
@@ -265,6 +269,30 @@ namespace JediEmulator
         private void UpdateStatus(string status)
         {
             OnStatusUpdate(new EmulatorStatusUpdateEventArgs() { Status = status });
+        }
+
+        private void Compare()
+        {
+            var newBytes = _codeplugBytes.ToArray();
+            int len = Math.Min(_codeplugBytes.Length, _codeplugBytesToCompare.Length);
+
+            if (_codeplugBytesToCompare.Length != newBytes.Length)
+            {
+                UpdateStatus($"Codeplug was {_codeplugBytesToCompare?.Length} and is now {newBytes.Length}");
+            }
+            int offset = newBytes[2] * 256 + newBytes[3]; //External Code Plug Start
+            int count = 0;
+            for (int i = 0; i < len; i++)
+            {
+                if (i >= offset + 0x1E && i <= offset + 0x22) continue; //Skip Time and Date changes
+                if (i == offset + 0x50) continue; //Skip Checksum byte related to Time and Date changes.
+                if (newBytes[i] != _codeplugBytesToCompare[i])
+                {
+                    UpdateStatus($"{i:X4} was {_codeplugBytesToCompare[i]:X2} now {newBytes[i]:X4}");
+                    count++;
+                }
+                if (count > 10) break;
+            }
         }
 
 

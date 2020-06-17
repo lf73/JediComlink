@@ -16,7 +16,7 @@
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
+    <DebugType>embedded</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>bin\Debug\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
@@ -25,7 +25,7 @@
     <LangVersion>8.0</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType>pdbonly</DebugType>
+    <DebugType>none</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
@@ -140,6 +140,10 @@
     <Compile Include="TypeDescriptors.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\JediCommon\JediComlink.JediCommon.csproj">
+      <Project>{595a7f22-ca6f-404f-9bd6-4eca01ab9067}</Project>
+      <Name>JediComlink.JediCommon</Name>
+    </ProjectReference>
     <ProjectReference Include="..\JediCommunication\JediComlink.JediCommunication.csproj">
       <Project>{834aa461-0875-4a41-bf64-0902ff444152}</Project>
       <Name>JediComlink.JediCommunication</Name>

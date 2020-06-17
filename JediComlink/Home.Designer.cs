@@ -58,6 +58,10 @@
             this.EmulatorComPortComboBox = new System.Windows.Forms.ComboBox();
             this.EmulatorButton = new System.Windows.Forms.Button();
             this.EmulatorStatus = new System.Windows.Forms.TextBox();
+            this.NormalOpenButton = new System.Windows.Forms.Button();
+            this.NormalSaveButton = new System.Windows.Forms.Button();
+            this.label2 = new System.Windows.Forms.Label();
+            this.label3 = new System.Windows.Forms.Label();
             label1 = new System.Windows.Forms.Label();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
@@ -90,7 +94,7 @@
             // 
             // NormalReadButton
             // 
-            this.NormalReadButton.Location = new System.Drawing.Point(7, 5);
+            this.NormalReadButton.Location = new System.Drawing.Point(62, 4);
             this.NormalReadButton.Margin = new System.Windows.Forms.Padding(2);
             this.NormalReadButton.Name = "NormalReadButton";
             this.NormalReadButton.Size = new System.Drawing.Size(52, 26);
@@ -101,7 +105,7 @@
             // 
             // NormalWriteButton
             // 
-            this.NormalWriteButton.Location = new System.Drawing.Point(76, 5);
+            this.NormalWriteButton.Location = new System.Drawing.Point(117, 4);
             this.NormalWriteButton.Margin = new System.Windows.Forms.Padding(2);
             this.NormalWriteButton.Name = "NormalWriteButton";
             this.NormalWriteButton.Size = new System.Drawing.Size(52, 26);
@@ -112,19 +116,23 @@
             // 
             // NormalStatus
             // 
-            this.NormalStatus.Location = new System.Drawing.Point(7, 65);
+            this.NormalStatus.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.NormalStatus.Location = new System.Drawing.Point(0, 34);
             this.NormalStatus.Margin = new System.Windows.Forms.Padding(2);
             this.NormalStatus.Multiline = true;
             this.NormalStatus.Name = "NormalStatus";
             this.NormalStatus.ReadOnly = true;
             this.NormalStatus.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.NormalStatus.Size = new System.Drawing.Size(807, 407);
+            this.NormalStatus.Size = new System.Drawing.Size(813, 419);
             this.NormalStatus.TabIndex = 2;
+            this.NormalStatus.WordWrap = false;
             // 
             // NormalComPortComboBox
             // 
             this.NormalComPortComboBox.FormattingEnabled = true;
-            this.NormalComPortComboBox.Location = new System.Drawing.Point(705, 5);
+            this.NormalComPortComboBox.Location = new System.Drawing.Point(178, 7);
             this.NormalComPortComboBox.Margin = new System.Windows.Forms.Padding(2);
             this.NormalComPortComboBox.Name = "NormalComPortComboBox";
             this.NormalComPortComboBox.Size = new System.Drawing.Size(98, 21);
@@ -142,11 +150,16 @@
             this.tabControl1.Location = new System.Drawing.Point(0, 0);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
-            this.tabControl1.Size = new System.Drawing.Size(824, 489);
+            this.tabControl1.Size = new System.Drawing.Size(824, 481);
             this.tabControl1.TabIndex = 5;
             // 
             // tabPage1
             // 
+            this.tabPage1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.tabPage1.Controls.Add(this.label3);
+            this.tabPage1.Controls.Add(this.label2);
+            this.tabPage1.Controls.Add(this.NormalSaveButton);
+            this.tabPage1.Controls.Add(this.NormalOpenButton);
             this.tabPage1.Controls.Add(this.NormalStatus);
             this.tabPage1.Controls.Add(this.NormalComPortComboBox);
             this.tabPage1.Controls.Add(this.NormalReadButton);
@@ -154,7 +167,7 @@
             this.tabPage1.Location = new System.Drawing.Point(4, 22);
             this.tabPage1.Name = "tabPage1";
             this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage1.Size = new System.Drawing.Size(816, 463);
+            this.tabPage1.Size = new System.Drawing.Size(816, 455);
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "Normal Read/Wrtie";
             this.tabPage1.UseVisualStyleBackColor = true;
@@ -405,14 +418,58 @@
             this.EmulatorStatus.Size = new System.Drawing.Size(807, 407);
             this.EmulatorStatus.TabIndex = 3;
             // 
+            // NormalOpenButton
+            // 
+            this.NormalOpenButton.Location = new System.Drawing.Point(334, 4);
+            this.NormalOpenButton.Margin = new System.Windows.Forms.Padding(2);
+            this.NormalOpenButton.Name = "NormalOpenButton";
+            this.NormalOpenButton.Size = new System.Drawing.Size(52, 26);
+            this.NormalOpenButton.TabIndex = 5;
+            this.NormalOpenButton.Text = "Open";
+            this.NormalOpenButton.UseVisualStyleBackColor = true;
+            this.NormalOpenButton.Click += new System.EventHandler(this.NormalOpenButton_Click);
+            // 
+            // NormalSaveButton
+            // 
+            this.NormalSaveButton.Location = new System.Drawing.Point(389, 4);
+            this.NormalSaveButton.Margin = new System.Windows.Forms.Padding(2);
+            this.NormalSaveButton.Name = "NormalSaveButton";
+            this.NormalSaveButton.Size = new System.Drawing.Size(52, 26);
+            this.NormalSaveButton.TabIndex = 6;
+            this.NormalSaveButton.Text = "Save";
+            this.NormalSaveButton.UseVisualStyleBackColor = true;
+            this.NormalSaveButton.Click += new System.EventHandler(this.NormalSaveButton_Click);
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label2.Location = new System.Drawing.Point(13, 9);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(49, 15);
+            this.label2.TabIndex = 7;
+            this.label2.Text = "Radio:";
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label3.Location = new System.Drawing.Point(297, 9);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(35, 15);
+            this.label3.TabIndex = 8;
+            this.label3.Text = "File:";
+            // 
             // Home
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(824, 489);
+            this.ClientSize = new System.Drawing.Size(824, 481);
             this.Controls.Add(this.tabControl1);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Margin = new System.Windows.Forms.Padding(2);
+            this.MaximizeBox = false;
+            this.MinimumSize = new System.Drawing.Size(500, 300);
             this.Name = "Home";
             this.Text = "Jedi Comlink";
             this.tabControl1.ResumeLayout(false);
@@ -468,6 +525,10 @@
         private System.Windows.Forms.Button FlashReadButton;
         private System.Windows.Forms.Button FlashWriteButton;
         private System.Windows.Forms.ComboBox EmulatorComPortComboBox;
+        private System.Windows.Forms.Button NormalOpenButton;
+        private System.Windows.Forms.Button NormalSaveButton;
+        private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.Label label2;
     }
 }
 

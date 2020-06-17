@@ -15,22 +15,6 @@ namespace JediCodeplug
             0x22, 0x26, 0x1F, 0x20, 0x19, 0x30, 0x49, 0x10, 0x18, 0x37, 0x3C, 0x23, 0x0B, 0x34, 0x4C, 0x00
         };
 
-        //TODO Consider moving to a config file, and auto adding entries read in flash mode.
-        private static readonly Dictionary<decimal, byte[]> FirmwareSignatures = new Dictionary<decimal, byte[]>() {
-            { 5.44M, new byte[] { 0xFF, 0x4F, 0x26, 0xC4, 0xC6, 0xBD, 0x30, 0xBD } },
-            { 5.53M, new byte[] { 0xFF, 0x2F, 0xC2, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF } },
-            { 5.63M, new byte[] { 0xFF, 0xF6, 0x5F, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF } },
-            { 5.65M, new byte[] { 0xFF, 0x7F, 0x5F, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF } },
-            { 6.10M, new byte[] { 0xFF, 0x09, 0xCC, 0xFF, 0xFF, 0xFF, 0xFF, 0x10 } },
-            { 6.60M, new byte[] { 0xFF, 0xCC, 0x30, 0xCC, 0x01, 0xFF, 0xFF, 0xCC } },
-            { 6.70M, new byte[] { 0xFF, 0xCC, 0x30, 0xCC, 0x01, 0xFF, 0xFF, 0xCC } },
-            { 6.74M, new byte[] { 0xFF, 0xCC, 0x05, 0xCC, 0x01, 0xFF, 0xFF, 0x41 } },
-            { 6.81M, new byte[] { 0xFF, 0xCC, 0x05, 0xCE, 0x51, 0xFF, 0xFF, 0x41 } },
-            { 6.82M, new byte[] { 0xFF, 0xCC, 0x05, 0xCE, 0x51, 0xFF, 0xFF, 0x41 } },
-            { 8.73M, new byte[] { 0xFF, 0xBD, 0x43, 0xCE, 0x41, 0xFF, 0xFF, 0x06 } },
-            //{ 9.99M, new byte[] { 0x03000, 0x0B000, 0x13000, 0x1B000, 0x23000, 0x2B000, 0x33000, 0x3B000 } },
-        };
-
         //Offset locations in the 0x50 byte buffer considered in the Auth Code calculation.
         private const int MODEL = 0x00;
         private const int FACTORY_CODE = 0x10;
@@ -40,9 +24,10 @@ namespace JediCodeplug
 
         public static void Calculate(Codeplug codeplug)
         {
-            if (!FirmwareSignatures.ContainsKey(codeplug.FirmwareVersion))
+            var signatureBytes = codeplug.Firmware.SignatureBytes;
+            if (signatureBytes == null || signatureBytes.Length == 0)
             {
-                codeplug.AuthCodeStatus = $"Unknown Firmware Version {codeplug.FirmwareVersion:0.00}. Firmware must be read in Flash Mode to get the bytes required for the calculation.";
+                codeplug.AuthCodeStatus = $"Unknown Firmware Version {codeplug.Firmware.Version:0.00}. Firmware must be read in Flash Mode to get the bytes required for the calculation.";
                 return;
             }
 
@@ -67,8 +52,8 @@ namespace JediCodeplug
             fc[0x7] = (byte)(check % 0x100);
 
             fc.CopyTo(buffer, FACTORY_CODE);
-           
-            FirmwareSignatures[codeplug.FirmwareVersion].CopyTo(buffer, FLASH_SIGNATURE);
+
+            signatureBytes.CopyTo(buffer, FLASH_SIGNATURE);
 
             codeplug.InternalCodeplug.Block10.FeatureBlock.CopyTo(buffer, FDB_PART_A);
             codeplug.InternalCodeplug.Block10.Flashcode.CopyTo(buffer, FDB_PART_B);

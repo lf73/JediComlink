@@ -3,6 +3,7 @@ using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using JediCommon;
 using JediCommunication;
 
 namespace JediCodeplug
@@ -13,7 +14,11 @@ namespace JediCodeplug
 
         public Block30 ExternalCodeplug { get; protected set; } = new Block30();
 
-        public decimal FirmwareVersion { get; set; }
+        [TypeConverter(typeof(ExpandableObjectConverter))]
+        public Model Model { get; set; }
+
+        [TypeConverter(typeof(ExpandableObjectConverter))]
+        public Firmware Firmware { get; set; }
 
         [TypeConverter(typeof(HexByteArrayTypeConverter))]
         public byte[] FactoryCode { get; set; }
@@ -23,6 +28,8 @@ namespace JediCodeplug
 
         public string AuthCodeStatus { get; set; }
 
+        public string Status { get; set; }
+
         /// <summary>
         /// Original source bytes used to unpack codeplug.
         /// </summary>
@@ -30,17 +37,55 @@ namespace JediCodeplug
 
         public Codeplug(string path)
         {           
-            var contents = File.ReadAllBytes(path);
-            OriginalBytes = contents;
-            InternalCodeplug.Deserialize(contents, 0);
-            ExternalCodeplug.Deserialize(contents, InternalCodeplug.ExternalCodeplugVector);
+            var codeplugBytes = File.ReadAllBytes(path);
+            OriginalBytes = codeplugBytes;
+            InternalCodeplug.Deserialize(codeplugBytes, 0);
+
+            try
+            {
+                Model = Common.GetModel(InternalCodeplug.Model);
+
+                //466AWA2860_2020-05-28_10-11-17_R08.73_08051d0b020ad8e2ffffffffffffffff.bin
+                var fileParts = Path.GetFileNameWithoutExtension(path).Split('_');
+                if (fileParts.Length == 5)
+                {
+                    Firmware = Common.GetFirmware(decimal.Parse(fileParts[3].Replace("R", "")));
+                    FactoryCode = Common.ConvertFromHexString(fileParts[4]);
+                    AuthCode.Calculate(this);
+                }
+            }
+            catch (Exception)
+            {
+
+            }
+
+            try
+            {
+                ExternalCodeplug.Deserialize(codeplugBytes, InternalCodeplug.ExternalCodeplugVector);
+            }
+            catch (Exception e)
+            {
+                Status = "Error unpacking external codeplug\r\n" + e.ToString();
+                return;
+            }
+
+            Status = "Codeplug successfully unpacked.";
         }
 
         public Codeplug(byte[] codeplugBytes)
         {
             OriginalBytes = codeplugBytes;
             InternalCodeplug.Deserialize(codeplugBytes, 0);
-            ExternalCodeplug.Deserialize(codeplugBytes, InternalCodeplug.ExternalCodeplugVector);
+            try
+            {
+                ExternalCodeplug.Deserialize(codeplugBytes, InternalCodeplug.ExternalCodeplugVector);
+            }
+            catch (Exception e)
+            {
+                Status = "Error unpacking external codeplug\r\n" + e.ToString();
+                return;
+            }
+            Status = "Codeplug successfully unpacked.";
         }
 
         public string GetTextDump()
@@ -80,13 +125,14 @@ namespace JediCodeplug
                         var bytesToRead = Math.Min(0x20, length - i);
                         com.Read(i, bytesToRead, codeplugBytes);
                     }
-                    string fileName = "MTS2000-" + DateTime.Now.ToString("yyyy-MM-dd_HH-mm-ss") + ".hex";
-                    File.WriteAllBytes(fileName, codeplugBytes);
                     codeplug = new Codeplug(codeplugBytes);
-                    codeplug.FirmwareVersion = firmwareVersion;
+                    codeplug.Model = Common.GetModel(codeplug.InternalCodeplug.Model);
+                    codeplug.Firmware = Common.GetFirmware(firmwareVersion);
                     codeplug.FactoryCode = com.Read(0x81F0, 0x10);
-                    AuthCode.Calculate(codeplug);
                     com.ExitSbepMode();
+
+                    AuthCode.Calculate(codeplug);
+                    File.WriteAllBytes(codeplug.GetProposedFileName(), codeplugBytes);
                 }
                 catch (Exception e)
                 {
@@ -103,9 +149,15 @@ namespace JediCodeplug
             return codeplug;
         }
 
+        public string GetProposedFileName()
+        {
+            //466AWA2860_2020-05-28_10-11-17_R08.73_08051d0b020ad8e2ffffffffffffffff.bin
+            return $"{InternalCodeplug?.Serial ?? "Unknown"}_{DateTime.Now:yyyy-MM-dd_HH-mm-ss}_R{Firmware?.Version ?? 0:00.00}_{((FactoryCode?.Length ?? 0) == 0 ? new string('0', 32) : Common.ConvertToHexString(FactoryCode,""))}.bin";
+        }
+
         public void RecalculateAuthCode()
         {
-            if (FirmwareVersion == 0.00m) return;
+            if (Firmware?.Version == 0.00m) return;
             AuthCode.Calculate(this);
             AuthCodeStatus = "Recalculated";
             CalculatedAuthCode.CopyTo(InternalCodeplug.AuthCode, 0);
